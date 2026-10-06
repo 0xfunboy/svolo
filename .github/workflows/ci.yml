@@ -70,9 +70,10 @@ jobs:
       - run: pnpm install --frozen-lockfile --ignore-scripts
         working-directory: web
       - name: Install the project's pinned native browser for web tests
+        working-directory: desktop
         run: |
-          pnpm --dir desktop install --frozen-lockfile --ignore-scripts
-          node desktop/node_modules/electron/install.js
+          pnpm install --frozen-lockfile --ignore-scripts
+          node node_modules/electron/install.js
           test -x "$SVOLO_TEST_ELECTRON"
       - run: pnpm test
         working-directory: web
