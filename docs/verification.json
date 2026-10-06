@@ -930,7 +930,9 @@
       "italianGuide": "it/docs/TASK_PROFILES.md"
     },
     "publicationChecks": "Tracked source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest. Hosted checks are available in GitHub Actions for the published commit; local/native evidence remains separate.",
-    "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification."
+    "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification.",
+    "testBrowser": "Actual sandboxed Chromium in the project-pinned Electron browser, with Xvfb. Hosted web checks explicitly install this native browser and retain the standard sandbox; no test skips or sandbox bypass flags.",
+    "additionalProbe": "Local Chrome 154 standalone fixture navigation timed out; not counted as a passed check. Production Go browser checks use their separate native transport."
   },
   "previousUpdates": [
     {

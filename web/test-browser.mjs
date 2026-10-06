@@ -108,7 +108,7 @@ export async function nativeBrowser(t, { handler, ready='globalThis.markdownRead
     if (port) break;
     await delay(20);
   }
-  assert.ok(port, 'Test Chromium should start with its standard sandbox');
+  assert.ok(port, `Test Chromium should start with its standard sandbox: ${launchError}`);
   const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
   const target = targets.find(target => target.type === 'page');
   assert.ok(target, 'Test Chromium should expose its fixture page');

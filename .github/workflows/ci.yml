@@ -52,23 +52,27 @@ jobs:
   web:
     runs-on: ubuntu-latest
     env:
-      SVOLO_CHROMIUM: /usr/bin/google-chrome
+      SVOLO_TEST_ELECTRON: ${{ github.workspace }}/desktop/node_modules/electron/dist/electron
     steps:
       - uses: actions/checkout@v4
       - name: Install native document readers and enable sandbox namespaces
         run: |
           sudo apt-get update
-          sudo apt-get install -y bubblewrap poppler-utils tesseract-ocr tesseract-ocr-eng tesseract-ocr-ita
+          sudo apt-get install -y bubblewrap poppler-utils tesseract-ocr tesseract-ocr-eng tesseract-ocr-ita xvfb
           # The disposable runner needs unprivileged namespaces for Bubblewrap and Chromium.
           if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
             sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           fi
-          test -x "$SVOLO_CHROMIUM"
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile --ignore-scripts
         working-directory: web
+      - name: Install the project's pinned native browser for web tests
+        run: |
+          pnpm --dir desktop install --frozen-lockfile --ignore-scripts
+          node desktop/node_modules/electron/install.js
+          test -x "$SVOLO_TEST_ELECTRON"
       - run: pnpm test
         working-directory: web
