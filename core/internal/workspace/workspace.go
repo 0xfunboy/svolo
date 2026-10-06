@@ -10,9 +10,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"svolo.local/core/internal/processenv"
 	"svolo.local/core/internal/store"
-	"strings"
 	"sync"
 	"time"
 )
@@ -38,7 +38,7 @@ func (w Workspace) Path(rel string, allowMissing bool) (string, error) {
 	if rel == "" {
 		rel = "."
 	}
-	if filepath.IsAbs(rel) || strings.ContainsAny(rel, "\x00:") || strings.Contains(rel, "\\") {
+	if filepath.IsAbs(rel) || strings.HasPrefix(rel, "/") || strings.ContainsAny(rel, "\x00:") || strings.Contains(rel, "\\") {
 		return "", errors.New("use a relative workspace path without backslash, NUL or colon")
 	}
 	path := filepath.Join(w.Root, filepath.FromSlash(rel))

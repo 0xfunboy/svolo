@@ -858,7 +858,7 @@
   },
   "latestUpdate": {
     "name": "document-attachments-and-reviewed-task-profiles",
-    "recordedAt": "2026-10-06T09:34:57.592917+00:00",
+    "recordedAt": "2026-10-06T09:41:16.629584+00:00",
     "assetVersion": "20261006-11",
     "webTests": {
       "passed": 73,
@@ -893,7 +893,7 @@
       "italianGuide": "it/docs/TASK_PROFILES.md"
     },
     "qualification": "Development status retained; real TIM portal flow and customer contracts not provided/tested",
-    "publicationChecks": "Prior GitHub CI failures addressed: ripgrep installed for desktop ATP tests, macOS temp fixture paths resolved, private-state path guard canonicalizes aliases. Local ATP seven tests and Go/native race suite passed; hosted CI results remain separate.",
+    "publicationChecks": "GitHub run for cd9e548 passed desktop and Go Linux/macOS checks. Windows rooted-path validation and web runner sandbox/decoder setup corrected afterwards. Local source-contract checks, ATP seven tests and Go/native race suite passed; hosted CI results remain separate.",
     "deployment": {
       "realSystemdGateway": true,
       "actualInternalMCPDiscovered": true,
@@ -911,6 +911,16 @@
       "routesPassed": 4,
       "assetsExactlyMatchSource": 11,
       "evidence": "public-tasks-deploy.json"
+    },
+    "deployedFrontend": {
+      "actualPublicHTTPSFrontend": true,
+      "actualGateway": true,
+      "taskProfileVisible": true,
+      "learningControlReady": true,
+      "fileFormatsAvailable": true,
+      "mobileNoHorizontalOverflow": true,
+      "modelRunsStarted": 0,
+      "evidence": "tasks-real-ui.json"
     }
   }
 }
