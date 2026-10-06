@@ -849,7 +849,7 @@
     "Complete host reboot and boot recovery test",
     "Long-duration reliability and independent security review"
   ],
-  "updatedAtLocal": "2026-10-06T11:13:56.967716+00:00",
+  "updatedAtLocal": "2026-10-06T17:08:31.379869+00:00",
   "updateTimezone": "Etc/UTC",
   "preUpdateEvidence": {
     "preservedFile": "/home/your-user/svolo-installation/verification-pre-dark.json",
@@ -857,20 +857,16 @@
     "scope": "Initial completed web-deployment verification before the 6 October 2026 Europe/Rome dark theme, tab observation and form-assistance update."
   },
   "latestUpdate": {
-    "name": "browser-rendering-live-viewport-and-continuation-fixes",
-    "recordedAt": "2026-10-06T11:13:56.967703+00:00",
-    "assetVersion": "20261006-14",
-    "confirmedCauses": [
-      "renderTabs callback shadowed the translation function, throwing TypeError for the active/viewed tab and surfacing a misleading browser-unavailable message",
-      "The old viewport handler took human control and cancelled in-flight model requests before attempting resize",
-      "Recorded follow-up failures were context cancellations on human takeover, not observed password validation failures"
-    ],
+    "name": "bounded-provider-recovery-and-chat-continuation",
+    "recordedAt": "2026-10-06T17:08:31.379869+00:00",
+    "assetVersion": "20261006-15",
+    "confirmedCause": "Gemrouter returned HTTP 503 on the inference following a successful browser navigation. The prior core terminated on the first transient response; no credential validation failure was observed.",
     "changes": [
-      "Active/viewed tab labels and URLs render correctly in both languages",
-      "Typed, CSRF-protected, tenant-bound viewport configuration preserves agent owner, epoch and selected target; queues with a cancellable deadline and invalidates old page references",
-      "Repeated tab markup, unchanged image data and unchanged Markdown reuse prior rendering",
-      "Transient capture failures retain the last valid image, distinguish reconnection from errors, and recover automatically",
-      "Waiting for model is explicit while inference is pending; the only owned unselected page remains observable"
+      "At most three identical inference requests for explicit HTTP 429, 500, 502, 503 or 504 responses, within an overall 180-second deadline",
+      "One- and two-second backoff; Retry-After respected up to 30 seconds, longer waits return to the user instead of retrying early; Stop cancels pending waits",
+      "Previously executed tools, partial streams and ambiguous transport failures are not automatically replayed",
+      "Sanitized providerError metadata and provider.retry progress contain no upstream error bodies",
+      "English and Italian failure messages apply to saved legacy runs; explicit Continue task resumes the same bound provider, model, task revision and selected documents while preserving the composer draft"
     ],
     "webTests": {
       "passed": 77,
@@ -878,56 +874,54 @@
       "skipped": 0,
       "unitAndMock": 65,
       "nativeBrowserAndOCR": 12,
-      "evidence": "browser-fix-web-tests.log"
+      "evidence": "provider-503-web-tests.log"
     },
     "core": {
-      "race": "All 20 tested Go packages passed; SVOLO_E2E=1 enabled actual Chromium checks. Unchanged package results may be cached.",
-      "targeted": "New browser queue/ownership/reference tests and credential-continuation server test passed with -race -count=1; real Chromium viewport/form test passed with SVOLO_E2E=1 -race -count=1",
+      "race": "All 20 tested Go packages passed with SVOLO_E2E=1. Unchanged package results may be cached. The updated agent tests also passed separately with -race -count=1.",
       "vet": "pass",
-      "build": "Native Linux/amd64 executable deployed; no new cross-platform release qualification",
+      "build": "Native Linux/amd64 core built and deployed",
       "evidence": [
-        "browser-fix-core-tests.log",
-        "browser-fix-core-vet.log"
+        "provider-503-core-tests.log",
+        "provider-503-agent-tests.log",
+        "provider-503-core-vet.log"
       ]
     },
-    "nativeAcceptance": {
-      "provider": "Simulated provider with a pending credential follow-up; resize does not cancel it",
-      "browser": "Real Chromium form, preserved values, new geometry, stale-reference recovery, password fixture entry and unchanged tab focus",
-      "frontend": "Native Electron browser against HTTP fixtures with active and background tabs, both languages, resize without control changes, stable rendering and transient recovery",
-      "realExternalRegistrations": 0
+    "acceptance": {
+      "simulatedProvider": "Responses and Chat Completions JSON recovery, SSE recovery before response start, status bounds, Retry-After, cancellation, typed private errors and persistence",
+      "noReplay": "Completed form tool runs once across inference recovery; interrupted SSE and transport failures are not retried",
+      "nativeFrontend": "Actual Electron browser against HTTP fixtures verifies continuation, preserved draft, retry progress and both languages",
+      "externalRegistrationsSubmitted": 0
     },
-    "latency": {
-      "observedCompletedFormSeconds": 88,
-      "modelResponseSecondsRange": [
-        5,
-        21
-      ],
-      "browserTools": "Recorded navigation took 197ms; most form reads/writes took 3–70ms",
-      "interpretation": "The provider dominated this recorded run. UI rendering work was reduced; no claim that upstream inference latency has been eliminated.",
-      "evidence": "runtime-diagnostics.json"
+    "liveProviderProbe": {
+      "provider": "Gemrouter",
+      "model": "gemini-3.8-flash",
+      "status": 200,
+      "elapsedMilliseconds": 17363,
+      "scope": "Synthetic 32-token connectivity prompt only; no customer documents, credentials, tools or task continuation sent. A healthy probe does not guarantee upstream availability.",
+      "evidence": "provider-503-probe.json"
     },
     "deployment": {
       "gatewayActive": true,
       "tunnelActive": true,
       "enabled": true,
       "lingering": true,
-      "chatsPreserved": 1,
-      "runsPreserved": 6,
+      "chatsPreserved": 2,
+      "runsPreserved": 7,
       "attachmentsPreserved": 1,
       "providerCredentialsUnchanged": true,
-      "dataIntegrity": "Attachments, task profiles/versions and MCP configuration unchanged versus consistent private SQLite backup",
+      "dataIntegrity": "Users, selected models, encrypted prompts, attachment rows, task contexts/profiles/proposals and MCP configuration compared against a consistent private SQLite backup; decrypted credentials compared privately after quota refresh.",
       "sourceAssetsExactlyMatched": 11,
       "publicRoutesPassed": 4,
-      "actualPublicFrontend": "FullHD resize and original viewport restoration, both languages, screenshot visibility and unchanged control epoch verified through the actual public HTTPS gateway; no model calls or registrations",
+      "actualPublicFrontend": "HTTPS native-browser check: friendly legacy 503 error and Continue task in EN/IT, live screenshot, hidden browser error and unchanged tabs; no run started or external submission.",
       "evidence": [
-        "browser-fix-deployed-check.json",
-        "browser-fix-data-integrity.json",
-        "browser-fix-real-ui.json",
-        "public-browser-fix-deploy.json"
+        "provider-503-deployed-check.json",
+        "provider-503-data-integrity.json",
+        "provider-503-real-ui.json",
+        "public-provider-503-deploy.json"
       ]
     },
-    "publicationChecks": "Source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest; hosted CI is reported separately for the published commit.",
-    "qualification": "Development release status and license retained. Credential follow-up tests use disposable data; external site registration flows and paid-model latency are not qualified by fixtures."
+    "publicationChecks": "Tracked source privacy comparison, redacted source/history secret scans, product/source contracts and regenerated SHA-256 manifest. Hosted CI is reported separately for the published commit.",
+    "qualification": "Development release and license retained. Recovery cannot guarantee provider uptime or remove model inference latency. Individual external account and invoice workflows were not executed or qualified by this update."
   },
   "previousUpdates": [
     {
@@ -1074,6 +1068,79 @@
       "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification.",
       "testBrowser": "Actual sandboxed Chromium in the project-pinned Electron browser, with Xvfb. Hosted web checks explicitly install this native browser and retain the standard sandbox; no test skips or sandbox bypass flags.",
       "additionalProbe": "Local Chrome 154 standalone fixture navigation timed out; not counted as a passed check. Production Go browser checks use their separate native transport."
+    },
+    {
+      "name": "browser-rendering-live-viewport-and-continuation-fixes",
+      "recordedAt": "2026-10-06T11:13:56.967703+00:00",
+      "assetVersion": "20261006-14",
+      "confirmedCauses": [
+        "renderTabs callback shadowed the translation function, throwing TypeError for the active/viewed tab and surfacing a misleading browser-unavailable message",
+        "The old viewport handler took human control and cancelled in-flight model requests before attempting resize",
+        "Recorded follow-up failures were context cancellations on human takeover, not observed password validation failures"
+      ],
+      "changes": [
+        "Active/viewed tab labels and URLs render correctly in both languages",
+        "Typed, CSRF-protected, tenant-bound viewport configuration preserves agent owner, epoch and selected target; queues with a cancellable deadline and invalidates old page references",
+        "Repeated tab markup, unchanged image data and unchanged Markdown reuse prior rendering",
+        "Transient capture failures retain the last valid image, distinguish reconnection from errors, and recover automatically",
+        "Waiting for model is explicit while inference is pending; the only owned unselected page remains observable"
+      ],
+      "webTests": {
+        "passed": 77,
+        "failed": 0,
+        "skipped": 0,
+        "unitAndMock": 65,
+        "nativeBrowserAndOCR": 12,
+        "evidence": "browser-fix-web-tests.log"
+      },
+      "core": {
+        "race": "All 20 tested Go packages passed; SVOLO_E2E=1 enabled actual Chromium checks. Unchanged package results may be cached.",
+        "targeted": "New browser queue/ownership/reference tests and credential-continuation server test passed with -race -count=1; real Chromium viewport/form test passed with SVOLO_E2E=1 -race -count=1",
+        "vet": "pass",
+        "build": "Native Linux/amd64 executable deployed; no new cross-platform release qualification",
+        "evidence": [
+          "browser-fix-core-tests.log",
+          "browser-fix-core-vet.log"
+        ]
+      },
+      "nativeAcceptance": {
+        "provider": "Simulated provider with a pending credential follow-up; resize does not cancel it",
+        "browser": "Real Chromium form, preserved values, new geometry, stale-reference recovery, password fixture entry and unchanged tab focus",
+        "frontend": "Native Electron browser against HTTP fixtures with active and background tabs, both languages, resize without control changes, stable rendering and transient recovery",
+        "realExternalRegistrations": 0
+      },
+      "latency": {
+        "observedCompletedFormSeconds": 88,
+        "modelResponseSecondsRange": [
+          5,
+          21
+        ],
+        "browserTools": "Recorded navigation took 197ms; most form reads/writes took 3–70ms",
+        "interpretation": "The provider dominated this recorded run. UI rendering work was reduced; no claim that upstream inference latency has been eliminated.",
+        "evidence": "runtime-diagnostics.json"
+      },
+      "deployment": {
+        "gatewayActive": true,
+        "tunnelActive": true,
+        "enabled": true,
+        "lingering": true,
+        "chatsPreserved": 1,
+        "runsPreserved": 6,
+        "attachmentsPreserved": 1,
+        "providerCredentialsUnchanged": true,
+        "dataIntegrity": "Attachments, task profiles/versions and MCP configuration unchanged versus consistent private SQLite backup",
+        "sourceAssetsExactlyMatched": 11,
+        "publicRoutesPassed": 4,
+        "actualPublicFrontend": "FullHD resize and original viewport restoration, both languages, screenshot visibility and unchanged control epoch verified through the actual public HTTPS gateway; no model calls or registrations",
+        "evidence": [
+          "browser-fix-deployed-check.json",
+          "browser-fix-data-integrity.json",
+          "browser-fix-real-ui.json",
+          "public-browser-fix-deploy.json"
+        ]
+      },
+      "publicationChecks": "Source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest; hosted CI is reported separately for the published commit.",
+      "qualification": "Development release status and license retained. Credential follow-up tests use disposable data; external site registration flows and paid-model latency are not qualified by fixtures."
     }
   ]
 }

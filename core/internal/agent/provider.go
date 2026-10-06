@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -37,7 +38,58 @@ type Provider struct {
 	AllowInsecureHTTP bool                         `json:"allowInsecureHTTP,omitempty"`
 	MaxOutputTokens   int                          `json:"maxOutputTokens"`
 	ReasoningEffort   string                       `json:"reasoningEffort,omitempty"`
+	onRetry           func(ProviderRetry)
 }
+
+type ProviderRetry struct {
+	Attempt     int   `json:"attempt"`
+	MaxAttempts int   `json:"maxAttempts"`
+	Status      int   `json:"status"`
+	DelayMS     int64 `json:"delayMs"`
+}
+
+type ProviderHTTPError struct {
+	Status    int  `json:"status"`
+	Attempts  int  `json:"attempts"`
+	Retryable bool `json:"retryable"`
+}
+
+func (e *ProviderHTTPError) Error() string {
+	reason := "request rejected"
+	if e.Retryable {
+		reason = "temporarily unavailable"
+	}
+	if e.Status == 401 || e.Status == 403 {
+		reason = "authentication or access rejected"
+	}
+	// Never persist an upstream body: it may echo the user's prompt or secrets.
+	return fmt.Sprintf("provider HTTP %d: %s (attempts: %d)", e.Status, reason, e.Attempts)
+}
+
+func transientProviderStatus(status int) bool {
+	switch status {
+	case 429, 500, 502, 503, 504:
+		return true
+	}
+	return false
+}
+
+func providerRetryDelay(header string, attempt int) (time.Duration, bool) {
+	delay := time.Duration(1<<(attempt-2)) * time.Second
+	if seconds, err := strconv.Atoi(strings.TrimSpace(header)); err == nil && seconds >= 0 {
+		if seconds > 30 {
+			return 0, false
+		}
+		delay = time.Duration(seconds) * time.Second
+	} else if until, err := http.ParseTime(header); err == nil {
+		delay = time.Until(until)
+		if delay < 0 {
+			delay = 0
+		}
+	}
+	return delay, delay <= 30*time.Second
+}
+
 type Image struct {
 	MIME string `json:"mimeType"`
 	Data string `json:"data"`
@@ -205,19 +257,48 @@ func (p Provider) Complete(ctx context.Context, system string, turns []Turn, too
 	client := &http.Client{Timeout: 180 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error {
 		return errors.New("provider redirects refused to protect credentials")
 	}}
-	resp, err := client.Do(req)
-	if err != nil {
-		return Reply{}, err
+	// Only explicit transient HTTP rejections are retried. No stream, partial
+	// response, transport failure or previously executed tool is replayed.
+	ctx, cancel := context.WithTimeout(ctx, 180*time.Second)
+	defer cancel()
+	var resp *http.Response
+	for attempt := 1; attempt <= 3; attempt++ {
+		if err := ctx.Err(); err != nil {
+			return Reply{}, err
+		}
+		request := req.Clone(ctx)
+		request.Body, err = req.GetBody()
+		if err != nil {
+			return Reply{}, err
+		}
+		resp, err = client.Do(request)
+		if err != nil {
+			return Reply{}, err
+		}
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			break
+		}
+		status := resp.StatusCode
+		retryable := transientProviderStatus(status)
+		delay, bounded := providerRetryDelay(resp.Header.Get("Retry-After"), attempt+1)
+		// Discard error content rather than expose any echoed credentials/history.
+		_, _ = io.CopyN(io.Discard, resp.Body, 2048)
+		resp.Body.Close()
+		if !retryable || attempt == 3 || !bounded {
+			return Reply{}, &ProviderHTTPError{Status: status, Attempts: attempt, Retryable: retryable}
+		}
+		if p.onRetry != nil {
+			p.onRetry(ProviderRetry{Attempt: attempt + 1, MaxAttempts: 3, Status: status, DelayMS: delay.Milliseconds()})
+		}
+		timer := time.NewTimer(delay)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return Reply{}, ctx.Err()
+		case <-timer.C:
+		}
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		msg, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
-		text := string(msg)
-		if key != "" {
-			text = strings.ReplaceAll(text, key, "[redacted]")
-		}
-		return Reply{}, fmt.Errorf("provider HTTP %d: %s", resp.StatusCode, text)
-	}
 	if p.Stream {
 		return p.readStream(resp.Body, delta)
 	}

@@ -130,6 +130,26 @@ sull'autenticazione](https://learn.chatgpt.com/docs/auth).
 
 ## Esecuzione e limiti
 
+Il core riprova al massimo due volte dopo HTTP 429, 500, 502, 503 e 504
+(tre richieste complessive), conservando modello, cronologia ed esiti degli
+strumenti. Le attese predefinite sono uno e due secondi. `Retry-After`, in secondi
+o come data HTTP, viene rispettato se l’attesa rientra in 30 secondi; un’attesa
+superiore termina l’attività invece di riprovare prima del tempo indicato.
+La richiesta ha un limite totale di 180 secondi. Stop cancella richieste e attese.
+Errori di trasporto o autenticazione, stream parziali e strumenti già completati
+non vengono ripetuti automaticamente. I tentativi non consumano altri passaggi
+dell’agente e non cambiano il provider selezionato.
+
+Gli eventi `provider.retry` contengono solo ID dell’attività, tentativo, numero
+massimo di tentativi, stato HTTP e durata dell’attesa. L’errore HTTP persistito
+include `providerError`, senza il corpo della risposta upstream, che potrebbe
+contenere prompt o credenziali. La chat mostra una spiegazione tradotta e
+**Continua attività** per l’ultimo errore temporaneo, se provider, modello,
+documenti selezionati e profilo verificato corrispondono ancora. La ripresa è
+richiesta esplicitamente dall’utente: conserva la cronologia, osserva la pagina
+attuale e mantiene la bozza non inviata. Non reinvia automaticamente vecchi click
+o invii. Anche gli errori HTTP già salvati ricevono messaggi leggibili.
+
 OpenAI-compatible e gli endpoint con function calling nativo passano al provider
 il corpo Chat Completions e inoltrano la risposta JSON o SSE. L'endpoint Gemrouter
 LAN importato su questo host ha risposto HTTP 400 con `Tool calling is not

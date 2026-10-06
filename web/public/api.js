@@ -1,4 +1,4 @@
-import { t, locale } from './i18n.js?v=20261006-14';
+import { t, locale } from './i18n.js?v=20261006-15';
 // Same-origin, cookie-based access. The core credential never reaches this client.
 let csrf = '';
 export const setCsrf = value => { csrf = typeof value === 'string' ? value : ''; };

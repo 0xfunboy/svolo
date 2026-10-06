@@ -1,5 +1,12 @@
 // UI-only translations. User messages, names, provider output and page content are never translated here.
 const messages = {
+  "The AI provider is temporarily unavailable. Your task is saved. Try continuing in a moment.": {"en":"The AI provider is temporarily unavailable. Your task is saved. Try continuing in a moment.","it":"Il provider AI è temporaneamente indisponibile. L’attività è salvata. Riprova a continuare tra un momento."},
+  "The AI provider is rate limiting requests. Your task is saved. Try continuing later.": {"en":"The AI provider is rate limiting requests. Your task is saved. Try continuing later.","it":"Il provider AI sta limitando le richieste. L’attività è salvata. Riprova a continuare più tardi."},
+  "The AI provider rejected access. Check its login or API key in Settings.": {"en":"The AI provider rejected access. Check its login or API key in Settings.","it":"Il provider AI ha rifiutato l’accesso. Controlla il login o la chiave API nelle impostazioni."},
+  "The AI provider rejected the request. Check the model settings.": {"en":"The AI provider rejected the request. Check the model settings.","it":"Il provider AI ha rifiutato la richiesta. Controlla le impostazioni del modello."},
+  "Retrying AI provider": {"en":"Retrying AI provider","it":"Nuovo tentativo con il provider AI"},
+  "Continue task": {"en":"Continue task","it":"Continua attività"},
+  "Continue the previous task from the current page. Verify which actions already completed and do not repeat an uncertain submission.": {"en":"Continue the previous task from the current page. Verify which actions already completed and do not repeat an uncertain submission.","it":"Continua l’attività precedente dalla pagina attuale. Verifica quali azioni sono già state completate e non ripetere un invio dall’esito incerto."},
   "Waiting for model": { "en": "Waiting for model", "it": "In attesa del modello" },
   "Browser view delayed. Retrying automatically…": { "en": "Browser view delayed. Retrying automatically…", "it": "Vista del browser in ritardo. Riprovo automaticamente…" },
   "Al lavoro": {

@@ -163,6 +163,14 @@ when the prompt was saved through this endpoint; the core strips
 `history` from the list response. Prompts are persisted for
 `(user_id,run_id)` and encrypted with the user's context.
 
+Provider HTTP failures also include optional
+`providerError:{status,attempts,retryable}`. The error message contains no raw
+upstream response body. Transient HTTP failures receive at most three attempts
+within one completion deadline; authentication, transport and partial-stream
+errors are not automatically retried. `provider.retry` events contain
+`{runId,attempt,maxAttempts,status,delayMs}` and no prompt or tool data. This is
+inference recovery, not a replay of previously executed browser actions.
+
 `GET /api/core/v1/events?session=…&after=…` returns an array of
 `{seq,at,session,type,data}` events. The client keeps the last `seq` received.
 `message.delta` contains `{runId,text}`; `tool.started`/`tool.finished`

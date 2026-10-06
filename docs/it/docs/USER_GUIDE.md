@@ -20,6 +20,13 @@ attende la risposta del provider AI selezionato. Una cattura in ritardo mantiene
 l'ultima immagine valida e riprova automaticamente; non significa che il browser
 sia stato chiuso.
 
+Se il provider AI è temporaneamente indisponibile, Svolo mostra i tentativi di
+recupero. Se falliscono, **Continua attività** sull’ultimo errore riprende con lo
+stesso provider, modello, documenti e profilo. Le azioni precedenti vengono
+verificate sulla pagina attuale; il meccanismo di retry non ripete gli strumenti
+già completati. La bozza non inviata rimane nel compositore. Gli errori di login
+o chiave API richiedono di correggere la connessione nelle impostazioni.
+
 ## Attività dell'agente
 
 Selezionare host, sessione e provider, scrivere un risultato desiderato e mantenere

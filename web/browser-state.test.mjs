@@ -10,6 +10,7 @@ const brand=resolve(fileURLToPath(new URL('../brand/',import.meta.url)));
 
 test('native active tabs, live viewport resize, credential continuation and transient capture recovery',{skip:browserAvailable?false:'Native browser unavailable'},async t=>{
   const mutations=[];
+  const events=[];
   let owner='human',epoch=2,width=1280,height=800,failedViews=0,viewRequests=0,tabsRequests=0,unselected=false;
   const shots=new Map();
   const runs=[{id:'initial',session:'fixture-chat',status:'completed',model:'fixture-model',prompt:'Fill the fixture form.',text:'The password is missing. Please supply one to continue.',steps:2,started:'2026-10-06T00:00:00Z'}];
@@ -32,7 +33,7 @@ test('native active tabs, live viewport resize, credential continuation and tran
           if(req.method==='POST'){
             assert.equal(payload.continue,true);
             owner='agent';epoch++;
-            const run={id:'followup',session:'fixture-chat',status:'running',model:'fixture-model',prompt:payload.prompt,steps:1,started:'2026-10-06T00:01:00Z'};runs.push(run);json(run);
+            const run={id:'followup-'+runs.length,session:'fixture-chat',provider:'fixture',status:'running',model:'fixture-model',prompt:payload.prompt,steps:1,started:new Date(Date.parse('2026-10-06T00:00:00Z')+runs.length*60000).toISOString()};runs.push(run);events.push({seq:events.length+1,type:'run.started',data:{id:run.id}});json(run);
           }else json(runs);
           break;
         case '/api/core/v1/control':
@@ -46,7 +47,8 @@ test('native active tabs, live viewport resize, credential continuation and tran
           viewRequests++;
           if(failedViews>0){failedViews--;json({error:'Temporary fixture capture failure'},503);break;}
           json({tab:url.searchParams.get('tab'),mimeType:'image/png',data:shots.get(`${width}x${height}`),viewport:{width,height}});break;
-        case '/api/core/v1/events':case '/api/core/v1/approvals':json([]);break;
+        case '/api/core/v1/events':json(events.filter(e=>e.seq>Number(url.searchParams.get('after')||0)));break;
+        case '/api/core/v1/approvals':json([]);break;
         default:json({error:'Unknown fixture route'},404);
       }
       return true;
@@ -101,4 +103,25 @@ test('native active tabs, live viewport resize, credential continuation and tran
   unselected=true;await wait('document.querySelectorAll("[data-tab]").length===1 && !document.querySelector(".tab-agent-badge")');
   assert.equal(await evaluate('document.querySelector("[data-tab=form]").getAttribute("aria-pressed")'),'true','The only owned page stays observable before an agent selects its target');
   assert.equal(await evaluate('document.querySelector("#browser-frame").hidden'),false);
+  const failed={id:'outage',session:'fixture-chat',provider:'fixture',model:'fixture-model',status:'failed',steps:2,prompt:'Continue the fixture task',error:'provider HTTP 503: {"error":{"message":"sensitive-upstream-fixture-body","type":"provider_error"}}',started:'2026-10-06T00:03:00Z'};
+  runs.push(failed);await wait('!!document.querySelector("[data-resume-run=outage]")');
+  assert.match(await evaluate('document.querySelector("#messages").textContent'),/temporarily unavailable/);
+  assert.doesNotMatch(await evaluate('document.querySelector("#messages").textContent'),/sensitive-upstream-fixture-body|provider HTTP 503/);
+  await click('[data-action=toggle-language]');await wait('document.documentElement.lang==="it" && !!document.querySelector("[data-resume-run=outage]")');
+  assert.match(await evaluate('document.querySelector("#messages").textContent'),/temporaneamente indisponibile/);
+  assert.equal(await evaluate('document.querySelector("[data-resume-run=outage]").textContent.trim()'),'Continua attività');
+  await click('[data-action=toggle-language]');await wait('document.documentElement.lang==="en" && !!document.querySelector("[data-resume-run=outage]")');
+  const postsBefore=mutations.filter(m=>m.path==='/api/core/v1/runs').length;
+  await evaluate('document.querySelector("#prompt").value="Preserve this unsent draft"');await click('[data-resume-run=outage]');
+  await wait('document.querySelector("#agent-status").textContent==="Waiting for model"');
+  assert.equal(mutations.filter(m=>m.path==='/api/core/v1/runs').length,postsBefore+1);
+  assert.equal(mutations.at(-1).payload.continue,true);
+  assert.match(mutations.at(-1).payload.prompt,/current page.*do not repeat an uncertain submission/);
+  assert.equal(await evaluate('document.querySelector("#prompt").value'),'Preserve this unsent draft');
+  events.push({seq:events.length+1,type:'provider.retry',data:{runId:runs.at(-1).id,attempt:2,maxAttempts:3,status:503,delayMs:1000}});
+  await wait('document.querySelector("#agent-status").textContent==="Retrying AI provider · 2/3"');
+  assert.equal(await evaluate('document.querySelectorAll("[data-resume-run]").length'),0,'No duplicate resume while a task is running');
+  runs.at(-1).status='completed';runs.at(-1).text='Recovered after transient outage';owner='human';epoch++;
+  await wait('document.querySelector("#messages").textContent.includes("Recovered after transient outage")');
+  assert.equal(await evaluate('document.querySelector("#agent-status").textContent'),'Ready when you are');
 });

@@ -146,6 +146,15 @@ dall’insieme ammesso al runner.
 
 ### Chat ed eventi
 
+Gli errori HTTP del provider includono, quando disponibile,
+`providerError:{status,attempts,retryable}`. Il messaggio non contiene il corpo
+della risposta upstream. Gli errori HTTP temporanei ricevono al massimo tre
+tentativi entro il limite della singola richiesta. Errori di autenticazione,
+trasporto o stream parziali non vengono riprovati automaticamente. Gli eventi
+`provider.retry` contengono `{runId,attempt,maxAttempts,status,delayMs}`, senza
+prompt o valori degli strumenti. Il recupero riguarda l’inferenza e non ripete
+azioni già eseguite nel browser.
+
 `POST /api/core/v1/runs` accetta `{session,provider?,prompt,maxSteps?,autonomy?,continue?,allowedTools?,toolScope?}`.
 Il gateway applica il provider preferito se omesso, autonomia `ask` oppure
 `browser`, da 1 a 50 passaggi, continuazione predefinita e strumenti della

@@ -67,6 +67,24 @@ New users configure their own Gemini API key or perform the Codex device login f
 
 ## Execution and limits
 
+The core retries explicit HTTP 429, 500, 502, 503 and 504 responses at most twice
+(three requests total), retaining the same model, history and tool results.
+Default waits are one and two seconds. `Retry-After` seconds or HTTP dates are
+honored when the wait fits within 30 seconds; a longer requested wait ends the
+run rather than retry early. A completion has a total 180-second deadline.
+Stop cancels both requests and backoff. Transport failures, authentication errors,
+partial streams and previously completed tools are not automatically replayed.
+Retries do not consume extra agent steps or change the selected provider.
+
+`provider.retry` events carry only run ID, attempt, maximum attempts, HTTP status
+and wait duration. Exhausted HTTP failures persist a sanitized `providerError`
+object, never the upstream error body, which could echo credentials or prompts.
+The web chat shows a translated explanation and **Continue task** for the latest
+transient failure when provider, model, selected documents and reviewed profile
+still match. Continuing is an explicit user action: it retains history, observes
+the current page and preserves an unsent draft. It does not resend an old click
+or submission automatically. Old stored HTTP errors also receive friendly labels.
+
 OpenAI-compatible and endpoints with native function calling pass the Chat Completions body to the provider and forward the JSON or SSE response. The LAN Gemrouter endpoint imported on this host responded with HTTP 400 with `Tool calling is not supported on this router surface` when receiving the native catalog; a minimal chat request to the same model returns `SVOLO_OK`. Its persistent configuration therefore uses `toolCalling: 'text'`, which is also exposed in the public configuration: **tools use a textual protocol, not native function calling**.
 
 This bridge transmits the catalog as JSON instructions in the system message and requires a complete `{"svolo_tool_calls":[{"name":"…","arguments":{}}]}` object or a final textual response. It does not send the native fields `tools`, `tool_choice`, and `parallel_tool_calls` to this router. Previous calls are represented in the protocol; tool results are marked as untrusted data. The parser converts only a complete JSON envelope, checks names present in the catalog, object arguments, types, properties, required fields, and numeric/length limits of the schema and generates new IDs. The adapter validates this JSON Schema subset and rejects calls with constraints it cannot validate (e.g., `$ref`, `pattern`, `not`); native adapters do not have this bridge restriction. A separate JSON visitation limits depth and rejects prototype keys even in nested free properties. JSON inside a quotation or larger text is not executed. Validated requests return to the normal core authorization and execution path. The model may not respect this protocol and page/tool results may contain prompt injections: structural validation does not replace core authorizations. The live browser test must therefore verify this capability of the model separately. On this host, on 2026-10-05, the actual test via gateway and Go core completed in two steps: `gemini-3.8-flash` requested the browser status and reported `Example Domain` / `https://example.com/` from the received data. The result is in `svolo-installation/web-gemrouter-agent-browser-live.json`. This verifies the tool/result/response path for that test; it does not qualify all browser operations or all models of the router.

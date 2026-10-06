@@ -1,8 +1,8 @@
-import {taskControls,taskSettings} from './tasks-ui.js?v=20261006-14';
-import { t, language, locale } from './i18n.js?v=20261006-14';
-import { escapeHtml as e, array, quotaText } from './api.js?v=20261006-14';
-import { icon } from './icons.js?v=20261006-14';
-import { VIEWPORT_PRESETS } from './viewports.js?v=20261006-14';
+import {taskControls,taskSettings} from './tasks-ui.js?v=20261006-15';
+import { t, language, locale } from './i18n.js?v=20261006-15';
+import { escapeHtml as e, array, quotaText } from './api.js?v=20261006-15';
+import { icon } from './icons.js?v=20261006-15';
+import { VIEWPORT_PRESETS } from './viewports.js?v=20261006-15';
 export const languageToggle = () => {
   const current = language(), label = t(current === 'en' ? 'Switch to Italian' : 'Switch to English');
   return `<button type="button" class="language-control" data-language="${current}" data-action="toggle-language" aria-label="${e(label)}" title="${e(label)}">${current.toUpperCase()}</button>`;

@@ -40,20 +40,21 @@ type RunRequest struct {
 	TaskOrigins   []string `json:"taskOrigins,omitempty"`
 }
 type Run struct {
-	ID       string     `json:"id"`
-	Session  string     `json:"session"`
-	Provider string     `json:"provider"`
-	Model    string     `json:"model"`
-	Kind     string     `json:"kind"`
-	Status   string     `json:"status"`
-	Started  time.Time  `json:"started"`
-	Finished *time.Time `json:"finished,omitempty"`
-	Steps    int        `json:"steps"`
-	Text     string     `json:"text,omitempty"`
-	Error    string     `json:"error,omitempty"`
-	History  []Turn     `json:"history,omitempty"`
-	cancel   context.CancelFunc
-	stopDone chan struct{}
+	ID            string             `json:"id"`
+	Session       string             `json:"session"`
+	Provider      string             `json:"provider"`
+	Model         string             `json:"model"`
+	Kind          string             `json:"kind"`
+	Status        string             `json:"status"`
+	Started       time.Time          `json:"started"`
+	Finished      *time.Time         `json:"finished,omitempty"`
+	Steps         int                `json:"steps"`
+	Text          string             `json:"text,omitempty"`
+	Error         string             `json:"error,omitempty"`
+	ProviderError *ProviderHTTPError `json:"providerError,omitempty"`
+	History       []Turn             `json:"history,omitempty"`
+	cancel        context.CancelFunc
+	stopDone      chan struct{}
 }
 type Approval struct {
 	ID        string         `json:"id"`
@@ -208,6 +209,9 @@ func (m *Manager) emit(sid, kind string, data any) error {
 }
 func (m *Manager) loop(ctx context.Context, r *Run, req RunRequest, p Provider) {
 	var runErr error
+	p.onRetry = func(retry ProviderRetry) {
+		_ = m.emit(r.Session, "provider.retry", map[string]any{"runId": r.ID, "attempt": retry.Attempt, "maxAttempts": retry.MaxAttempts, "status": retry.Status, "delayMs": retry.DelayMS})
+	}
 	finalStatus := "completed"
 	defer func() {
 		if runErr == nil && ctx.Err() != nil {
@@ -224,6 +228,10 @@ func (m *Manager) loop(ctx context.Context, r *Run, req RunRequest, p Provider) 
 		r.Status = finalStatus
 		if runErr != nil {
 			r.Error = runErr.Error()
+			var providerError *ProviderHTTPError
+			if errors.As(runErr, &providerError) {
+				r.ProviderError = providerError
+			}
 		}
 		now := time.Now().UTC()
 		r.Finished = &now

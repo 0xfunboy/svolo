@@ -1,10 +1,10 @@
-import {loadTasks,loadTaskChat,bindTaskUI,learningCards} from './tasks-ui.js?v=20261006-14';
-import { t, language, setLanguage, locale } from './i18n.js?v=20261006-14';
-import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-14';
-import { icon } from './icons.js?v=20261006-14';
-import * as view from './views.js?v=20261006-14';
-import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-14';
-import { renderMarkdown } from './markdown.js?v=20261006-14';
+import {loadTasks,loadTaskChat,bindTaskUI,learningCards} from './tasks-ui.js?v=20261006-15';
+import { t, language, setLanguage, locale } from './i18n.js?v=20261006-15';
+import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-15';
+import { icon } from './icons.js?v=20261006-15';
+import * as view from './views.js?v=20261006-15';
+import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-15';
+import { renderMarkdown } from './markdown.js?v=20261006-15';
 
 const app = document.getElementById('app');
 const modal = document.getElementById('modal');
@@ -32,8 +32,19 @@ function runErrorText(run) {
   if(['cancelled','stopped','interrupted'].includes(run.status)||/context cancel(?:ed|led)/i.test(text))return t("Attività interrotta. Puoi intervenire nel browser e poi chiedere di continuare.");
   if(/step budget exhausted/i.test(text))return t("L’agente ha raggiunto il limite di passaggi. Puoi chiedergli di continuare dal punto raggiunto.");
   if(/context deadline exceeded/i.test(text))return t("Il provider non ha risposto in tempo. Riprova o scegli un altro modello.");
+  const status=providerErrorStatus(run);
+  if(status===429)return t("The AI provider is rate limiting requests. Your task is saved. Try continuing later.");
+  if([500,502,503,504].includes(status))return t("The AI provider is temporarily unavailable. Your task is saved. Try continuing in a moment.");
+  if([401,403].includes(status))return t("The AI provider rejected access. Check its login or API key in Settings.");
+  if(status===400)return t("The AI provider rejected the request. Check the model settings.");
   const cleaned=text.replace(/(?:Post|Get) "https?:\/\/127\.0\.0\.1:\d+\/internal\/provider\/[^"\s]+"\s*:?\s*/g,'').trim();
   return cleaned.length>600?cleaned.slice(0,600)+'…':cleaned;
+}
+function providerErrorStatus(run) { return Number(run.providerError?.status)||Number(/provider HTTP (\d{3})\b/i.exec(String(run.error||''))?.[1])||0; }
+function canResume(run) {
+  if(run?.status!=='failed'||![429,500,502,503,504].includes(providerErrorStatus(run))||run.id!==state.runs.at(-1)?.id||run.provider!==state.provider||run.model!==state.model||state.busy||state.uploading||state.runs.some(r=>['running','waiting_approval'].includes(r.status)))return false;
+  const profile=state.taskProfiles.find(p=>p.id===state.taskProfile);
+  return (run.taskProfileId||'')===(state.taskProfile||'')&&(run.taskRevision||0)===(profile?.revision||0)&&JSON.stringify(array(run.attachments).map(a=>a.id).sort())===JSON.stringify([...(state.selectedDocuments.get(state.session)||[])].sort());
 }
 
 function tell(message, bad = false) {
@@ -245,7 +256,7 @@ function bindChat() {
   bind('#prompt-form','submit',sendPrompt);
   bind('#prompt','keydown',ev=>{if(ev.key==='Enter'&&!ev.shiftKey&&!ev.isComposing){ev.preventDefault();$('#prompt-form').requestSubmit();}});
   bind('#model-select','change',ev=>chooseModel(JSON.parse(ev.target.value)));
-  bind('#messages','click',ev=>{const button=ev.target.closest('[data-prompt]');if(button){$('#prompt').value=button.dataset.prompt;$('#prompt').focus();}});
+  bind('#messages','click',async ev=>{const resume=ev.target.closest('[data-resume-run]');if(resume){const run=state.runs.find(r=>r.id===resume.dataset.resumeRun);if(!canResume(run))return;resume.disabled=true;try{await sendPrompt(undefined,t("Continue the previous task from the current page. Verify which actions already completed and do not repeat an uncertain submission."));}finally{if(resume.isConnected)resume.disabled=false;}return;}const button=ev.target.closest('[data-prompt]');if(button){$('#prompt').value=button.dataset.prompt;$('#prompt').focus();}});
   bind('#control-button','click',async()=>{
     if(state.controlBusy)return;
     const sid=requireSession(),stamp=generation;state.controlBusy=true;renderControl();
@@ -290,13 +301,13 @@ async function chooseModel([provider,model]) {
   if(state.page.startsWith('settings'))await renderSettings('providers',generation);
   tell(`${p.name||p.id} · ${model} ${e(t("selezionato."))}`);
 }
-async function sendPrompt(ev) {
-  ev.preventDefault();if(state.busy||state.uploading)return;
-  const prompt=$('#prompt').value.trim();if(!prompt)return;
+async function sendPrompt(ev,override) {
+  ev?.preventDefault();if(state.busy||state.uploading||state.runs.some(r=>['running','waiting_approval'].includes(r.status)))return;
+  const prompt=override??$('#prompt').value.trim();if(!prompt)return;
   const provider=state.providers.find(p=>p.id===state.provider&&p.configured);if(!provider)throw new Error(t("Collega un provider nelle impostazioni per avviare l’agente."));
   requireSession();state.busy=true;$('#send-button').disabled=true;
-  try {const run=await mutations('/v1/runs',{session:state.session,provider:state.provider,prompt,attachments:[...(state.selectedDocuments.get(state.session)||[])],autonomy:'ask',maxSteps:20,continue:true});state.submitted.set(run.id,prompt);state.liveText.set(run.id,'');$('#prompt').value='';drafts.delete(state.session);await poll();}
-  finally{state.busy=false;if($('#send-button'))$('#send-button').disabled=false;}
+  try {const run=await mutations('/v1/runs',{session:state.session,provider:state.provider,prompt,attachments:[...(state.selectedDocuments.get(state.session)||[])],autonomy:'ask',maxSteps:20,continue:true});state.submitted.set(run.id,prompt);state.liveText.set(run.id,'');if(override===undefined){$('#prompt').value='';drafts.delete(state.session);}await poll();}
+  finally{state.busy=false;if($('#send-button'))$('#send-button').disabled=state.runs.some(r=>['running','waiting_approval'].includes(r.status));}
 }
 async function poll() {
   if(polling || state.page!=='workspace' || !state.session || !state.user)return;
@@ -310,7 +321,9 @@ async function poll() {
       state.after=Math.max(state.after,Number(event.seq)||0);
       if(event.type==='message.delta' && event.data?.runId)state.liveText.set(event.data.runId,(state.liveText.get(event.data.runId)||'')+(event.data.text||''));
       if(event.type==='tool.started' && event.data?.runId){const text=state.liveText.get(event.data.runId);if(text&&!text.endsWith('\n\n'))state.liveText.set(event.data.runId,text+'\n\n');}
-      if(event.type==='run.started')state.activity=null;
+      if(event.type==='run.started'){state.activity=null;state.providerRetry=null;}
+      if(event.type==='provider.retry'&&event.data?.runId)state.providerRetry=event.data;
+      if(['tool.started','message.delta'].includes(event.type)&&state.providerRetry?.runId===event.data?.runId)state.providerRetry=null;
       if(event.type==='tool.started'&&event.data?.runId&&event.data?.callId)state.activity={runId:event.data.runId,callId:event.data.callId,name:event.data.name,tab:event.data.tab||'',status:'running'};
       if(event.type==='tool.finished'&&state.activity?.runId===event.data?.runId&&state.activity?.callId===event.data?.callId)state.activity={...state.activity,status:event.data.ok?'completed':'failed'};
     }
@@ -337,12 +350,13 @@ function renderConversation() {
   const markup=state.runs.slice(-50).map(run=>{
     const prompt=run.prompt||state.submitted.get(run.id)||[...array(run.history)].reverse().find(t=>t.role==='user')?.text||'';
     const active=['running','waiting_approval'].includes(run.status), text=active?(state.liveText.get(run.id)||run.text||''):(run.text||state.liveText.get(run.id)||'');
+    const retry=run.status==='running'&&state.providerRetry?.runId===run.id?`${t("Retrying AI provider")} · ${state.providerRetry.attempt}/${state.providerRetry.maxAttempts}`:'';
     const started=new Date(run.started), time=Number.isNaN(started.getTime())?'':new Intl.DateTimeFormat(locale(),{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Rome'}).format(started),failureText=runErrorText(run);
-    return `${prompt?`<article class="message user"><div class="message-head"><span class="avatar">${e(state.user.username.slice(0,2).toUpperCase())}</span>${e(t("Tu"))}<time>${e(time)}</time></div><pre class="message-body">${e(prompt)}</pre></article>`:''}<article class="message assistant"><div class="message-head"><img src="/brand/mark.svg" alt="" width="26" height="26">Svolo<span class="muted" style="font-size:9px;font-weight:400">${e(run.model||run.provider)}</span></div>${text?`<div class="message-body markdown-body">${messageMarkdown(run.id,text)}</div>`:''}<div class="run-state ${active?'live':''} ${run.error?'error':''}">${e(t(failureText||statusLabels[run.status]||run.status))}${!run.error&&run.steps?` · ${e(run.steps)} ${run.steps===1?t("passaggio"):t("passaggi")}`:''}</div></article>`;
+    return `${prompt?`<article class="message user"><div class="message-head"><span class="avatar">${e(state.user.username.slice(0,2).toUpperCase())}</span>${e(t("Tu"))}<time>${e(time)}</time></div><pre class="message-body">${e(prompt)}</pre></article>`:''}<article class="message assistant"><div class="message-head"><img src="/brand/mark.svg" alt="" width="26" height="26">Svolo<span class="muted" style="font-size:9px;font-weight:400">${e(run.model||run.provider)}</span></div>${text?`<div class="message-body markdown-body">${messageMarkdown(run.id,text)}</div>`:''}<div class="run-state ${active?'live':''} ${run.error?'error':''}">${e(retry||t(failureText||statusLabels[run.status]||run.status))}${!retry&&!run.error&&run.steps?` · ${e(run.steps)} ${run.steps===1?t("passaggio"):t("passaggi")}`:''}</div>${canResume(run)?`<button type="button" class="btn secondary" data-resume-run="${e(run.id)}">${e(t("Continue task"))} ${icon('arrow',13)}</button>`:''}</article>`;
   }).join('');
   if(area.dataset.markup!==markup){area.innerHTML=markup;area.dataset.markup=markup;if(nearEnd)scroll.scrollTop=scroll.scrollHeight;}
   const running=state.runs.findLast(r=>['running','waiting_approval'].includes(r.status));
-  $('#agent-status').textContent=running?(running.status==='running'?(state.activity?.runId===running.id&&state.activity.status==='running'?(t(activityLabels[state.activity.name])||t("Uso di uno strumento")):t("Waiting for model")):(t(statusLabels[running.status])||t("Al lavoro"))):t("Pronto quando vuoi");$('#agent-status').classList.toggle('active',!!running);
+  $('#agent-status').textContent=running?(running.status==='running'?(state.providerRetry?.runId===running.id?`${t("Retrying AI provider")} · ${state.providerRetry.attempt}/${state.providerRetry.maxAttempts}`:state.activity?.runId===running.id&&state.activity.status==='running'?(t(activityLabels[state.activity.name])||t("Uso di uno strumento")):t("Waiting for model")):(t(statusLabels[running.status])||t("Al lavoro"))):t("Pronto quando vuoi");$('#agent-status').classList.toggle('active',!!running);
   $('#send-button').disabled=state.busy||!!running;
 }
 function renderApprovals() {

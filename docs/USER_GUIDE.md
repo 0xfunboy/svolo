@@ -19,6 +19,13 @@ clicking on the page. **Waiting for model** means the browser is waiting for the
 selected AI provider's next response. A delayed capture retains the last valid
 image and retries automatically; it does not imply that the browser has closed.
 
+When the AI provider is temporarily unavailable, Svolo shows its retry progress.
+If those attempts fail, use **Continue task** on the latest failure to resume with
+the same provider, model, documents and task profile. Existing actions are checked
+against the current page; completed tools are not repeated by the retry mechanism.
+Your unsent draft remains in the composer. Login or API-key errors require fixing
+the provider connection in Settings.
+
 ## Agent Activity
 
 Select host, session, and provider, write a desired outcome, and initially keep
