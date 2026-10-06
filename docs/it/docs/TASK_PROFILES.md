@@ -5,41 +5,54 @@ procedure revisionate per singolo account, anche cambiando modello o riavviando
 l'applicazione. È memoria operativa, non addestramento del modello. Questo flusso
 non è ancora esposto nel client desktop.
 
-## Primo contratto TIM
+## Crea un profilo per la tua attività
 
-1. In **Impostazioni → Profili di compito**, crea il profilo iniziale per i contratti
-   TIM. Per altre operazioni ripetitive crea un profilo personalizzato.
-2. Modifica la procedura e aggiungi l'origine HTTPS esatta del portale autorizzato,
-   per esempio `https://dealer.example`, senza percorso, parametri o credenziali.
-   Aggiungi gli altri siti necessari al flusso osservato. Con l'elenco vuoto l'agente
-   può leggere i documenti ma non compiere azioni nel browser per quel compito.
-3. Seleziona il profilo sopra il messaggio della chat. Accedi personalmente al
-   portale nel browser condiviso e gestisci OTP o CAPTCHA.
-4. Allega preventivo, contratto firmato e documenti del cliente. Spunta soltanto i
-   file della pratica corrente. Il tasto con l'occhio mostra il testo estratto;
-   verifica i dati importanti sull'originale, scaricabile dalla stessa finestra.
-5. Durante il primo caso verifica con l'assistente etichette, tipi di documento,
-   codici offerta, validazioni e ricevuta del portale. Le istruzioni richiedono
-   dati forniti, nessun consenso o firma inventati e approvazione prima dell'invio
-   definitivo. Gli upload richiedono sempre approvazione esplicita nel core, con
-   destinazione indicata, anche in autonomia browser.
-6. Chiedi di ricordare i passi verificati oppure premi il tasto di apprendimento
-   nella testata della chat. Rivedi la proposta, elimina informazioni personali,
-   modifica la procedura se necessario e salvala esplicitamente.
+Ogni account inizia senza profili. Non esistono attività aziendali predefinite o
+profili assegnati automaticamente. Ogni utente può creare fino a 1.000 profili
+privati per le proprie esigenze, indipendenti dal modello selezionato.
 
-Per il cliente successivo apri una nuova chat, seleziona lo stesso profilo e carica
-i nuovi documenti. Il cambio di profilo, versione o selezione degli allegati crea
-un nuovo contesto del modello al prossimo avvio, conservando la cronologia visibile.
-Una nuova serie di upload sostituisce la selezione precedente; dopo un ricaricamento
-gli allegati devono essere nuovamente selezionati.
+1. Apri **Impostazioni → Profili attività → Nuovo profilo attività**. Scegli nome,
+   obiettivo e istruzioni: regole del flusso, controlli richiesti e risultato atteso.
+   Le **Conoscenze verificate** possono iniziare vuote e raccolgono i passaggi
+   osservati nelle esecuzioni e approvati dall'utente.
+2. Per azioni nel browser aggiungi i siti HTTPS esatti autorizzati, per esempio
+   `https://portal.example`, senza percorsi, parametri o credenziali. Lascia vuoto
+   per attività sui documenti. Accedi personalmente ai siti e gestisci OTP o CAPTCHA.
+   Il login del browser è separato dalla memoria. Rivedi tutti i campi e salva.
+3. Seleziona il profilo sopra il messaggio della chat. Creare, duplicare o modificare
+   un profilo non lo assegna automaticamente. Ogni esecuzione usa solo obiettivo,
+   istruzioni e conoscenze del profilo selezionato.
+4. Se necessario allega i documenti del caso corrente, spunta i file da usare e
+   verifica il testo estratto e i dati incerti sull'originale. Chiedi all'assistente
+   di svolgere l'attività e verifica i risultati osservati insieme a lui.
+5. Correggi l'assistente durante il primo caso. Le modifiche esterne sensibili
+   richiedono approvazione. Gli upload richiedono sempre approvazione esplicita
+   nel core, con destinazione indicata, anche in autonomia browser.
+6. Chiedi di ricordare i passi verificati o premi **Apprendi attività** nella chat.
+   Rivedi la proposta completa, elimina dati personali e salva. Cambiano soltanto
+   le conoscenze di questo profilo: obiettivo, istruzioni, altri profili e altri
+   account restano separati.
+
+Per il caso successivo apri una nuova chat e seleziona il profilo appropriato.
+Il cambio di profilo, versione o selezione degli allegati crea un nuovo contesto
+al prossimo avvio, conservando la cronologia visibile. Una nuova serie di upload
+sostituisce la selezione precedente; dopo un ricaricamento riseleziona i file.
+
+Cerca i profili per nome, obiettivo o istruzioni. **Duplica profilo** apre una copia
+modificabile da rivedere e salvare, con ID indipendente e revisione 1. L'apprendimento
+della copia non modifica l'originale e viceversa.
 
 ## Memoria e revisioni
 
 Conserva percorsi dei menu, corrispondenze fra campi, tipi di allegato, regole di
 validazione ed eccezioni verificate. L'agente propone: non può approvare da solo.
 Ogni salvataggio revisionato crea una versione; sono disponibili le ultime 20.
-Ripristinare una versione richiede revisione e crea una nuova versione. Modifiche
-concorrenti o proposte basate su versioni superate vengono respinte.
+Ripristinare una versione richiede revisione e crea una nuova versione. Il ripristino
+comprende anche obiettivo, istruzioni e siti autorizzati. Obiettivo:
+2.000 caratteri; istruzioni: 10.000; conoscenze: 40.000. Le revisioni precedenti
+senza i nuovi campi espongono obiettivo e istruzioni vuoti fino alla modifica
+dell’utente. Modifiche concorrenti o proposte basate su versioni superate vengono
+respinte.
 
 Non inserire nella procedura nomi, indirizzi, documenti, valori di consenso,
 password, cookie o token. I controlli riconoscono diversi codici fiscali, IBAN,
@@ -79,8 +92,7 @@ scadere un allegato non cancella il testo già nella conversazione o presso il
 fornitore. Eliminare la chat rimuove cronologia e relativi allegati locali. Proteggi
 i backup completi e conserva separatamente la chiave principale.
 
-Il profilo TIM iniziale deve imparare il vostro portale con il primo caso assistito:
-non costituisce un'integrazione già verificata. I requisiti di qualificazione della
-release restano invariati. Vedi [sicurezza web](WEB_SECURITY.md),
+Ogni flusso specifico deve essere verificato durante un primo caso assistito.
+I requisiti di qualificazione della release restano invariati. Vedi [sicurezza web](WEB_SECURITY.md),
 [API aggiornate in inglese](../../WEB_API.md) e
 [guida completa in inglese](../../TASK_PROFILES.md).

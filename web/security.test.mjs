@@ -572,7 +572,7 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
 
   await t.test('attachments and reviewed task learning are tenant-bound across HTTP and internal MCP',async()=>{
     const chat=(await api('/api/sessions',{auth:alice,method:'POST',input:{name:'Document fixture'}})).data.id;
-    const created=await api('/api/task-profiles',{auth:alice,method:'POST',input:{name:'Fixture workflow',template:'tim',uploadOrigins:['https://portal.example']}});assert.equal(created.status,201);const profile=created.data;
+    const created=await api('/api/task-profiles',{auth:alice,method:'POST',input:{name:'Fixture workflow',goal:'Complete the requested workflow',instructions:'Use only supplied values.',knowledge:'Verify the current form.',reviewed:true,uploadOrigins:['https://portal.example']}});assert.equal(created.status,201);const profile=created.data;
     assert.equal((await api('/api/task-profiles?id='+profile.id,{auth:bob,method:'PATCH',input:{...profile,reviewed:true}})).status,404);
     assert.equal((await api('/api/task-selection?session='+chat,{auth:alice,method:'POST',input:{profileId:profile.id}})).status,200);
     assert.equal((await api('/api/attachments?session='+chat+'&name=fixture.txt',{auth:alice,method:'POST',raw:Buffer.from('PRIVATE_DOCUMENT_FIXTURE')})).status,201);

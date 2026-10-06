@@ -60,8 +60,9 @@ distributed backgrounds are variations of the approved Svolo landscape, without 
 
 Attach JPG, PNG, PDF, UTF-8 TXT or CSV above the chat composer. Check only the
 current case's files; preview extracted text and verify important OCR values.
-In **Settings → Task profiles**, create a task or the TIM contract starter, configure
-authorized portal origins and review its reusable procedure. Select it in chat.
-The agent proposes learning for review; saving creates a version recalled in future
-chats. See [documents and task profiles](TASK_PROFILES.md) for the supervised first
+In **Settings → Task profiles**, create your own profile with a goal, instructions
+and optionally verified knowledge. Add authorized sites if browser actions are
+needed. Search or duplicate profiles to manage different tasks, then select the
+appropriate profile in chat. The agent proposes learning for review; saving updates
+only that profile’s knowledge and preserves its goal and instructions. See [documents and task profiles](TASK_PROFILES.md) for the supervised first
 case, retention and privacy boundaries.

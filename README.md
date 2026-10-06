@@ -64,9 +64,9 @@ The service in `web/` provides HTTPS access with login, chat, integrated browser
 The gateway requires Node.js with `node:sqlite`, Chromium, Bubblewrap, and a compiled Go core. It listens on loopback and is exposed via an HTTPS proxy/tunnel: follow [web setup and verification](docs/WEB_DEPLOYMENT.md), [web API](docs/WEB_API.md), and [web security](docs/WEB_SECURITY.md). The Linux service is distinct from the desktop distribution and remains in development, with `productionQualified:false`; external providers require live checks of individual protocols and unavailable quotas are indicated as such.
 
 Attach JPG, PNG, PDF, TXT and CSV documents in chat. Select a reusable task profile
-to recall reviewed procedures, field mappings and exceptions. The TIM starter
-supports a first supervised contract-entry case; learning proposals require review
-before becoming a new private revision. See [documents and task profiles](docs/TASK_PROFILES.md).
+to recall your goal, instructions and verified knowledge. Every account can create,
+search, duplicate and version its own profiles for different tasks. Learning
+proposals require review and update only the selected profile’s knowledge. See [documents and task profiles](docs/TASK_PROFILES.md).
 
 ## Documentation
 

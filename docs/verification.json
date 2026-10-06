@@ -631,7 +631,7 @@
         "browser-aged-runtime-final.log",
         "browser-aged-runtime-B.png"
       ],
-      "scope": "After deployment, three background B captures after 6.5 seconds idle each returned through the actual gateway in 13\u201314 ms. Control owner/epoch and selected A preserved. Image visually checked as B. Separate from the live model/frontend run."
+      "scope": "After deployment, three background B captures after 6.5 seconds idle each returned through the actual gateway in 13–14 ms. Control owner/epoch and selected A preserved. Image visually checked as B. Separate from the live model/frontend run."
     },
     {
       "name": "web-final-viewer-after-background-fix",
@@ -857,70 +857,148 @@
     "scope": "Initial completed web-deployment verification before the 6 October 2026 Europe/Rome dark theme, tab observation and form-assistance update."
   },
   "latestUpdate": {
-    "name": "document-attachments-and-reviewed-task-profiles",
-    "recordedAt": "2026-10-06T09:41:16.629584+00:00",
-    "assetVersion": "20261006-11",
+    "name": "user-defined-task-profile-infrastructure",
+    "recordedAt": "2026-10-06T10:25:07.287798+00:00",
+    "assetVersion": "20261006-13",
+    "profiles": {
+      "fields": [
+        "name",
+        "goal",
+        "instructions",
+        "knowledge",
+        "uploadOrigins"
+      ],
+      "maxPerUser": 1000,
+      "noBuiltInBusinessTasks": true,
+      "noAutomaticSelection": true,
+      "searchAndReviewedDuplication": true,
+      "learningChangesOnlyBoundProfileKnowledge": true,
+      "ownerBoundEncryptedStorage": true
+    },
     "webTests": {
-      "passed": 73,
+      "passed": 75,
       "failed": 0,
       "skipped": 0,
-      "unitAndMock": 62,
+      "unitAndMock": 64,
       "nativeBrowserAndOCR": 11,
-      "evidence": "tasks-web-final.log"
+      "evidence": "generic-profiles-web.log"
     },
     "core": {
-      "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled actual Chromium browser/server tests. Cached unit-package results identified in tasks-core-final.log",
-      "vet": "pass: tasks-core-vet.log",
-      "build": "Native Linux/amd64 core, tasks-svolo-core; no new cross-platform qualification",
-      "guardTests": "Mandatory upload approval, selected-file and destination guards, changed destination after approval"
+      "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled native Chromium checks. Unmodified package results may be cached. Evidence: generic-profiles-core.log",
+      "vet": "pass",
+      "build": "Native Linux/amd64 core: generic-profiles-core"
     },
     "nativeMCP": {
-      "core": "Actual sandboxed Go executable with automatically discovered internal MCP",
+      "core": "Actual sandboxed Go executable, automatically discovered internal MCP",
       "provider": "Simulated completion provider; no external inference",
       "selectedDocumentRead": true,
       "proposalRequiresReview": true,
       "reviewCreatesRevision": 2,
-      "evidence": "tasks-native-smoke.log"
+      "evidence": "generic-profiles-native-mcp.log"
     },
-    "nativeDocumentReading": {
-      "fixtures": "Generated JPG, PNG, text PDF, scanned PDF and mixed text/raster PDF; no customer records",
-      "decoders": "Actual isolated Tesseract eng/ita and Poppler",
-      "evidence": "tasks-final-targeted.log"
+    "deployment": {
+      "realSystemdGateway": true,
+      "multipleCustomProfiles": true,
+      "fieldsRoundTrip": true,
+      "profileSelectionSwitches": true,
+      "temporaryFixturesRemoved": true,
+      "unsolicitedUnmodifiedExampleRemoved": true,
+      "existingChatsPreserved": 1,
+      "existingRunsPreserved": 3,
+      "providerCredentialsUnchanged": true,
+      "externalModelCalls": 0,
+      "evidence": [
+        "generic-profile-cleanup.json",
+        "generic-profiles-deployed-check.json"
+      ]
     },
-    "frontend": "Real browser against simulated HTTP API: attachments, safe extracted-text preview, task selection/edit, reviewed learning, version history, languages, drafts and responsive layouts",
+    "publicFrontend": {
+      "actualPublicHTTPSFrontend": true,
+      "noAutomaticallySelectedProfile": true,
+      "customProfileFields": true,
+      "searchAvailable": true,
+      "mobileNoHorizontalOverflow": true,
+      "routesPassed": 4,
+      "assetsExactlyMatchSource": 11,
+      "evidence": [
+        "generic-profiles-real-ui.json",
+        "public-generic-profiles-deploy.json"
+      ]
+    },
     "documentation": {
       "englishGuide": "TASK_PROFILES.md",
       "italianGuide": "it/docs/TASK_PROFILES.md"
     },
-    "qualification": "Development status retained; real TIM portal flow and customer contracts not provided/tested",
-    "publicationChecks": "GitHub run for cd9e548 passed desktop and Go Linux/macOS checks. Windows rooted-path validation and web runner sandbox/decoder setup corrected afterwards. Local source-contract checks, ATP seven tests and Go/native race suite passed; hosted CI results remain separate.",
-    "deployment": {
-      "realSystemdGateway": true,
-      "actualInternalMCPDiscovered": true,
-      "actualOCRInsideService": true,
-      "TIMStarterInstalledForAdmin": true,
-      "authorizedPortalOriginPendingUserConfiguration": true,
-      "existingChatsPreserved": 1,
-      "existingRunsPreserved": 3,
-      "providerCredentialsUnchanged": true,
-      "temporaryChatAndDocumentRemoved": true,
-      "externalModelCalls": 0,
-      "evidence": "tasks-deployed-check.json"
-    },
-    "publicFrontend": {
-      "routesPassed": 4,
-      "assetsExactlyMatchSource": 11,
-      "evidence": "public-tasks-deploy.json"
-    },
-    "deployedFrontend": {
-      "actualPublicHTTPSFrontend": true,
-      "actualGateway": true,
-      "taskProfileVisible": true,
-      "learningControlReady": true,
-      "fileFormatsAvailable": true,
-      "mobileNoHorizontalOverflow": true,
-      "modelRunsStarted": 0,
-      "evidence": "tasks-real-ui.json"
+    "publicationChecks": "Tracked source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest. Hosted checks are available in GitHub Actions for the published commit; local/native evidence remains separate.",
+    "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification."
+  },
+  "previousUpdates": [
+    {
+      "name": "document-attachments-and-reviewed-task-profiles",
+      "recordedAt": "2026-10-06T09:41:16.629584+00:00",
+      "assetVersion": "20261006-11",
+      "webTests": {
+        "passed": 73,
+        "failed": 0,
+        "skipped": 0,
+        "unitAndMock": 62,
+        "nativeBrowserAndOCR": 11,
+        "evidence": "tasks-web-final.log"
+      },
+      "core": {
+        "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled actual Chromium browser/server tests. Cached unit-package results identified in tasks-core-final.log",
+        "vet": "pass: tasks-core-vet.log",
+        "build": "Native Linux/amd64 core, tasks-svolo-core; no new cross-platform qualification",
+        "guardTests": "Mandatory upload approval, selected-file and destination guards, changed destination after approval"
+      },
+      "nativeMCP": {
+        "core": "Actual sandboxed Go executable with automatically discovered internal MCP",
+        "provider": "Simulated completion provider; no external inference",
+        "selectedDocumentRead": true,
+        "proposalRequiresReview": true,
+        "reviewCreatesRevision": 2,
+        "evidence": "tasks-native-smoke.log"
+      },
+      "nativeDocumentReading": {
+        "fixtures": "Generated JPG, PNG, text PDF, scanned PDF and mixed text/raster PDF; no customer records",
+        "decoders": "Actual isolated Tesseract eng/ita and Poppler",
+        "evidence": "tasks-final-targeted.log"
+      },
+      "frontend": "Real browser against simulated HTTP API: attachments, safe extracted-text preview, task selection/edit, reviewed learning, version history, languages, drafts and responsive layouts",
+      "documentation": {
+        "englishGuide": "TASK_PROFILES.md",
+        "italianGuide": "it/docs/TASK_PROFILES.md"
+      },
+      "qualification": "Development status retained; real TIM portal flow and customer contracts not provided/tested",
+      "publicationChecks": "GitHub run for cd9e548 passed desktop and Go Linux/macOS checks. Windows rooted-path validation and web runner sandbox/decoder setup corrected afterwards. Local source-contract checks, ATP seven tests and Go/native race suite passed; hosted CI results remain separate.",
+      "deployment": {
+        "realSystemdGateway": true,
+        "actualInternalMCPDiscovered": true,
+        "actualOCRInsideService": true,
+        "TIMStarterInstalledForAdmin": true,
+        "authorizedPortalOriginPendingUserConfiguration": true,
+        "existingChatsPreserved": 1,
+        "existingRunsPreserved": 3,
+        "providerCredentialsUnchanged": true,
+        "temporaryChatAndDocumentRemoved": true,
+        "externalModelCalls": 0,
+        "evidence": "tasks-deployed-check.json"
+      },
+      "publicFrontend": {
+        "routesPassed": 4,
+        "assetsExactlyMatchSource": 11,
+        "evidence": "public-tasks-deploy.json"
+      },
+      "deployedFrontend": {
+        "actualPublicHTTPSFrontend": true,
+        "actualGateway": true,
+        "taskProfileVisible": true,
+        "learningControlReady": true,
+        "fileFormatsAvailable": true,
+        "mobileNoHorizontalOverflow": true,
+        "modelRunsStarted": 0,
+        "evidence": "tasks-real-ui.json"
+      }
     }
-  }
+  ]
 }

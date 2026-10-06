@@ -248,8 +248,8 @@ Chromium profiles. Request fields and knowledge are bounded; see
 | --- | --- | --- |
 | `GET /api/documents/capabilities` | — | Supported types, OCR/PDF availability, file/page limits |
 | `GET /api/task-profiles` | — | `{profiles}` owned by this account |
-| `POST /api/task-profiles` | `{name,knowledge,uploadOrigins,reviewed:true}` or `{name,template:'tim'}` | Profile with revision 1 |
-| `PATCH /api/task-profiles?id=…` | `{name,knowledge,uploadOrigins,revision,reviewed:true}` | New revision; stale revision returns 409 |
+| `POST /api/task-profiles` | `{name,goal?,instructions?,knowledge,uploadOrigins,reviewed:true}` | Profile with revision 1 |
+| `PATCH /api/task-profiles?id=…` | `{name,goal?,instructions?,knowledge,uploadOrigins,revision,reviewed:true}` | New revision; stale revision returns 409 |
 | `DELETE /api/task-profiles?id=…` | — | Deletes procedure, versions and proposals; active bindings return 409 |
 | `GET /api/task-profiles/versions?id=…` | — | `{versions}`, latest 20 |
 | `GET /api/task-selection?session=…` | — | `{profileId}` for an owned chat |
@@ -264,7 +264,16 @@ Chromium profiles. Request fields and knowledge are bounded; see
 
 `uploadOrigins` contains exact authorized HTTPS portal origins, without credentials,
 paths, query or fragment. It constrains task browser actions as well as file uploads.
-Changing profile knowledge/origins while it is actively bound also returns 409.
+Profiles are arbitrary user-defined tasks, with no built-in templates or automatic
+creation/selection. A `template` property is rejected. Names are limited to 100
+characters, goals to 2,000, instructions to 10,000 and knowledge to 40,000. Each
+account can own up to 1,000 profiles. Older encrypted revisions explicitly expose
+empty goals/instructions; no knowledge is rewritten. Learning updates knowledge
+only, preserving the profile goal, instructions and authorized origins. Versions
+include all fields; duplication is a reviewed POST using the chosen source fields,
+with a new ID and revision 1. Profile IDs alone never authorize access.
+
+Changing any profile fields while it is actively bound also returns 409.
 
 `POST /api/core/v1/runs` additionally accepts `attachments:string[]`, at most eight
 IDs belonging to the same account and chat. The gateway loads the selected profile,

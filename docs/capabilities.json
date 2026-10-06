@@ -185,12 +185,21 @@
     },
     "taskProfiles": {
       "ownership": "Per-user encrypted database procedures, versions and pending proposals; selected per chat",
-      "learning": "Agent proposes verified general steps/mappings; explicit human review creates a new revision",
+      "learning": "Agent proposes verified general knowledge for the bound profile only; human review updates knowledge while preserving goal/instructions/sites",
       "versionsRetained": 20,
-      "starter": "TIM contract-entry first-case guide; actual portal workflow requires supervised verification",
       "toolScope": "Browser plus trusted internal document/memory MCP, excluding scripts, workspace and external MCP tools",
       "destinationPolicy": "Configured exact HTTPS portal origins; selected-file uploads always require human approval and destination recheck",
-      "caseSeparation": "New profile revision or changed nonempty document selection starts fresh model context"
+      "caseSeparation": "New profile revision or changed nonempty document selection starts fresh model context",
+      "fields": [
+        "name",
+        "goal",
+        "instructions",
+        "knowledge",
+        "uploadOrigins"
+      ],
+      "maxProfilesPerAccount": 1000,
+      "creation": "Explicit user-defined profiles only; no built-in task templates or automatic selection",
+      "management": "Search, reviewed duplication, editing, deletion and complete revision restoration"
     }
   }
 }

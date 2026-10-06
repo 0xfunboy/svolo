@@ -102,7 +102,10 @@ The web gateway adds a reviewed profile snapshot and bounded selected-document
 excerpts as untrusted data. The internal MCP offers `read_document` in bounded
 chunks and `propose_knowledge`; these require the current user's active run and
 its persisted binding. The latter creates a pending proposal, not trusted memory.
-Only user review creates a new profile revision. Customer values and credentials
+Only user review creates a new profile revision. Profiles contain user-chosen goals
+and instructions separately from reviewed knowledge; there are no built-in task
+procedures. Learning updates the bound profile’s knowledge only. Proposals show
+the target profile and base revision for review. Personal case values and credentials
 must remain outside reusable procedures. New document selections/profile revisions
 start fresh model context; procedure history remains persistent in the gateway DB.
 

@@ -1,10 +1,10 @@
-import {loadTasks,loadTaskChat,bindTaskUI,learningCards} from './tasks-ui.js?v=20261006-11';
-import { t, language, setLanguage, locale } from './i18n.js?v=20261006-11';
-import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-11';
-import { icon } from './icons.js?v=20261006-11';
-import * as view from './views.js?v=20261006-11';
-import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-11';
-import { renderMarkdown } from './markdown.js?v=20261006-11';
+import {loadTasks,loadTaskChat,bindTaskUI,learningCards} from './tasks-ui.js?v=20261006-13';
+import { t, language, setLanguage, locale } from './i18n.js?v=20261006-13';
+import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-13';
+import { icon } from './icons.js?v=20261006-13';
+import * as view from './views.js?v=20261006-13';
+import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-13';
+import { renderMarkdown } from './markdown.js?v=20261006-13';
 
 const app = document.getElementById('app');
 const modal = document.getElementById('modal');
@@ -320,7 +320,7 @@ async function poll() {
     const activityRun=state.activity&&state.runs.find(run=>run.id===state.activity.runId);
     if(state.activity?.status==='running'&&activityRun&&!['running','waiting_approval'].includes(activityRun.status))state.activity={...state.activity,status:['stopped','interrupted','cancelled'].includes(activityRun.status)?'interrupted':activityRun.status==='failed'?'failed':'completed'};
     renderConversation();renderApprovals();renderControl();renderActivity();
-    const learning=await api('/api/task-profiles/proposals?session='+encodeURIComponent(sid),signal());if(stamp===generation&&$('#learning-proposals'))$('#learning-proposals').innerHTML=learningCards(array(learning.proposals));
+    const learning=await api('/api/task-profiles/proposals?session='+encodeURIComponent(sid),signal());if(stamp===generation&&$('#learning-proposals'))$('#learning-proposals').innerHTML=learningCards(array(learning.proposals),state.taskProfiles);
     const activeTask=state.runs.some(r=>['running','waiting_approval'].includes(r.status));if($('#learn-task'))$('#learn-task').disabled=!state.taskProfile||state.busy||activeTask||state.uploading;if($('#attach-file'))$('#attach-file').disabled=state.busy||activeTask||state.uploading;if($('#task-select'))$('#task-select').disabled=state.busy||activeTask;
     try{await refreshTabs();}catch(failure){if(failure.name==='AbortError')return;const note=$('#browser-error');if(note){note.textContent=t("Il browser non è disponibile. Riprova ad aprire la pagina tra un momento.");note.title=failure.message;note.hidden=false;}}
     state.health=true;const health=$('#service-health');if(health){health.classList.add('ready');health.innerHTML=`<span class="dot"></span>${e(t("Core connesso"))}`;}
@@ -492,4 +492,4 @@ if(!location.hash && ['/app','/login','/settings'].includes(location.pathname))h
 try { me(await api('/api/me')); } catch(failure) { if(failure.status!==401 && failure.status!==403)tell(failure.message,true); }
 await route();
 
-function bindTasks(){bindTaskUI({state,bind,showModal,signal,tell,error,refresh:async()=>{if(state.page.startsWith('settings'))await renderSettings('tasks',generation);else await route();},learn:async()=>{if(state.busy||state.uploading||!state.taskProfile||state.runs.some(r=>['running','waiting_approval'].includes(r.status)))return;const draft=$('#prompt').value;$('#prompt').value=t('Extract only reusable procedures and field mappings confirmed by tool results in this chat. Do not include customer data or credentials. Propose the complete updated knowledge with the task-memory tool; do not claim it is saved until I approve.');await sendPrompt({preventDefault(){}});if($('#prompt'))$('#prompt').value=draft;drafts.set(state.session,draft);}});}
+function bindTasks(){bindTaskUI({state,bind,showModal,signal,tell,error,refresh:async()=>{if(state.page.startsWith('settings'))await renderSettings('tasks',generation);else await route();},learn:async()=>{if(state.busy||state.uploading||!state.taskProfile||state.runs.some(r=>['running','waiting_approval'].includes(r.status)))return;const draft=$('#prompt').value;$('#prompt').value=t('Extract only reusable procedures and field mappings confirmed by tool results in this chat. Use only the selected task profile. Do not include personal case data or credentials, or change the profile goal or instructions. Propose the complete updated knowledge with the task-memory tool; do not claim it is saved until I approve.');await sendPrompt({preventDefault(){}});if($('#prompt'))$('#prompt').value=draft;drafts.set(state.session,draft);}});}

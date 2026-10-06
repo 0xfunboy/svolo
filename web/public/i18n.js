@@ -1949,10 +1949,6 @@ Object.assign(messages, {
     "en": "Save procedures, field mappings and verified exceptions. Review learning before it becomes reusable.",
     "it": "Salva procedure, mappature dei campi ed eccezioni verificate. Rivedi le conoscenze prima di renderle riutilizzabili."
   },
-  "Start with TIM contracts": {
-    "en": "Start with TIM contracts",
-    "it": "Inizia con i contratti TIM"
-  },
   "New task profile": {
     "en": "New task profile",
     "it": "Nuovo profilo attività"
@@ -1976,10 +1972,6 @@ Object.assign(messages, {
   "Delete task profile": {
     "en": "Delete task profile",
     "it": "Elimina profilo attività"
-  },
-  "Create a profile for a task you repeat, such as entering TIM contracts.": {
-    "en": "Create a profile for a task you repeat, such as entering TIM contracts.",
-    "it": "Crea un profilo per un’attività ricorrente, come l’inserimento di contratti TIM."
   },
   "Store reusable instructions, not customer records or login credentials. Documents and knowledge are encrypted and isolated by user. Task profiles use browser tools and private document/memory tools.": {
     "en": "Store reusable instructions, not customer records or login credentials. Documents and knowledge are encrypted and isolated by user. Task profiles use browser tools and private document/memory tools.",
@@ -2048,14 +2040,6 @@ Object.assign(messages, {
   "Download original": {
     "en": "Download original",
     "it": "Scarica originale"
-  },
-  "TIM contract entry": {
-    "en": "TIM contract entry",
-    "it": "Inserimento contratti TIM"
-  },
-  "TIM starter created. Teach the portal procedure during the first supervised case.": {
-    "en": "TIM starter created. Teach the portal procedure during the first supervised case.",
-    "it": "Procedura iniziale TIM creata. Insegna i passaggi del portale durante la prima pratica assistita."
   },
   "Delete task profile?": {
     "en": "Delete task profile?",
@@ -2189,10 +2173,6 @@ Object.assign(messages, {
     "en": "This profile changed. Reload it before saving.",
     "it": "Il profilo è cambiato. Ricaricalo prima di salvare."
   },
-  "Maximum 32 task profiles per user.": {
-    "en": "Maximum 32 task profiles per user.",
-    "it": "Massimo 32 profili attività per utente."
-  },
   "Task names must contain 1 to 100 characters.": {
     "en": "Task names must contain 1 to 100 characters.",
     "it": "Il nome dell’attività deve contenere da 1 a 100 caratteri."
@@ -2292,6 +2272,110 @@ Object.assign(messages, {
   "Message and document context exceed the model budget.": {
     "en": "Message and document context exceed the model budget.",
     "it": "Messaggio e contesto dei documenti superano il limite del modello."
+  },
+  "Document tasks only; add authorized sites to enable browser actions.": {
+    "en": "Document tasks only; add authorized sites to enable browser actions.",
+    "it": "Solo attività sui documenti; aggiungi siti autorizzati per abilitare le azioni nel browser."
+  },
+  "Edit profile": {
+    "en": "Edit profile",
+    "it": "Modifica profilo"
+  },
+  "Duplicate profile": {
+    "en": "Duplicate profile",
+    "it": "Duplica profilo"
+  },
+  "No matching task profiles.": {
+    "en": "No matching task profiles.",
+    "it": "Nessun profilo attività corrispondente."
+  },
+  "Create your own profiles for any repeated task. Each has its own goal, instructions and reviewed knowledge.": {
+    "en": "Create your own profiles for any repeated task. Each has its own goal, instructions and reviewed knowledge.",
+    "it": "Crea i tuoi profili per qualsiasi attività ricorrente. Ognuno ha un obiettivo, istruzioni e conoscenze verificate propri."
+  },
+  "Search task profiles": {
+    "en": "Search task profiles",
+    "it": "Cerca profili attività"
+  },
+  "Search by name, goal or instructions": {
+    "en": "Search by name, goal or instructions",
+    "it": "Cerca per nome, obiettivo o istruzioni"
+  },
+  "Create a profile for an activity you want to repeat. You choose its name, goal and instructions.": {
+    "en": "Create a profile for an activity you want to repeat. You choose its name, goal and instructions.",
+    "it": "Crea un profilo per un’attività che vuoi ripetere. Scegli tu nome, obiettivo e istruzioni."
+  },
+  "Each profile belongs to your account. Review learned steps before saving; keep personal case data and credentials out of reusable memory.": {
+    "en": "Each profile belongs to your account. Review learned steps before saving; keep personal case data and credentials out of reusable memory.",
+    "it": "Ogni profilo appartiene al tuo account. Rivedi i passaggi appresi prima di salvarli; escludi dati personali della pratica e credenziali dalla memoria riutilizzabile."
+  },
+  "Goal": {
+    "en": "Goal",
+    "it": "Obiettivo"
+  },
+  "Describe the result this profile should help you achieve.": {
+    "en": "Describe the result this profile should help you achieve.",
+    "it": "Descrivi il risultato che vuoi ottenere con questo profilo."
+  },
+  "Your instructions": {
+    "en": "Your instructions",
+    "it": "Le tue istruzioni"
+  },
+  "Set your workflow rules, required checks and desired output.": {
+    "en": "Set your workflow rules, required checks and desired output.",
+    "it": "Definisci le regole del flusso, i controlli richiesti e il risultato desiderato."
+  },
+  "Verified knowledge": {
+    "en": "Verified knowledge",
+    "it": "Conoscenze verificate"
+  },
+  "Start empty or add verified steps. Reviewed learning updates this field without changing your goal or instructions.": {
+    "en": "Start empty or add verified steps. Reviewed learning updates this field without changing your goal or instructions.",
+    "it": "Inizia senza conoscenze o aggiungi passaggi verificati. L’apprendimento approvato aggiorna questo campo conservando obiettivo e istruzioni."
+  },
+  "Authorized sites": {
+    "en": "Authorized sites",
+    "it": "Siti autorizzati"
+  },
+  "One exact HTTPS origin per line. Leave empty for document tasks; add sites for browser actions. Uploads always require approval.": {
+    "en": "One exact HTTPS origin per line. Leave empty for document tasks; add sites for browser actions. Uploads always require approval.",
+    "it": "Un sito HTTPS esatto per riga. Lascia vuoto per attività sui documenti; aggiungi siti per le azioni nel browser. Gli upload richiedono sempre approvazione."
+  },
+  "I reviewed this profile: it contains no personal case data or credentials.": {
+    "en": "I reviewed this profile: it contains no personal case data or credentials.",
+    "it": "Ho rivisto il profilo: non contiene dati personali della pratica o credenziali."
+  },
+  "I reviewed this knowledge: it contains no personal case data or credentials.": {
+    "en": "I reviewed this knowledge: it contains no personal case data or credentials.",
+    "it": "Ho rivisto le conoscenze: non contengono dati personali della pratica o credenziali."
+  },
+  "Customize this task for your needs. Keep reusable rules separate from the data of each case.": {
+    "en": "Customize this task for your needs. Keep reusable rules separate from the data of each case.",
+    "it": "Personalizza l’attività in base alle tue esigenze. Separa le regole riutilizzabili dai dati di ogni pratica."
+  },
+  "Copy": {
+    "en": "Copy",
+    "it": "Copia"
+  },
+  "Task goals must contain at most 2,000 characters.": {
+    "en": "Task goals must contain at most 2,000 characters.",
+    "it": "Gli obiettivi possono contenere al massimo 2.000 caratteri."
+  },
+  "Task instructions must contain at most 10,000 characters.": {
+    "en": "Task instructions must contain at most 10,000 characters.",
+    "it": "Le istruzioni possono contenere al massimo 10.000 caratteri."
+  },
+  "Review reusable knowledge and instructions before saving.": {
+    "en": "Review reusable knowledge and instructions before saving.",
+    "it": "Rivedi le conoscenze e le istruzioni riutilizzabili prima di salvare."
+  },
+  "Maximum 1000 task profiles per user.": {
+    "en": "Maximum 1000 task profiles per user.",
+    "it": "Massimo 1000 profili attività per utente."
+  },
+  "Create a task profile with your own goal and instructions; built-in templates are not supported.": {
+    "en": "Create a task profile with your own goal and instructions; built-in templates are not supported.",
+    "it": "Crea un profilo attività con il tuo obiettivo e le tue istruzioni; i modelli predefiniti non sono supportati."
   }
 });
 const aliases = new Map(Object.entries(messages).flatMap(([source,value])=>[[source,value],[value.en,value]]));

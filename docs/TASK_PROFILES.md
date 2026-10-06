@@ -5,37 +5,44 @@ reuse a reviewed procedure across chats. A profile is procedural memory, not mod
 training. It belongs to one account and survives provider switches and application
 restarts. The desktop client does not yet expose this web workflow.
 
-## First TIM contract
+## Create a profile for your task
 
-1. Open **Settings → Task profiles** and choose **Start with TIM contracts**.
-   This creates a starter procedure; it does not establish a verified TIM portal
-   integration. Other repeated jobs can use **New task profile**.
-2. Edit the procedure. Add the authorized portal's exact HTTPS origin, for example
-   `https://dealer.example`, without a path, query or credentials. Add any additional
-   portal origins required by the observed workflow. Review and save the profile.
-   With an empty origin list, the agent can read documents but cannot perform
-   browser actions for that task.
-3. Select the task above the chat composer. Sign into the portal yourself in the
-   shared browser and handle any OTP or CAPTCHA. Portal login stays in your private
-   browser profile, independently of procedural knowledge.
-4. Use the attachment button to upload the quote, signed contract and customer
-   documents. Check the files for this case. The eye button previews extracted text;
-   download the original to check uncertain OCR. Ask Svolo to inspect the documents,
-   identify missing or inconsistent data, and assist with the actual portal form.
-5. Verify the first case together: field labels, document types, offer codes,
-   validation rules and the portal receipt. The harness instructs the agent to use
-   supplied values, avoid invented consents/signatures, and obtain your approval
-   before final submission. File uploads require an explicit core approval, showing
-   their destination, even when browser autonomy is enabled.
-6. Ask the agent to remember verified steps, or use **Learn this task** in the chat
-   header. A learning proposal appears in the chat. Review and edit the complete
-   proposed procedure, remove customer information, then explicitly save it.
+Every account starts without task profiles. There are no built-in business tasks,
+industry-specific templates or automatically assigned profiles. Users choose the
+activities they want to repeat and may keep up to 1,000 private profiles.
 
-For the next customer, create a new chat, select the same profile and attach the
-new case documents. Changing the profile/revision or the selected document set
-starts a fresh model context on the next run, avoiding continuation with a previous
-case's model history. The visible chat history is preserved. New upload batches
-replace the checked selection; after a page reload, files require selection again.
+1. Open **Settings → Task profiles → New task profile**. Choose a name and goal,
+   then describe your instructions: workflow rules, required checks and desired
+   output. **Verified knowledge** may start empty; it holds reviewed observations
+   learned from actual executions. Profiles are independent of the selected model.
+2. If the task needs browser actions, add each authorized site's exact HTTPS origin,
+   for example `https://portal.example`, without paths, queries or credentials.
+   Leave the list empty for document-only tasks. Sign in to websites yourself in
+   the shared browser and handle any OTP or CAPTCHA. Browser login is separate
+   from reusable memory. Review all fields before saving.
+3. Select the profile above the chat composer. Creating, duplicating or editing a
+   profile does not automatically assign it to a chat. Only the selected profile's
+   goal, instructions and knowledge enter that run; other profiles stay separate.
+4. Attach the current case's documents if needed. Check the files to use. Preview
+   extracted text with the eye button and check uncertain OCR against the original.
+   Ask Svolo to perform your task; it reports missing information and verifies the
+   outcome with current tool results instead of inventing a workflow.
+5. During the first execution, correct the assistant and verify its steps together.
+   Sensitive external changes require approval. File uploads require an explicit
+   core approval showing their destination, even with browser autonomy enabled.
+6. Ask the agent to remember verified steps, or use **Learn this task**. Review and
+   edit the complete knowledge proposal and remove personal case data. Saving
+   creates a new revision of this profile's knowledge; it preserves your goal and
+   instructions. A proposal never changes another profile or another account.
+
+For the next case, open a new chat, select the appropriate profile and attach that
+case's documents. Changing profile/revision or the selected document set starts a
+fresh model context on the next run. Visible chat history is preserved. New upload
+batches replace the checked selection; page reloads require selecting files again.
+
+Search profiles by name, goal or instructions in Settings. **Duplicate profile**
+opens an editable copy; review and save it as an independent profile with revision
+1. Subsequent edits or learning in either profile do not update the other.
 
 ## What is remembered
 
@@ -49,7 +56,11 @@ Do not store customer records, identity scans, names, addresses, consent choices
 passwords, cookies or tokens in a task profile. Pattern checks reject common email,
 tax-code, IBAN, telephone and credential patterns, including credential-bearing
 URLs. These checks cannot identify every name or address, so human review is
-required. A profile can be edited or deleted independently of its chats.
+required. Goals (2,000 characters), instructions (10,000) and knowledge (40,000) are reviewed
+and stored separately. Existing older revisions have empty goal and instruction
+fields until the owner edits them. Version restore includes all profile fields,
+requires review and creates a new revision. A profile can be edited or deleted
+independently of its chats.
 
 ## Reading and limits
 
@@ -96,7 +107,7 @@ information. Expiring or deleting an attachment does not erase text already reta
 in chat history or by the provider. Delete the chat to remove its local history and
 attachment records. Protect full backups and keep the master key separately, as
 described in [web security](WEB_SECURITY.md). This feature does not change release
-qualification or establish that a particular TIM workflow has already been tested.
+qualification or establish that a particular user workflow has already been tested.
 
 See [web API](WEB_API.md), [assistant harness](AGENT_HARNESS.md) and
 [deployment dependencies](WEB_DEPLOYMENT.md).
