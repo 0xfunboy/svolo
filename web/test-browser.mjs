@@ -87,7 +87,7 @@ export async function nativeBrowser(t, { handler, ready='globalThis.markdownRead
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const origin = `http://127.0.0.1:${server.address().port}`;
-  let command = chromium, args = ['--headless=new','--remote-debugging-address=127.0.0.1','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-sync','--disable-component-update','--disable-dev-shm-usage',origin];
+  let command = chromium, args = ['--headless=new','--window-size=1280,800','--remote-debugging-address=127.0.0.1','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-sync','--disable-component-update','--disable-dev-shm-usage',origin];
   const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => /^(PATH|HOME|USER|LOGNAME|LANG|LANGUAGE|TZ|DISPLAY|XAUTHORITY|XDG_RUNTIME_DIR|DBUS_SESSION_BUS_ADDRESS|TMPDIR|TMP|TEMP)$/.test(key) || key.startsWith('LC_')));
   if (electron) {
     const helper = join(profile, 'markdown-browser.cjs');
@@ -119,8 +119,9 @@ export async function nativeBrowser(t, { handler, ready='globalThis.markdownRead
     return result.result.value;
   };
   const moduleDeadline = Date.now() + 10000;
-  while (Date.now() < moduleDeadline) { if (await evaluate(`(${ready}) || !!globalThis.markdownLoadError`)) break; await delay(20); }
-  const readiness = await evaluate(`({ready:(${ready}),error:globalThis.markdownLoadError,url:location.href})`);
+  const readyExpression = `document.readyState!=="loading" && (${ready})`;
+  while (Date.now() < moduleDeadline) { if (await evaluate(`(${readyExpression}) || !!globalThis.markdownLoadError`)) break; await delay(20); }
+  const readiness = await evaluate(`({ready:(${readyExpression}),error:globalThis.markdownLoadError,url:location.href})`);
   assert.equal(readiness.ready, true, `Actual Markdown and sanitizer modules should load: ${JSON.stringify({ ...readiness, requests })}`);
   return { evaluate, requests, origin, client };
 }
