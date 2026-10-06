@@ -1,0 +1,545 @@
+{
+  "version": 1,
+  "product": "Svolo",
+  "presentationImagesAreScreenshots": false,
+  "landscapeCrop": [
+    174,
+    590,
+    642,
+    851
+  ],
+  "assets": [
+    {
+      "path": "brand/brand-board.webp",
+      "sha256": "819f9b0a732012c44a315890873798bc6a0fd79e3a25ef8919357c3a83a75ecf",
+      "bytes": 77626,
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "brand/icons/app-dark-1024.png",
+      "sha256": "619e715bf88cfe581db57fd78554808ac89ab98af207c987b51b8b0d0f952686",
+      "bytes": 55666,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "path": "brand/icons/app-dark-128.png",
+      "sha256": "4775721b3048ad5eccae2ae134c0bc8f3a60961467d8b466370d17f446bb2b9b",
+      "bytes": 4593,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "path": "brand/icons/app-dark-16.png",
+      "sha256": "2c1d791cfb757860fe23ab70a222131dc0b581b5f5ab8167ef25aca2ec74b73b",
+      "bytes": 488,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "path": "brand/icons/app-dark-180.png",
+      "sha256": "2bc076a989791ab174c8a7ed9c439f76d674070dfebc2e11d2af389f1eb3a3a4",
+      "bytes": 6698,
+      "width": 180,
+      "height": 180
+    },
+    {
+      "path": "brand/icons/app-dark-192.png",
+      "sha256": "1e69b1bacd1dd750294a7270f840dc99c6104dfd2b31f7e8f66978c2a6fa4f36",
+      "bytes": 7193,
+      "width": 192,
+      "height": 192
+    },
+    {
+      "path": "brand/icons/app-dark-24.png",
+      "sha256": "79d566383a16d1e415a8985210924a6f9f954e67b03e74f0a778e028ced777ba",
+      "bytes": 723,
+      "width": 24,
+      "height": 24
+    },
+    {
+      "path": "brand/icons/app-dark-256.png",
+      "sha256": "5ed455c384da8398de50358e33d6fac331670a10f1adbd3a21afb0e10ed38660",
+      "bytes": 9806,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "brand/icons/app-dark-32.png",
+      "sha256": "5831e19fcde741047aa142d1c48bc0b324d6e34c4fa51ce826b67480688c8328",
+      "bytes": 1012,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "path": "brand/icons/app-dark-48.png",
+      "sha256": "dc2fbe48e7d1f5a5a3f6613898dfe08b70a7e6530570fef548711e77795b8f78",
+      "bytes": 1612,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "path": "brand/icons/app-dark-512.png",
+      "sha256": "5c07198d46855f6ba3047357be01b732499917c74c0f0a1dc6cd2d37829db1b8",
+      "bytes": 22909,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "brand/icons/app-dark-64.png",
+      "sha256": "9e826a345bc84cbbb35b172ae5b69bd439dca703498e7d0ada12a1592a8f8540",
+      "bytes": 2210,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "path": "brand/icons/app-dark.ico",
+      "sha256": "74e8ff55ae6bb8505f348e96bcdb5642d7b41b9542af2780e0f875b4b27c72a3",
+      "bytes": 32476,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "brand/icons/app-dark.svg",
+      "sha256": "f7d400c6955daebe8e8fbfc44220159c89bb7343cc58406efed0238afc96b815",
+      "bytes": 807
+    },
+    {
+      "path": "brand/icons/app-light-1024.png",
+      "sha256": "fb0c99a4c927dcc22daef555af659b9fbcaef5609f4061bd64be6cc8d13619e5",
+      "bytes": 66492,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "path": "brand/icons/app-light-128.png",
+      "sha256": "72bf43482f96c15a34a885a4d449ec33df12318f217f450a30b7f6c3292ce7f3",
+      "bytes": 5148,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "path": "brand/icons/app-light-16.png",
+      "sha256": "aaad9bd78b31bf7a23d6988e1178d69b9cd37e7954a53b26a55a24e4b3d8d530",
+      "bytes": 505,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "path": "brand/icons/app-light-180.png",
+      "sha256": "c361199b72ca1fb09954638ff03a060ae0f4dd7858ff3e2c86fd0a0b557dbb1b",
+      "bytes": 7540,
+      "width": 180,
+      "height": 180
+    },
+    {
+      "path": "brand/icons/app-light-192.png",
+      "sha256": "c4c058e05b75de0f64ba60dce2692344965f7fbf0a4fcdc739f205e36a944c04",
+      "bytes": 7965,
+      "width": 192,
+      "height": 192
+    },
+    {
+      "path": "brand/icons/app-light-24.png",
+      "sha256": "618063a463525bdff0ed4604254407f6020a0a9c83b0274b0662366400df9f01",
+      "bytes": 759,
+      "width": 24,
+      "height": 24
+    },
+    {
+      "path": "brand/icons/app-light-256.png",
+      "sha256": "c1b81513f0d0c9cfacea7f698a1397b6e4378bd7d35214312e8465a019278c40",
+      "bytes": 11333,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "brand/icons/app-light-32.png",
+      "sha256": "aedc3dcebdf13d392c98dcf52771d0a27becefaa6cce331040e9f8deb30aa6c1",
+      "bytes": 1087,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "path": "brand/icons/app-light-48.png",
+      "sha256": "81f493cf3f0130fc6c747c57e6a316f62ea54ec557610769581fdfde75b15383",
+      "bytes": 1719,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "path": "brand/icons/app-light-512.png",
+      "sha256": "afc61c8cee56cd291ff69fcf0b68d85da555f96472c980f60cab9003a5f14339",
+      "bytes": 26463,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "brand/icons/app-light-64.png",
+      "sha256": "5cc0f337bebb3d1f68d39dd3174527abe571f885afec42bcc8d5888e7a15c150",
+      "bytes": 2385,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "path": "brand/icons/app-light.ico",
+      "sha256": "4417e5039255c87ec9e652c3bbe681673331521cc8e8122be54fda29ff5ed537",
+      "bytes": 37124,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "brand/icons/app-light.svg",
+      "sha256": "478624f7a958c3f3fdd7d845948d3f107af5148cee523d2f2d4f3f93f4cc5ca0",
+      "bytes": 811
+    },
+    {
+      "path": "brand/icons/app.icns",
+      "sha256": "d527b6411850c40dcfba51722395aa2613a26a8fd399ba1f8e95ad65b7a3eb95",
+      "bytes": 153920,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "path": "brand/icons/favicon.ico",
+      "sha256": "50525b9845c5d2aedfbfe10abaf23c0212ed9654ba03915e80a1621cbc467084",
+      "bytes": 8706,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "path": "brand/icons/favicon.svg",
+      "sha256": "ef6815310298f73f3a86bf49bcb2197bfaed083583a4425b7e8cb925f16c22b2",
+      "bytes": 808
+    },
+    {
+      "path": "brand/icons/mark-128.png",
+      "sha256": "f3346607f4f67ff48cf5e6b4f4ca1268e8172305a2f21ef03d72f566f5a1eea2",
+      "bytes": 4748,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "path": "brand/icons/mark-16.png",
+      "sha256": "91e8fc48db9e795a60779a0f1c74062d83aad20bda46d9d3ddfa108ecdcef99d",
+      "bytes": 467,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "path": "brand/icons/mark-24.png",
+      "sha256": "def7fdd5b5ee88d4ef7e5a237cc37e8d1eb29a3046e1c3cbb75e09f76b7c003e",
+      "bytes": 739,
+      "width": 24,
+      "height": 24
+    },
+    {
+      "path": "brand/icons/mark-256.png",
+      "sha256": "7c5503bf1a43b18213754ebffbea8ad4875d4a14c6f0921780c0c5f5b6f531c9",
+      "bytes": 10718,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "brand/icons/mark-32.png",
+      "sha256": "8674a0d725c5b11226ac9b3dd169450cd5a5fea73467e4b4cf8949a761f14061",
+      "bytes": 1013,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "path": "brand/icons/mark-48.png",
+      "sha256": "5b6578d83f6a4fad57d02a81e371cd64f66f8c71fefcf198089325ac69309628",
+      "bytes": 1571,
+      "width": 48,
+      "height": 48
+    },
+    {
+      "path": "brand/icons/mark-512.png",
+      "sha256": "3856ea11da64f565e0714345444e243b7d2ceb8059d0a3d0b47785b098295227",
+      "bytes": 25973,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "brand/icons/mark-64.png",
+      "sha256": "0afa3006648790b32030c87cafa42d53c3017f0e5b411ab8a20579c5bb8aeb0d",
+      "bytes": 2203,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "path": "brand/identity-sheet.webp",
+      "sha256": "3691290f4c30c22fdc924e4eeb76f02dea9f94db1c25e2b16218d835e0ce1361",
+      "bytes": 62816,
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "brand/landscape.webp",
+      "sha256": "020001c3384cc11da8cc557d363965c6f63053db3fec3c76e9107b5c31300471",
+      "bytes": 23638,
+      "width": 468,
+      "height": 261
+    },
+    {
+      "path": "brand/launch-poster.webp",
+      "sha256": "074a277aa8164dedf0bffdeec7651adb34b16dfac05ed6aca4b803ea5de951d9",
+      "bytes": 130124,
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "path": "brand/mark-dark.svg",
+      "sha256": "26043dcb6dad433ec6b6e885d1e010e2feb600c64a73974db612991e0e1a8b0a",
+      "bytes": 701
+    },
+    {
+      "path": "brand/mark-mono.svg",
+      "sha256": "7124d9a0902a13274c3cf75e86e38bdc896e7050471ba6ae2ddf406b99af689a",
+      "bytes": 712
+    },
+    {
+      "path": "brand/mark.svg",
+      "sha256": "8723100b59c20a2eae9108a4b3fb78e3622db46be47118edf7d597563d8de135",
+      "bytes": 705
+    },
+    {
+      "path": "brand/product-hero.webp",
+      "sha256": "4afac1e090ea3907861c0cb31bd793af18bb36bc9595daafbfc0ccb4c75b5936",
+      "bytes": 120596,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "brand/sources/brand-board.png",
+      "sha256": "45d259d72c0a38c902453bdbd9d5b0931e2fcc2a64ad1aee2765d86cd5ba6171",
+      "bytes": 1471659,
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "brand/sources/identity-sheet.png",
+      "sha256": "ad79d68a65e17bce9932b071b33581f52d7ae3c5db9bb03bfa8214ac4c0489c2",
+      "bytes": 1287757,
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "brand/sources/launch-poster.png",
+      "sha256": "33e7c139f8a3bece8c8c5185adb25df751c1fcc230238bd97ab84b5589a9465d",
+      "bytes": 1903808,
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "path": "brand/sources/product-hero.png",
+      "sha256": "0e65e746a1e9f913667d94ca1b4b0e51618a81d8ad445d340efae71ed79ebe13",
+      "bytes": 1740075,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "brand/wordmark.svg",
+      "sha256": "1d3c21761a344200980a5c047e260130fe9241a31edc9246cfad44cfffce4722",
+      "bytes": 866
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/fresco-day.webp",
+      "sha256": "e67f18acdb2636cfe15995c3191cc94891b012ffd3af4955cf09c3ab63897326",
+      "bytes": 26112,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/fresco-dusk.webp",
+      "sha256": "fd616c03d792e64a4bfd0b86de44ccfea90cd78d562cb7d5b612653fb3486beb",
+      "bytes": 22046,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/ink-day.webp",
+      "sha256": "c60afbca3ff2d39f580c1e9a9da1cc7677511d925ce163dd2299a1efb638b887",
+      "bytes": 27854,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/ink-dusk.webp",
+      "sha256": "7774029c3964a15eb58eb94228ce4175012249c1f4ebe810549b80c1ba2cd377",
+      "bytes": 20780,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/peak-day.webp",
+      "sha256": "6212fa1ed7fddc4a94eb6eb3312f835fdfff0d9800ca4103bc5238e7ac318ec1",
+      "bytes": 39754,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/peak-dusk.webp",
+      "sha256": "af4ee4b70a15a45aa99a7a3b71b0c7d2d988fc21f36a804ddd0a09755c12a345",
+      "bytes": 34570,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/pines-day.webp",
+      "sha256": "430252afa8923d00c58f74f04050a1924b03faff8b00ad3d1fbe7b9cdf74669e",
+      "bytes": 37822,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/pines-dusk.webp",
+      "sha256": "4955ae9ad7f9f4538f11e70ea45b30f1d678c52ea2165b00d5ce4f033576ad5d",
+      "bytes": 33708,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/shadow-day.webp",
+      "sha256": "a483a2dd9f7859cd9546c7b6d20fab52fcf655b444fbaa8e33dc6c2284b08b1b",
+      "bytes": 26292,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/shadow-dusk.webp",
+      "sha256": "7a222d716bee581e46c40e8bda5bb235a34cca840a9377edeb8f692d64f2f093",
+      "bytes": 22302,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/sky-day.webp",
+      "sha256": "6e638289b5f25fd8e7bc9c8ac560ffd68f2938ca8aea2a6911ddadc3266c4c29",
+      "bytes": 38730,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/sky-dusk.webp",
+      "sha256": "c7d1f26c051d48ba37a5b18a225644a231399e92693fe9c1f16af16e3ea4a0b5",
+      "bytes": 34562,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/stars-day.webp",
+      "sha256": "188bb6ec7b78f4b8a48c9d38eb1d76e74b19499b0949d90efad66af5364c5d4a",
+      "bytes": 27990,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/stars-dusk.webp",
+      "sha256": "cfd0cf7320e241ed75536191d1ecd585349f6828d3b0b678c5e0e36c1802f505",
+      "bytes": 23660,
+      "width": 1600,
+      "height": 900
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/fresco-day.webp",
+      "sha256": "61d4dd297f6bef757284ba68071585448a84c755dbbbb3cba709df565abc5cee",
+      "bytes": 5264,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/fresco-dusk.webp",
+      "sha256": "862f31d4fd1f57f9979c63d99259a33c6a1be209ba86513bb89656e85ebab4fe",
+      "bytes": 4586,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/ink-day.webp",
+      "sha256": "3009b2b549f84a0e476074af338468a6d4580f9194614f4e1f1d31a9db06fe58",
+      "bytes": 5378,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/ink-dusk.webp",
+      "sha256": "5b271ff7ccd17c75f57fca6cb2722011189ee3c5175652101407a96b59612a13",
+      "bytes": 4370,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/peak-day.webp",
+      "sha256": "71618422c834466c99cd60311ad831b2cd5e3df490ded1e1ead240ef690e7c0b",
+      "bytes": 7578,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/peak-dusk.webp",
+      "sha256": "45cc609a10c1ef73844aafd833d10ef640dd2f151d7c2655348d61e4ac11fa83",
+      "bytes": 6538,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/pines-day.webp",
+      "sha256": "9983f29d4fc0f559d80d4b2fbdb03a1f768385ebd52338399cd58e831111af12",
+      "bytes": 7212,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/pines-dusk.webp",
+      "sha256": "7262ddc1835cb80d173394c540c24e5e272a5b64ca64f4d6c258575406588283",
+      "bytes": 5976,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/shadow-day.webp",
+      "sha256": "bc2023a9b228bd6388848aab472fedb4af58b86daa3e9c862de87ad5bb94d7d9",
+      "bytes": 5014,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/shadow-dusk.webp",
+      "sha256": "3f1ec3b14d8fa4273a7cf69617967997d708573af57793202df7f1a76928a7f3",
+      "bytes": 4438,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/sky-day.webp",
+      "sha256": "64000564057756357a9877a95ebe996c2783e3f28dd467fb4c1077d55cad15a0",
+      "bytes": 7530,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/sky-dusk.webp",
+      "sha256": "4996521699435ae745b761ee4398344d76893a96782624da4105c6e4618933c7",
+      "bytes": 6488,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/stars-day.webp",
+      "sha256": "8e52588635c19a354664f04f001f2f762e1621e07b470a138cc7eef80439fece",
+      "bytes": 5312,
+      "width": 480,
+      "height": 270
+    },
+    {
+      "path": "desktop/src/renderer/src/assets/wallpapers/thumbs/stars-dusk.webp",
+      "sha256": "e3e3fd8fc19d5e9b21e52904c86d8204d7ea28bb8eec8a34c6c0743a67ca1b18",
+      "bytes": 4646,
+      "width": 480,
+      "height": 270
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# EXAMPLE user service for a Linux host; edit paths before use.
+# Do not run as root. Start once per data directory. Never expose the port.
+[Unit]
+Description=svolo Agent Core (development build)
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/svolo-core serve --headless --data %h/.local/share/svolo-agent-browser --listen 127.0.0.1:7331
+EnvironmentFile=%h/.config/svolo-agent-browser/provider.env
+Restart=on-failure
+RestartSec=5
+UMask=0077
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

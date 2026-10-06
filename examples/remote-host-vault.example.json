@@ -1,0 +1,8 @@
+{
+  "id": "devbox",
+  "alias": "devbox",
+  "name": "Development host",
+  "remotePort": 7331,
+  "tokenRef": "ssh-devbox",
+  "autoReconnect": true
+}

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Svolo task plan",
+  "description": "Authoring contract for workspace task graphs. The librarian owns claims, dependency checks, scope completion and future-plan patches; JSON Schema does not prove acyclicity or execution success.",
+  "type": "object",
+  "required": [
+    "meta",
+    "nodes"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "project_name",
+        "version",
+        "project_status"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "project_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "enum": [
+            "1.3",
+            "1.4"
+          ]
+        },
+        "project_status": {
+          "enum": [
+            "DRAFT",
+            "ACTIVE",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "graph_version": {
+          "type": "string",
+          "description": "Librarian-generated optimistic-concurrency digest. Do not set to bypass a version conflict."
+        },
+        "activated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "activated_by": {
+          "type": "string"
+        },
+        "activation_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "nodes": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "title",
+          "instruction",
+          "dependencies",
+          "status"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instruction": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "description": "IDs in the same graph. Dependencies must complete before this node is ready."
+          },
+          "status": {
+            "enum": [
+              "LOCKED",
+              "READY",
+              "CLAIMED",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "type": {
+            "enum": [
+              "TASK",
+              "SCOPE"
+            ]
+          },
+          "scope_children": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "future_state": {
+            "enum": [
+              "CLOSED",
+              "SUPERSEDED"
+            ]
+          },
+          "worker_id": {
+            "type": "string"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reasoning_effort": {
+            "enum": [
+              "minimal",
+              "low",
+              "medium",
+              "high",
+              "xhigh"
+            ]
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "report": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

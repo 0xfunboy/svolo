@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "product": "Svolo",
+  "version": "0.3.1-dev",
+  "modules": [
+    {
+      "id": "browser",
+      "implementation": "core/internal/browser",
+      "integration": "managed Chromium and Electron adapter",
+      "status": "implemented",
+      "qualification": "See verification.json; native interaction handoff needs full desktop qualification"
+    },
+    {
+      "id": "agent",
+      "implementation": "core/internal/agent",
+      "integration": "provider-neutral loop",
+      "status": "implemented",
+      "qualification": "Local simulated providers do not qualify external services"
+    },
+    {
+      "id": "mcp",
+      "implementation": "core/internal/mcp",
+      "integration": "client and session-limited server",
+      "status": "implemented",
+      "qualification": "External services require separate live qualification"
+    },
+    {
+      "id": "workspace",
+      "implementation": "core/internal/workspace",
+      "status": "implemented",
+      "limitations": [
+        "Program execution is not an OS sandbox"
+      ]
+    },
+    {
+      "id": "projects",
+      "implementation": "core/internal/project",
+      "status": "implemented"
+    },
+    {
+      "id": "runtime",
+      "implementation": "core/internal/piruntime",
+      "status": "implemented",
+      "limitations": [
+        "pi is an external dependency"
+      ]
+    },
+    {
+      "id": "atp",
+      "implementation": "core/internal/atp",
+      "status": "implemented",
+      "limitations": [
+        "Graph mutations use the bundled Python librarian"
+      ]
+    },
+    {
+      "id": "ssh",
+      "implementation": "core/internal/ssh",
+      "status": "implemented",
+      "qualification": "Live multi-host qualification is separate"
+    },
+    {
+      "id": "computer-use",
+      "implementation": "core/internal/computer",
+      "status": "platform-dependent",
+      "limitations": [
+        "Native permissions and interactive sessions are required",
+        "Windows/macOS/Wayland are not qualified by Linux tests"
+      ]
+    },
+    {
+      "id": "desktop-stream",
+      "implementation": "core/internal/desktopview",
+      "status": "library-not-integrated"
+    },
+    {
+      "id": "aggregate-quotas",
+      "implementation": "core/internal/quota",
+      "status": "library-not-integrated"
+    },
+    {
+      "id": "signed-updates",
+      "implementation": "core/internal/updates",
+      "status": "library-not-integrated",
+      "limitations": [
+        "No desktop publisher channel configured"
+      ]
+    },
+    {
+      "id": "cef",
+      "status": "not-implemented"
+    }
+  ],
+  "webDeployment": {
+    "implementation": "web",
+    "platform": "Linux",
+    "status": "implemented-development",
+    "productionQualified": false,
+    "authentication": "Password login, hashed session cookies and CSRF; administrator-created accounts",
+    "coreIsolation": "Per-user Bubblewrap namespaces, private data/home/workspace and lifetime ownership flock",
+    "credentialStorage": "AES-256-GCM fields bound to the user; external master key; one-time independent credential import",
+    "providerTools": "Native Codex tool calls and validated textual Gemrouter bridge; core approvals apply to both",
+    "limitations": [
+      "Web deployment does not qualify desktop releases or Windows/macOS",
+      "Host network is shared; configured egress proxy is not a kernel-wide firewall",
+      "SQLite metadata, core history, browser profiles and workspace files are not wholly encrypted",
+      "Resource ceilings are aggregate, not per-user cost or CPU quotas",
+      "MCP accepts public HTTPS endpoints only; local commands and host execution tools are denied",
+      "Gemrouter quota remains unavailable without real quota data; Antigravity requires a supported credential",
+      "External models and MCP services require separate live qualification"
+    ],
+    "documentation": [
+      "WEB_DEPLOYMENT.md",
+      "WEB_API.md",
+      "WEB_SECURITY.md",
+      "frontend-web.md",
+      "web-providers.md",
+      "AGENT_HARNESS.md"
+    ],
+    "appearance": "Dark default on public and authenticated screens; persistent light/dark choice",
+    "browserObservation": "Independent watched tab and operative target; follow agent or inspect another owned tab without taking control; idle hidden-tab screenshots use CDPScreenshotNewSurface and fromSurface:true without physical activation",
+    "assistantHarness": "Current untrusted tab metadata, explicit target IDs, per-run tool scope, assisted forms and verified continuation after interruption",
+    "assistantMarkdown": "GFM semantic layout for live and saved responses; final sanitizer; local pinned libraries",
+    "browserViewportPresets": {
+      "desktop": [
+        [
+          1280,
+          800
+        ],
+        [
+          1920,
+          1080
+        ]
+      ],
+      "tablet": [
+        [
+          768,
+          1024
+        ],
+        [
+          1536,
+          2048
+        ]
+      ],
+      "mobile": [
+        [
+          393,
+          852
+        ],
+        [
+          1080,
+          1920
+        ]
+      ],
+      "dpr": 1,
+      "selectionSync": "actual PNG dimensions"
+    },
+    "chatManagement": "Per-user persistent names and pins; confirmed deletion of idle chat history, browser profiles, recordings and artifacts; workspace files retained",
+    "localization": "EN default; persistent direct EN/IT toggle on public/authenticated screens; original user/model/provider content preserved",
+    "chatColumn": "Persistent desktop collapse from chat header and floating reopen button; hidden panel inert; mobile Browser/Chat control retained",
+    "publicSourceRepository": {
+      "url": "https://github.com/0xfunboy/svolo",
+      "clone": "https://github.com/0xfunboy/svolo.git",
+      "hosting": "Public GitHub repository; authenticated maintainer push"
+    },
+    "sidebar": "Persistent compact desktop rail retaining logo, new chat, settings and profile; full mobile navigation retained"
+  }
+}

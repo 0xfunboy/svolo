@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Svolo: a shared browser and workspace for human-directed agents.">
+  <title>Svolo — your direction, work done</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="ac-standalone">
+  <main id="app">
+    <form class="ac-login">
+      <picture><source media="(prefers-color-scheme:dark)" srcset="/mark-dark.svg"><img src="/mark.svg" width="64" height="64" alt="Svolo"></picture>
+      <h1>Svolo</h1>
+      <p class="ac-login-tag">You set the direction.<br>Svolo gets the work done.</p>
+      <label for="token">Admin token from your private <code>auth.token</code> file</label>
+      <input id="token" type="password" autocomplete="off" spellcheck="false" required aria-describedby="token-note">
+      <button type="submit">Open workspace</button>
+      <small id="token-note">The token stays in this tab’s memory. It is not sent to a model or saved in browser storage.</small>
+      <p class="error" role="alert"></p>
+      <small class="ac-login-note">Development build. Use a dedicated workspace and review the release requirements before deployment.</small>
+    </form>
+  </main>
+  <script type="module" src="/boot.js"></script>
+</body>
+</html>

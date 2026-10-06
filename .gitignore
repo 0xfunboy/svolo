@@ -1,0 +1,49 @@
+# Build products and dependencies
+/build/
+/dist/
+node_modules/
+**/out/
+**/.cache/
+**/__pycache__/
+*.pyc
+*.tsbuildinfo
+.venv/
+# User state and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+auth.token
+vault.key
+service.json
+# Development-only logs
+*.log
+.DS_Store
+Thumbs.db
+# Private runtime data must never be published
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.jsonl
+*.zip
+*.tar.gz
+/data/
+/state/
+/profiles/
+/artifacts/
+.cloudflared/
+.codex/
+.gemini/
+web-admin.json
+web-master.key
+config-svolo.yml
+local-test-session.json
+initial-import.json
+*.session.json
+
+# Desktop native core is built from source during packaging
+/desktop/build/core/

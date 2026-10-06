@@ -1,0 +1,9 @@
+{
+  "id": "model-service",
+  "kind": "chat-completions",
+  "baseURL": "http://127.0.0.1:8080/v1",
+  "model": "REPLACE_WITH_THE_SERVER_MODEL_ID",
+  "vision": false,
+  "stream": true,
+  "maxOutputTokens": 4096
+}

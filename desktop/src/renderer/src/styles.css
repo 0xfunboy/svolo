@@ -1,0 +1,940 @@
+@import "tailwindcss";
+
+/* Visual language: dark neutral surfaces, hairline borders, dashed dividers, system sans with
+   small mono labels, muted grays, a green accent. Light theme follows the system. */
+:root {
+  --canvas: #0f172a;
+  --panel: #172631;
+  --raised: #2b2b2f;
+  --sunken: #0e161e;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.14);
+  --fg: #ececef;
+  --muted: #a1a1aa;
+  --faint: #6e6e78;
+  --accent: #00e676;
+  --accent-soft: rgb(0 230 118 / 0.14);
+  --ok: #5fd38d;
+  --bad: #ff6b6b;
+  --warn: #e5c07b;
+  --add-bg: rgb(95 211 141 / 0.1);
+  --del-bg: rgb(255 107 107 / 0.1);
+  --sidebar: #0e161e;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --canvas: #fcfcfb;
+    --panel: #f4f4f3;
+    --raised: #ebebea;
+    --sunken: #f7f7f6;
+    --line: rgb(0 0 0 / 0.08);
+    --line-strong: rgb(0 0 0 / 0.14);
+    --fg: #1d1d20;
+    --muted: #63636b;
+    --faint: #9a9aa2;
+    --accent: #007b53;
+    --accent-soft: rgb(0 123 83 / 0.1);
+    --ok: #1f9d55;
+    --bad: #d93b3b;
+    --warn: #a86b00;
+    --add-bg: rgb(31 157 85 / 0.09);
+    --del-bg: rgb(217 59 59 / 0.08);
+    --sidebar: #f1f1f0;
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
+  --color-bad: var(--bad);
+  --color-warn: var(--warn);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--sidebar);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+
+.selectable,
+.selectable * {
+  user-select: text;
+}
+
+.drag {
+  -webkit-app-region: drag;
+}
+.drag button,
+.drag input,
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashed-b {
+  border-bottom: 1px dashed var(--line-strong);
+}
+.dashed-t {
+  border-top: 1px dashed var(--line-strong);
+}
+
+/* Shimmer label for live states. */
+.shimmer {
+  background: linear-gradient(90deg, var(--muted) 0%, var(--muted) 40%, var(--fg) 50%, var(--muted) 60%, var(--muted) 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2.2s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* Loading keeps the Svolo silhouette stable and respects reduced-motion settings. */
+.svolo-loading { display: inline-flex; animation: svolo-breathe 1.4s ease-in-out infinite; }
+@keyframes svolo-breathe { 50% { opacity: .42; transform: translateY(-1px); } }
+@media (prefers-reduced-motion: reduce) { .svolo-loading { animation: none; } }
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pulse-dot {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Markdown prose */
+.prose {
+  line-height: 1.65;
+  font-size: 14.5px;
+  overflow-wrap: anywhere;
+}
+.prose > :first-child {
+  margin-top: 0;
+}
+.prose > :last-child {
+  margin-bottom: 0;
+}
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote,
+.prose table,
+.prose .code-block {
+  margin: 0.7em 0;
+}
+.prose li:has(> .task-box),
+.prose li:has(> p > .task-box) {
+  list-style: none;
+  margin-left: -1.3em;
+}
+.prose li:has(> .task-box.done),
+.prose li:has(> p > .task-box.done) {
+  color: var(--muted);
+}
+.task-box {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.55em;
+  vertical-align: -2px;
+  border: 1.5px solid var(--faint);
+  border-radius: 4px;
+}
+.task-box.done {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.task-box.done::after {
+  content: "";
+  position: absolute;
+  left: 3.5px;
+  top: 0.5px;
+  width: 4px;
+  height: 7.5px;
+  border: solid #fff;
+  border-width: 0 1.7px 1.7px 0;
+  transform: rotate(45deg);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.3em 0 0.5em;
+}
+.prose h1 {
+  font-size: 1.35em;
+}
+.prose h2 {
+  font-size: 1.2em;
+}
+.prose h3 {
+  font-size: 1.05em;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+.prose ul {
+  list-style: disc;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li {
+  margin: 0.2em 0;
+}
+.prose li::marker {
+  color: var(--faint);
+}
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.prose a:hover {
+  text-decoration: underline;
+}
+.prose strong {
+  font-weight: 600;
+}
+.prose blockquote {
+  border-left: 2px solid var(--line-strong);
+  padding-left: 0.9em;
+  color: var(--muted);
+}
+.prose hr {
+  border: 0;
+  border-top: 1px dashed var(--line-strong);
+  margin: 1.4em 0;
+}
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--raised);
+  border-radius: 5px;
+  padding: 0.12em 0.36em;
+}
+.prose table {
+  border-collapse: collapse;
+  font-size: 0.93em;
+  display: block;
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--line);
+  padding: 0.35em 0.7em;
+  text-align: left;
+}
+.prose th {
+  background: var(--panel);
+  font-weight: 600;
+}
+
+.code-block {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--sunken);
+  overflow: hidden;
+}
+.code-block > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--faint);
+  border-bottom: 1px solid var(--line);
+}
+.code-block > header button {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.code-block > header button:hover {
+  background: var(--raised);
+  color: var(--fg);
+}
+.visual {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--sunken);
+  overflow: hidden;
+  margin: 0.8em 0;
+}
+.visual.pending {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--faint);
+}
+.visual > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--faint);
+  border-bottom: 1px solid var(--line);
+}
+.visual > header button {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.visual > header button:hover {
+  background: var(--raised);
+  color: var(--fg);
+}
+.visual-frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: normal;
+}
+.visual-error {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--bad);
+}
+.visual-note {
+  font-size: 12px;
+  color: var(--faint);
+}
+.visual pre.code {
+  border-top: 1px solid var(--line);
+}
+
+.code-block pre,
+pre.code {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+/* Shiki dual themes (defaultColor: false) */
+code.hl span {
+  color: var(--shiki-dark);
+}
+@media (prefers-color-scheme: light) {
+  code.hl span {
+    color: var(--shiki-light);
+  }
+}
+
+/* Empty-state backdrop: the wallpaper picked in Settings (lib/wallpapers.ts sets --wallpaper-dusk and
+   --wallpaper-day; dusk in dark mode, day in light), masked to fade into the canvas where the empty state's text and
+   the composer sit. A mask rather than a canvas-colored gradient on top: the overlay let a 1px row of sky show at a
+   fractional bottom edge. The picker's thumbnails switch the same way. */
+.hero {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--wallpaper-dusk) center top / cover no-repeat;
+  mask-image: linear-gradient(to bottom, black 50%, transparent 94%);
+}
+.wallpaper-thumb {
+  background: var(--wallpaper-dusk) center / cover no-repeat;
+}
+@media (prefers-color-scheme: light) {
+  .hero {
+    background-image: var(--wallpaper-day);
+  }
+  .wallpaper-thumb {
+    background-image: var(--wallpaper-day);
+  }
+}
+
+/* Thinking: shown in full like pi's terminal, italic and muted. */
+.thinking .prose {
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--muted);
+}
+.thinking .prose code {
+  font-style: normal;
+}
+
+/* A lament's reports read at the size of the card text around them. */
+.lament-report .prose,
+.github-body .prose {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Composer: grey hairline with faint pi-logo tints and a soft blurred pi glow behind it. On focus the border
+   brightens (beautifului.dev) and becomes a slowly flowing coral/blue/yellow gradient (Gemini-like). */
+.composer {
+  --pi-coral: #f09082;
+  --pi-blue: #4d9abf;
+  --pi-yellow: #f1be58;
+  --pi-gray: #7c7c86;
+}
+.composer-box {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--composer-fill, var(--panel)), var(--composer-fill, var(--panel))) padding-box,
+    linear-gradient(
+        115deg,
+        color-mix(in srgb, var(--pi-coral) 45%, var(--line-strong)),
+        var(--line-strong) 28%,
+        var(--line-strong) 58%,
+        color-mix(in srgb, var(--pi-blue) 45%, var(--line-strong)) 80%,
+        color-mix(in srgb, var(--pi-yellow) 40%, var(--line-strong))
+      )
+      border-box;
+  background-size:
+    100% 100%,
+    220% 220%;
+  background-position:
+    0 0,
+    0% 50%;
+  transition: box-shadow 0.25s ease;
+}
+.composer-box:focus-within {
+  background:
+    linear-gradient(var(--composer-fill, var(--panel)), var(--composer-fill, var(--panel))) padding-box,
+    linear-gradient(115deg, var(--pi-coral), var(--pi-gray) 30%, var(--pi-blue) 52%, var(--pi-gray) 74%, var(--pi-yellow), var(--pi-coral))
+      border-box;
+  background-size:
+    100% 100%,
+    220% 220%;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  animation: composer-flow 7s ease-in-out infinite alternate;
+}
+.composer-glow {
+  position: absolute;
+  inset: 10px 14px -6px;
+  z-index: 0;
+  border-radius: 24px;
+  background: linear-gradient(115deg, var(--pi-coral), var(--pi-gray) 35%, var(--pi-blue) 58%, var(--pi-gray) 78%, var(--pi-yellow));
+  background-size: 220% 220%;
+  filter: blur(24px);
+  opacity: 0.13;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.composer:focus-within .composer-glow {
+  opacity: 0.3;
+  animation: composer-glow-flow 7s ease-in-out infinite alternate;
+}
+/* Floating over the ATP graph: the canvas shows through, blurred, and a shadow lifts the box off it. */
+.composer-floating {
+  --composer-fill: color-mix(in srgb, var(--panel) 80%, transparent);
+}
+.composer-floating .composer-box {
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 18px 48px -18px rgb(0 0 0 / 0.55);
+}
+.composer-floating .composer-box:focus-within {
+  box-shadow: 0 18px 48px -18px rgb(0 0 0 / 0.55);
+}
+@keyframes composer-glow-flow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+@keyframes composer-flow {
+  from {
+    background-position:
+      0 0,
+      0% 50%;
+  }
+  to {
+    background-position:
+      0 0,
+      100% 50%;
+  }
+}
+@media (prefers-color-scheme: light) {
+  .composer-glow {
+    opacity: 0.1;
+  }
+  .composer:focus-within .composer-glow {
+    opacity: 0.22;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .composer-box:focus-within,
+  .composer:focus-within .composer-glow {
+    animation: none;
+  }
+}
+
+/* Turn rail (TurnRail, Codex's user message navigation rail): a 2px line per message you sent, 6px at
+   rest and 26px under the pointer, with the three neighbours on each side magnified like the Dock.
+   Turns on screen are brighter; bookmarked ones stay lit and carry a dot. */
+.turn-rail-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: min(70vh, 40rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.turn-rail-list::-webkit-scrollbar {
+  display: none;
+}
+.turn-rail-list[data-fade] {
+  mask-image: linear-gradient(var(--fade-top, #000), #000 2.5rem, #000 calc(100% - 2.5rem), var(--fade-bottom, #000));
+}
+.turn-rail-list[data-fade~="top"] {
+  --fade-top: transparent;
+}
+.turn-rail-list[data-fade~="bottom"] {
+  --fade-bottom: transparent;
+}
+.turn-rail-item {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  width: 36px;
+  height: 10px;
+  outline: none;
+}
+.turn-rail-marker {
+  --progress: 0;
+  position: relative;
+  display: flex;
+  width: 26px;
+  height: 2px;
+  color: var(--muted);
+  opacity: var(--bookmarked, 0.4);
+}
+.turn-rail-marker[data-bookmarked] {
+  --bookmarked: 1;
+}
+.turn-rail-line,
+.turn-rail-dot {
+  background: currentColor;
+  transition: transform 0.16s linear(0, 0.398 10%, 0.682 20%, 0.843 30%, 0.925 40%, 0.972 50%, 1.004 60%, 1.008 70%, 1.003 80%, 1);
+}
+.turn-rail-line {
+  width: 100%;
+  height: 100%;
+  border-radius: 1px;
+  transform-origin: left;
+  transform: scaleX(calc(0.2308 + 0.7692 * var(--progress)));
+}
+.turn-rail-dot {
+  position: absolute;
+  left: 2px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  transform: translateX(calc(26px * (0.2308 + 0.7692 * var(--progress))));
+}
+.turn-rail-item[aria-current="true"] .turn-rail-marker {
+  color: var(--fg);
+  opacity: var(--bookmarked, 0.6);
+}
+.turn-rail-list:has([data-hot]) .turn-rail-item[aria-current="true"]:not([data-hot]) .turn-rail-marker {
+  color: var(--muted);
+  opacity: var(--bookmarked, 0.4);
+}
+.turn-rail-marker[data-near="3"] {
+  --progress: 0.2;
+}
+.turn-rail-marker[data-near="2"] {
+  --progress: 0.4;
+}
+.turn-rail-marker[data-near="1"] {
+  --progress: 0.7;
+}
+.turn-rail-item[data-hot] .turn-rail-marker {
+  --progress: 1;
+  color: var(--fg);
+  opacity: 1;
+}
+.turn-rail-list[data-scrubbing] :is(.turn-rail-line, .turn-rail-dot) {
+  transition-duration: 0s;
+}
+.turn-rail-card {
+  animation: turn-rail-card-in 0.12s ease-out;
+}
+@keyframes turn-rail-card-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Answer preview: three muted lines; tables become fixed columns with truncated cells. */
+.rail-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  max-height: 60px;
+  overflow: hidden;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.rail-preview :is(p, ul, ol, blockquote, table, pre, h1, h2, h3, h4, .code-block) {
+  margin: 0;
+}
+.rail-preview :is(h1, h2, h3, h4, strong) {
+  font-weight: 600;
+}
+.rail-preview :is(ul, ol) {
+  padding-left: 1.2em;
+}
+.rail-preview ul {
+  list-style: disc;
+}
+.rail-preview ol {
+  list-style: decimal;
+}
+.rail-preview .code-block > header {
+  display: none;
+}
+.rail-preview code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+.rail-preview table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.rail-preview :is(th, td) {
+  overflow: hidden;
+  padding: 0 0.5em 0 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rail-preview th {
+  font-weight: 500;
+}
+@media (prefers-reduced-motion: reduce) {
+  .turn-rail-line,
+  .turn-rail-dot,
+  .turn-rail-card {
+    transition-duration: 0s;
+    animation: none;
+  }
+}
+
+/* Kanban: the board settles in, a card's dialog (and the update dialog) rises over a dimmed page. */
+.page-enter {
+  animation: page-in 180ms ease-out;
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+.card-dialog[open] {
+  animation: dialog-in 160ms ease-out;
+}
+.card-dialog[open]::backdrop {
+  animation: backdrop-in 160ms ease-out;
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .card-dialog[open],
+  .card-dialog[open]::backdrop {
+    animation: none;
+  }
+}
+
+/* ATP page graph (AtpGraph): cards per node, edges that march into running nodes. */
+/* A card's status color (--s) drives its rail, its state text and, zoomed out, its whole block (--far). The layer
+   sets --k to the zoom, so outlines and the glow keep their size on screen at any zoom. */
+.atp-node {
+  --s: var(--faint);
+  --far: color-mix(in srgb, var(--faint) 30%, transparent);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--fg);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.16);
+  transition:
+    opacity 160ms ease-out,
+    border-color 200ms ease-out,
+    background-color 200ms ease-out;
+}
+.atp-node::before {
+  content: "";
+  position: absolute;
+  top: 11px;
+  bottom: 11px;
+  left: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--s);
+}
+.atp-node:hover {
+  border-color: var(--muted);
+}
+.atp-state {
+  color: var(--s);
+}
+.atp-node[data-look="done"] {
+  --s: var(--ok);
+  --far: color-mix(in srgb, var(--ok) 62%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 22%, var(--line-strong));
+  background: color-mix(in srgb, var(--ok) 4%, var(--panel));
+}
+.atp-node[data-look="failed"] {
+  --s: var(--bad);
+  --far: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 60%, transparent);
+  background: color-mix(in srgb, var(--bad) 9%, var(--panel));
+}
+.atp-node[data-look="stalled"] {
+  --s: var(--warn);
+  --far: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 60%, transparent);
+  background: color-mix(in srgb, var(--warn) 7%, var(--panel));
+}
+.atp-node[data-look="ready"] {
+  --s: var(--accent);
+  --far: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.atp-node[data-look="locked"] {
+  --s: var(--line-strong);
+  background: var(--sunken);
+}
+.atp-node[data-look="locked"] .atp-title {
+  color: var(--muted);
+}
+.atp-node[data-look="locked"] .atp-state {
+  color: var(--faint);
+}
+/* A running node glows. */
+.atp-node[data-look="running"] {
+  --s: var(--accent);
+  --far: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 11%, var(--panel));
+  animation: atp-glow 2.4s ease-in-out infinite;
+}
+@keyframes atp-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 calc(1px / var(--k, 1)) var(--accent),
+      0 0 calc(14px / var(--k, 1)) calc(1px / var(--k, 1)) color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 calc(1px / var(--k, 1)) var(--accent),
+      0 0 calc(34px / var(--k, 1)) calc(8px / var(--k, 1)) color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+}
+/* A split node (a scope, CLAIMED until its subtasks are done) reads as a stack of cards. */
+.atp-node[data-look="scope"] {
+  --s: color-mix(in srgb, var(--accent) 70%, transparent);
+  --far: color-mix(in srgb, var(--accent) 30%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow:
+    4px 4px 0 -1px var(--panel),
+    4px 4px 0 0 color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.atp-node[data-look="closed"] {
+  --far: color-mix(in srgb, var(--faint) 12%, transparent);
+  opacity: 0.45;
+}
+.atp-node[data-look="closed"] .atp-title {
+  text-decoration: line-through;
+}
+.atp-node[data-match] {
+  outline: calc(2px / var(--k, 1)) solid var(--warn);
+  outline-offset: calc(3px / var(--k, 1));
+}
+.atp-node[data-selected] {
+  outline: calc(2px / var(--k, 1)) solid var(--fg);
+  outline-offset: calc(3px / var(--k, 1));
+}
+.atp-node[data-dim] {
+  opacity: 0.32;
+}
+.atp-edge {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 160ms ease-out;
+}
+.atp-edge[data-done] {
+  stroke: color-mix(in srgb, var(--ok) 32%, transparent);
+}
+.atp-edge[data-scope] {
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+.atp-edge[data-lit] {
+  stroke: var(--fg);
+  stroke-width: 1.5;
+}
+.atp-edge[data-live] {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+  animation: atp-march 0.9s linear infinite;
+  filter: drop-shadow(0 0 3px var(--accent));
+}
+@keyframes atp-march {
+  to {
+    stroke-dashoffset: -13;
+  }
+}
+.atp-edge[data-dim] {
+  opacity: 0.1;
+}
+/* Zoomed out: bigger titles only, then status-colored blocks. */
+[data-lod="mid"] .atp-meta {
+  display: none;
+}
+[data-lod="mid"] .atp-title {
+  font-size: 19px;
+  line-height: 23px;
+  font-weight: 500;
+}
+[data-lod="far"] .atp-node {
+  border-color: transparent;
+  border-radius: 14px;
+  background: var(--far);
+}
+[data-lod="far"] .atp-node:not([data-look="running"]) {
+  box-shadow: none;
+}
+[data-lod="far"] .atp-node::before,
+[data-lod="far"] .atp-node > * {
+  display: none;
+}
+/* Reports and instructions in the node panel: their "# Outcome" headings are section labels, not titles. */
+.atp-doc .prose :is(h1, h2, h3, h4) {
+  margin: 1.1em 0 0.3em;
+  font-size: 12px;
+  color: var(--muted);
+}
+.atp-doc .prose > :first-child {
+  margin-top: 0;
+}
+/* The orchestrator's chat as bubbles over the graph (Atp.tsx ChatBubbles): compact prose, a new bubble rises in,
+   older ones scroll away under a fade at the top, and the whole list fades away once the chat is quiet. The mask
+   makes the list a backdrop root, so bubbles are nearly opaque instead of blurred glass. */
+.atp-bubbles {
+  scrollbar-width: none;
+  mask-image: linear-gradient(to bottom, transparent, black 2.5rem);
+  transition: opacity 260ms ease-out;
+}
+.atp-bubbles[data-faded] {
+  opacity: 0;
+  transition-duration: 1.4s;
+}
+.atp-bubbles[data-faded] * {
+  pointer-events: none;
+}
+.atp-bubble .prose {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.atp-bubble .prose :is(h1, h2, h3, h4) {
+  margin: 0.8em 0 0.3em;
+  font-size: 13px;
+}
+.bubble-in {
+  animation: bubble-in 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atp-node,
+  .atp-edge,
+  .bubble-in {
+    animation: none !important;
+  }
+}

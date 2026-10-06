@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "project_name": "Inspect a dedicated test workspace",
+    "version": "1.4",
+    "project_status": "DRAFT"
+  },
+  "nodes": {
+    "inspect": {
+      "title": "Inspect project checks",
+      "instruction": "Read the test workspace instructions and identify the commands needed to verify this checkout. Do not install software or modify files. Report which commands require authorization.",
+      "dependencies": [],
+      "status": "READY"
+    },
+    "verify": {
+      "title": "Run authorized checks",
+      "instruction": "Run only the project checks authorized by the user. Report command outputs, failures and tests not executed. Do not publish or edit the plan directly.",
+      "dependencies": [
+        "inspect"
+      ],
+      "status": "LOCKED"
+    }
+  }
+}

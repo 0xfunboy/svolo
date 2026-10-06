@@ -1,0 +1,10 @@
+{
+  "entry":"open","max_steps":10,"max_duration_ms":120000,"keep_browser":true,
+  "nodes":{
+    "open":{"tool":"navigate","args":{"url":"{{ url }}"},"next":"inspect"},
+    "inspect":{"tool":"read-page","args":{},"save":"page","next":"human"},
+    "human":{"hitl":"Inspect the actual page, then explicitly resume this routine.","resume":"capture"},
+    "capture":{"tool":"screenshot","args":{"save":true},"save":"artifact","next":"done"},
+    "done":{"terminal":"success","message":"Human-reviewed screenshot saved."}
+  }
+}

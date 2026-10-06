@@ -1,0 +1,17 @@
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+const desktop=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const root=resolve(desktop,'..');
+const platform=process.env.GOOS || ({win32:'windows',darwin:'darwin',linux:'linux'}[process.platform]);
+const arch=process.env.GOARCH || ({x64:'amd64',arm64:'arm64'}[process.arch]);
+if (!['windows','darwin','linux'].includes(platform) || !['amd64','arm64'].includes(arch)) throw new Error('Supported core targets are Linux/Windows/macOS, x64/ARM64.');
+const out=join(desktop,'build','core');mkdirSync(out,{recursive:true});
+const file=join(out,platform==='windows'?'svolo-core.exe':'svolo-core');
+const result=spawnSync('go',['build','-trimpath','-ldflags=-s -w','-o',file,'./cmd/svolo-core'],{cwd:join(root,'core'),stdio:'inherit',env:{...process.env,CGO_ENABLED:'0',GOOS:platform,GOARCH:arch}});
+if(result.error)throw result.error;
+if(result.status!==0)process.exit(result.status||1);
+const product=JSON.parse(readFileSync(join(root,'product.json'),'utf8'));
+writeFileSync(join(out,'build-info.json'),JSON.stringify({product:product.name,version:product.version,platform,arch,productionQualified:false},null,2)+'\n');
+console.log(`Built core ${product.version}: ${platform}/${arch} -> ${file}`);

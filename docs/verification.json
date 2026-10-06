@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "product": "Svolo",
+  "version": "0.3.1-dev",
+  "recordedAt": "2026-10-05T23:47:12.463119+00:00",
+  "productionQualified": false,
+  "releaseChannel": "development",
+  "environment": {
+    "os": "Linux 6.17.0-22-generic x86_64",
+    "go": "go1.27.1 linux/amd64",
+    "node": "v24.18.0",
+    "pnpm": "10.34.3",
+    "typescript": "6.0.3",
+    "browser": "Chrome for Testing 154.0.8037.92 linux64",
+    "electron": "44.5.1",
+    "modelSDK": "@earendil-works/pi-coding-agent 1.0.3",
+    "cloudflared": "2026.8.2"
+  },
+  "evidence": {
+    "directory": "/home/your-user/svolo-installation",
+    "currentSource": "/home/your-user/svolo",
+    "sourceModifiedSinceInputArchive": true,
+    "runtimeChecksRerunDuringThisDocumentationUpdate": false,
+    "scope": "Results read from current installation logs/reports. Unit/mock tests, local synthetic acceptance and real configured-account/browser checks are identified separately."
+  },
+  "checks": [
+    {
+      "name": "delivery-source-manifest",
+      "result": "pass",
+      "trackedHashes": 492,
+      "inputArchiveSHA256": "803af792edd263d7173399d9009a8f98f2f3da7582ea362199a520560deea7a5",
+      "evidence": [
+        "manifest-audit.log",
+        "source-audit.json"
+      ],
+      "scope": "Integrity of the original archive after extraction, before the subsequent web deployment changes; not the final updated source manifest."
+    },
+    {
+      "name": "go-build",
+      "result": "pass",
+      "target": "linux/amd64",
+      "evidence": [
+        "core-build.log",
+        "desktop-build.log",
+        "status.json"
+      ],
+      "scope": "Native Linux core builds, including the deployed web core. GOFLAGS=-buildvcs=false is used for an archive inside a parent Git tree."
+    },
+    {
+      "name": "go-vet",
+      "result": "pass",
+      "command": "go vet ./...",
+      "evidence": [
+        "core-dark-tabs-vet.log",
+        "status.json"
+      ]
+    },
+    {
+      "name": "go-race-tests",
+      "result": "pass",
+      "command": "go test -race ./...",
+      "packagesPassed": 20,
+      "packagesWithoutTestFiles": 6,
+      "latestResultsCached": true,
+      "evidence": [
+        "core-dark-tabs-all-race.log",
+        "core-test-race-verbose.log",
+        "core-checks-summary.json"
+      ],
+      "initialVerboseRun": {
+        "passedTopLevelTests": 100,
+        "passedIncludingSubtests": 299,
+        "failedTests": 0,
+        "optInTestsSkipped": 4,
+        "skippedResolvedBySeparateE2E": true
+      },
+      "scope": "All current Go packages passed the race suite after the final dark-theme/tab/harness and aged-background screenshot changes; 17 package results cached. Initial verbose counts retained as earlier evidence, not current test totals. Opt-in native acceptance and live provider checks recorded separately.",
+      "cachedPackageResults": 17
+    },
+    {
+      "name": "go-browser-e2e",
+      "result": "pass",
+      "optInAcceptanceTests": 4,
+      "remainingSkipped": 0,
+      "standardChromiumSandbox": true,
+      "evidence": [
+        "browser-e2e.log",
+        "server-browser-e2e.log",
+        "core-checks-summary.json"
+      ],
+      "scope": "Actual Chromium/CDP, synthetic local documents, real core and HTTP daemon, and simulated model provider. Separate from the live provider/browser checks below."
+    },
+    {
+      "name": "cli",
+      "result": "pass",
+      "checks": 4,
+      "evidence": [
+        "core-smoke-cli.log"
+      ],
+      "scope": "Built native executable, authenticated local daemon, manual CLI and scoped stdio MCP. This local CLI smoke does not qualify external MCP accounts."
+    },
+    {
+      "name": "detached-service-smoke",
+      "result": "pass",
+      "checks": 7,
+      "evidence": [
+        "core-service-smoke.log"
+      ],
+      "scope": "Detached local daemon lifecycle, persistence and authenticated stop; this smoke uses no remote SSH host or OS user-service manager. The actual deployed systemd services are verified separately."
+    },
+    {
+      "name": "desktop-install",
+      "result": "pass",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "packageManager": "pnpm@10.34.3",
+      "packagesAdded": 410,
+      "evidence": [
+        "pnpm-install.log"
+      ],
+      "scope": "Desktop dependencies installed successfully; the delivery-time DNS block has been resolved."
+    },
+    {
+      "name": "desktop-typecheck",
+      "result": "pass",
+      "command": "pnpm typecheck",
+      "typescript": "6.0.3",
+      "evidence": [
+        "desktop-typecheck-current.log"
+      ],
+      "scope": "Full main/preload and renderer TypeScript typecheck."
+    },
+    {
+      "name": "desktop-vitest",
+      "result": "pass",
+      "command": "pnpm test",
+      "testFiles": 46,
+      "passedTests": 384,
+      "failedTests": 0,
+      "evidence": [
+        "desktop-tests-current.log"
+      ]
+    },
+    {
+      "name": "desktop-build",
+      "result": "pass",
+      "command": "pnpm build",
+      "target": "linux/amd64",
+      "evidence": [
+        "desktop-build.log"
+      ],
+      "scope": "Go core and Electron Vite main/preload/renderer built; this is not a signed installer or a cross-platform runtime qualification."
+    },
+    {
+      "name": "desktop-linux-runtime",
+      "result": "pass",
+      "electron": "44.5.1",
+      "display": "Xvfb",
+      "evidence": [
+        "installed-desktop-check.json",
+        "installed-desktop.log",
+        "desktop-screenshot.png"
+      ],
+      "scope": "Installed current-user Electron desktop with real Go core and authenticated health on a virtual X11 display. Current interactive session, Windows/macOS and Wayland were not qualified."
+    },
+    {
+      "name": "source-contracts",
+      "result": "pass",
+      "checks": 9,
+      "evidence": [
+        "source-contract-tests.log",
+        "source-audit.json"
+      ],
+      "scope": "Node assertions against transpiled pure TypeScript modules and release contracts; separate from desktop Vitest."
+    },
+    {
+      "name": "typescript-syntax",
+      "result": "pass",
+      "files": 169,
+      "typescript": "6.0.3",
+      "evidence": [
+        "typescript-syntax.log"
+      ],
+      "scope": "Source transpilation check performed during initial audit; full desktop typecheck/build results are recorded separately."
+    },
+    {
+      "name": "product-consistency",
+      "result": "pass",
+      "counts": {
+        "json": 27,
+        "markdownLinks": 62,
+        "sourceImports": 588,
+        "assets": 78,
+        "files": 518
+      },
+      "evidence": [
+        "web-product-check.json"
+      ],
+      "scope": "Latest recorded source audit before final documentation and packaging updates; final packaging reruns the same audit. No runtime or compilation qualification is implied."
+    },
+    {
+      "name": "product-audit-negative-tests",
+      "result": "pass",
+      "checks": 6,
+      "evidence": [
+        "product-negative-tests.log"
+      ]
+    },
+    {
+      "name": "task-plan-contracts",
+      "result": "pass",
+      "checks": 4,
+      "evidence": [
+        "task-plan-tests.log"
+      ]
+    },
+    {
+      "name": "release-publication-guard",
+      "result": "pass-expected-rejection",
+      "exitCode": 1,
+      "evidence": [
+        "release-guard.log"
+      ],
+      "scope": "Production publication remains disabled; no signed publisher/update channel is configured."
+    },
+    {
+      "name": "web-dependency-install",
+      "result": "pass",
+      "command": "corepack pnpm install --frozen-lockfile --ignore-scripts",
+      "workingDirectory": "web",
+      "packageManager": "pnpm@10.34.3",
+      "packagesAdded": 121,
+      "modelSDK": {
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "1.0.3",
+        "runtime": "web/node_modules/@earendil-works/pi-coding-agent/dist/core/model-runtime.js"
+      },
+      "lifecycleScripts": "disabled",
+      "offlineModuleImport": "pass",
+      "previousRuntimeModuleHashIdentical": true,
+      "evidence": [
+        "web-dependency-install.log",
+        "web-dependency-checks.json"
+      ],
+      "scope": "App-owned dependency manifest and lockfile; gateway SDK runtime no longer depends on the external toolchain copy."
+    },
+    {
+      "name": "web-unit-and-mock-tests",
+      "result": "pass",
+      "command": "node --test web/*.test.mjs",
+      "passedTests": 53,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "providerTests": 14,
+      "securityTests": 39,
+      "evidence": [
+        "web-app-tests.log",
+        "web-provider-tests.log",
+        "web-dependency-checks.json"
+      ],
+      "scope": "Temporary databases/credentials, real local HTTP gateway with simulated cores and provider transports. Includes hashing, user-bound authenticated encryption, CSRF/session expiry, per-user data, restricted APIs, tool bridge validation and DNS-pinned egress. No external inference in this suite."
+    },
+    {
+      "name": "web-frontend-runtime",
+      "result": "pass",
+      "screens": 10,
+      "javascriptErrors": 0,
+      "horizontalOverflow": false,
+      "evidence": [
+        "frontend-web-smoke.json",
+        "frontend-web-final-smoke.log"
+      ],
+      "scope": "Browser-rendered landing/login/workspace/settings and desktop/mobile layouts against the real gateway; screenshots are runtime captures."
+    },
+    {
+      "name": "web-frontend-interaction-contracts",
+      "result": "pass",
+      "checks": 8,
+      "evidence": [
+        "frontend-contract-smoke.json"
+      ],
+      "scope": "Simulated HTTP API used to check prompt/stream/approval/human-input/CSRF UI contracts; separate from native agent/model execution."
+    },
+    {
+      "name": "web-native-two-user-isolation",
+      "result": "pass",
+      "checks": 19,
+      "modelCalls": false,
+      "temporaryFixtureRemoved": true,
+      "flockHeldWhileCoreRunning": true,
+      "flockReleasedBeforeDirectoryRemoval": true,
+      "evidence": [
+        "native-isolation-results.json",
+        "web-infrastructure.json"
+      ],
+      "scope": "Real systemd Node gateway, distinct per-user bwrap cores and actual Chromium. Same-path workspace content is isolated; traversal/foreign session/exec attempts fail. Chromium displays the proxy denial page for the loopback gateway without target service data. Host networking remains shared."
+    },
+    {
+      "name": "web-live-provider-metadata",
+      "result": "pass",
+      "providers": {
+        "gemrouter": {
+          "modelCount": 16,
+          "quota": "unavailable: not offered by observed endpoint/headers"
+        },
+        "codex": {
+          "modelCount": 9,
+          "quota": "available via account/rateLimits/read"
+        },
+        "antigravity": {
+          "configured": false,
+          "modelCount": 0,
+          "quota": "unavailable"
+        }
+      },
+      "evidence": [
+        "web-provider-checks.json",
+        "web-final-status.json"
+      ],
+      "scope": "Real configured-account catalog/quota reads; catalog presence does not prove every model works."
+    },
+    {
+      "name": "web-live-provider-browser-runs",
+      "result": "pass",
+      "providers": [
+        {
+          "id": "codex",
+          "completed": true,
+          "browserSteps": 2,
+          "evidence": "web-agent-browser-live.json"
+        },
+        {
+          "id": "gemrouter",
+          "model": "gemini-3.8-flash",
+          "completed": true,
+          "browserSteps": 2,
+          "toolCalling": "text",
+          "evidence": "web-gemrouter-agent-browser-live.json"
+        }
+      ],
+      "evidence": [
+        "web-provider-checks.json",
+        "web-agent-browser-live.json",
+        "web-gemrouter-agent-browser-live.json"
+      ],
+      "scope": "Two real configured providers completed browser-agent runs through gateway and Go core, observing Example Domain at https://example.com/. Gemrouter uses a validated text tool bridge because native tool calling on this router surface returned HTTP 400. This is limited smoke coverage, not all-model/streaming/image/error qualification."
+    },
+    {
+      "name": "web-public-http",
+      "result": "pass",
+      "checks": 12,
+      "landingStatus": 200,
+      "healthStatus": 200,
+      "anonymousAPIStatus": 401,
+      "forgedOriginOrHostStatus": 403,
+      "evidence": [
+        "public-http-checks.json"
+      ],
+      "scope": "HTTPS public gateway and loopback Host rejection checks; this anonymous probe did not perform password login."
+    },
+    {
+      "name": "web-public-authenticated",
+      "result": "pass",
+      "authenticatedStatus": 200,
+      "providerListStatus": 200,
+      "modelSwitches": 3,
+      "forgedCSRFStatus": 403,
+      "evidence": [
+        "web-public-authenticated.json",
+        "web-final-status.json"
+      ],
+      "scope": "Authorized configured account checked over public HTTPS using private session credentials; no passwords or session secrets are recorded here."
+    },
+    {
+      "name": "web-public-tls",
+      "result": "pass",
+      "hostname": "svolo.eeess.cyou",
+      "hostnameVerified": true,
+      "verifyReturnCode": 0,
+      "issuer": "Google Trust Services WE1",
+      "certificateSAN": [
+        "eeess.cyou",
+        "*.eeess.cyou"
+      ],
+      "notBefore": "2026-08-15T06:14:40Z",
+      "notAfter": "2026-11-13T07:12:20Z",
+      "evidence": [
+        "public-tls-certificate.txt",
+        "public-tls-handshake.log"
+      ]
+    },
+    {
+      "name": "web-systemd-and-tunnel",
+      "result": "pass",
+      "gateway": "127.0.0.1:7340",
+      "unitEnabled": {
+        "svolo-web.service": true,
+        "svolo-cloudflared.service": true
+      },
+      "unitActive": {
+        "svolo-web.service": true,
+        "svolo-cloudflared.service": true
+      },
+      "linger": true,
+      "tunnelConnections": 4,
+      "unitAndIngressValidation": "pass",
+      "existingCore7331Exposed": false,
+      "evidence": [
+        "web-infrastructure.json",
+        "status.json",
+        "web-final-status.json"
+      ],
+      "scope": "Actual user services, dedicated Cloudflare tunnel and DNS. Linger and enablement are configured; a complete host reboot has not been exercised."
+    },
+    {
+      "name": "web-restart-and-crash-recovery",
+      "result": "pass",
+      "simulatedCrash": "SIGKILL of only the gateway main process",
+      "recoveredAutomatically": true,
+      "recoveryMs": 7129,
+      "sessionCookiePersists": true,
+      "sessionsPersist": true,
+      "providerRunsPersist": true,
+      "concurrentProfileOwnerRefused": true,
+      "browserNavigationStatus": 200,
+      "browserScreenshotStatus": 200,
+      "publicHTTPSStatus": 200,
+      "wholeHostRebootTested": false,
+      "evidence": [
+        "web-restart-verification.json",
+        "web-crash-recovery.json",
+        "web-final-status.json"
+      ],
+      "scope": "Normal app restart and automatic recovery after a process crash; no full host reboot or prolonged endurance run."
+    },
+    {
+      "name": "web-test-session-cleanup",
+      "result": "pass",
+      "loggedOutCookieStatus": 401,
+      "privateFixtureRemoved": true,
+      "publicHealthStatus": 200,
+      "evidence": [
+        "web-test-session-cleanup.json"
+      ],
+      "scope": "Final authorized test session logout and private fixture cleanup; reported by the deployment owner without rerunning runtime checks during this documentation update."
+    },
+    {
+      "name": "agent-harness-unit-and-contract-tests",
+      "result": "pass",
+      "passedTopLevelTests": 20,
+      "passedIncludingSubtests": 27,
+      "harnessTopLevelTests": 13,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "raceDetector": true,
+      "vet": "pass",
+      "evidence": [
+        "agent-harness-tests.log",
+        "agent-harness-checks.json"
+      ],
+      "scope": "Local HTTP model providers, temporary stores and mocked browser. Grounded authorized form support, supplied facts and user-chosen persona, required missing email/manual verification, fresh untrusted tab metadata in Responses and Chat, explicit tab IDs, direct/nested ToolScope denial, continuation after cancellation/interruption/failure, no dangling calls or automatic replay, Stop and final control-release ordering. No external inference or actual registration in this suite. Final regression fix also rejects historic/terminal Stop and serializes its human-control handoff before session reuse."
+    },
+    {
+      "name": "browser-tab-observation-and-reference-regression",
+      "result": "pass",
+      "browserTopLevelTests": 10,
+      "browserSubtests": 14,
+      "browserPassedIncludingSubtests": 24,
+      "serverTopLevelTests": 3,
+      "serverSubtests": 4,
+      "serverPassedIncludingSubtests": 7,
+      "raceDetector": true,
+      "standardChromiumSandbox": true,
+      "evidence": [
+        "browser-tab-checks.json",
+        "browser-tabs-regression-e2e.log",
+        "server-tabs-regression-e2e.log"
+      ],
+      "scope": "Initial complete suite before the additional aged-hidden screenshot investigation: browser unit/regression plus real local Chromium forms; explicit tab identity, refs bound to originating tab/document, observation preserves selection/control and stays outside action queue. Final full opt-in suites recorded separately below."
+    },
+    {
+      "name": "browser-background-view-native-regression",
+      "result": "pass",
+      "passedTopLevelTests": 1,
+      "raceDetector": true,
+      "realChromium": true,
+      "backgroundCaptureMs": 47.336931,
+      "evidence": [
+        "browser-background-view-e2e.log"
+      ],
+      "scope": "Initial fresh hidden-tab native regression before the aged static surface bug was isolated. A physically active, B independently captured with distinct pixels, focus/control unchanged. Original 10 repeated fresh-surface passes did not reproduce aged-page stalls; final native feature regression is separate below.",
+      "productionCaptureCodeChanged": false,
+      "reportedStressCaptures": {
+        "passed": 10,
+        "attempted": 10,
+        "minimumMs": 32,
+        "maximumMs": 65
+      },
+      "operationalGatewayStallsResolved": true,
+      "targetedOperationalGatewayVerification": "pass after the final CDPScreenshotNewSurface deployment; initial fresh-tab test alone did not resolve stalls",
+      "followupEvidence": [
+        "browser-aged-runtime-final.json",
+        "frontend-viewer-after-capture-fix.json"
+      ]
+    },
+    {
+      "name": "web-dark-theme-runtime",
+      "result": "pass",
+      "themeChecks": 13,
+      "darkScreens": 12,
+      "lightScreens": 1,
+      "sampledSurfaces": 80,
+      "sampledDarkSurfaces": 75,
+      "sampledLightSurfaces": 5,
+      "javascriptErrors": 0,
+      "horizontalOverflow": false,
+      "lightPreferencePersistsAfterReload": true,
+      "evidence": [
+        "frontend-dark-smoke.json",
+        "frontend-dark-smoke.log"
+      ],
+      "scope": "Real browser theme/layout inspection across landing, login, workspace, providers, modal, MCP, users, account and mobile views; 80 sampled surfaces include 75 dark and 5 light. The initial visual theme run did not show a loaded browser frame; viewer behavior is evidenced separately by native regression and the live form run. This is sampled visual/runtime coverage, not a complete accessibility certification."
+    },
+    {
+      "name": "web-live-gemrouter-form-harness",
+      "result": "pass",
+      "provider": "gemrouter",
+      "model": "gemini-3.8-flash",
+      "realModel": true,
+      "realBrowser": true,
+      "checks": 10,
+      "steps": 6,
+      "executedTools": 6,
+      "otherTabViewerFrames": 99,
+      "formA": {
+        "authorizedNameFilled": true,
+        "authorizedEmailFilled": true,
+        "consentChecked": true,
+        "submitted": true,
+        "confirmationReadFromPage": true
+      },
+      "formBUntouched": true,
+      "allPageActionsHaveExplicitTab": true,
+      "externalAccountCreated": false,
+      "evidence": [
+        "form-harness-live.json"
+      ],
+      "scope": "Real configured Gemrouter agent and real Chromium operated a local authorized registration fixture in tab A while tab B was observed independently for 99 frames. Name/email supplied for the fixture, checkbox, submission and confirmation were verified; form B remained unchanged. No external account registration or real CAPTCHA/OTP flow was performed."
+    },
+    {
+      "name": "web-dark-tabs-unit-and-mock-tests",
+      "result": "pass",
+      "lastCompletedTests": 54,
+      "lastCompletedPassedTests": 54,
+      "lastCompletedFailedTests": 0,
+      "evidence": [
+        "web-dark-tabs-all-tests.log"
+      ],
+      "scope": "Expanded full web suite including the disconnect regression passed 54 tests. Temporary credentials/providers and simulated core transport, separate from native/live model evidence.",
+      "passedTests": 54,
+      "failedTests": 0
+    },
+    {
+      "name": "web-live-operative-tab-visibility",
+      "result": "pass",
+      "provider": "gemrouter",
+      "model": "gemini-3.8-flash",
+      "realModel": true,
+      "realBrowser": true,
+      "operativeViewerFrames": 78,
+      "maxFrameLatencyMs": 775,
+      "steps": 7,
+      "tools": 6,
+      "distinctUIFrames": 7,
+      "activityShown": true,
+      "readOnlyObserver": true,
+      "javascriptErrors": 0,
+      "externalAccountCreated": false,
+      "evidence": [
+        "form-harness-operative-live.json",
+        "frontend-live-operative-watch.json"
+      ],
+      "scope": "Actual configured Gemrouter and Chromium with frontend observing operative tab A during authorized local form filling, checkbox and submission; independently pinned B was previously verified. All 78 API images were readable, max 775ms; 7 changed UI frames during work. This operational tab check does not by itself resolve aged background capture stalls."
+    },
+    {
+      "name": "web-viewer-ui-contract",
+      "result": "pass",
+      "evidence": [
+        "frontend-viewer-contract-smoke.json"
+      ],
+      "scope": "Browser-driven frontend contract using simulated HTTP endpoints. Follows logical operative tab, pinning/view-only tab selection uses no mutation or takeover, stale control polls cannot revert takeover response, inputs retain captured target, deferred wheel is dropped after tab change. Separate from live operative UI evidence."
+    },
+    {
+      "name": "browser-aged-hidden-capture-fix-native",
+      "result": "pass",
+      "productionCaptureCodeChanged": true,
+      "feature": "CDPScreenshotNewSurface",
+      "fromSurface": true,
+      "standardChromiumSandbox": true,
+      "browserPassedIncludingSubtests": 25,
+      "serverPassedIncludingSubtests": 29,
+      "raceDetector": true,
+      "vet": "pass",
+      "skippedNativeTests": 0,
+      "agedCaptureConsecutivePasses": 6,
+      "idleSeconds": 6,
+      "captureMsMinimum": 77.67084,
+      "captureMsMaximum": 82.241868,
+      "physicalFocusAndControlPreserved": true,
+      "evidence": [
+        "browser-aged-screenshot-diagnostic.log",
+        "browser-aged-screenshot-new-surface.log",
+        "browser-background-view-fixed-race.log",
+        "server-background-view-fixed-race.log",
+        "browser-tab-checks.json"
+      ],
+      "scope": "Old Chromium ForceRedraw path reproduced screenshot stalls on aged static hidden pages. Managed Chrome enables documented new-surface CDP capture; screenshots request fromSurface:true. Six aged hidden B captures read correct pixels while physical A remains focused and control/epoch unchanged. Full native browser and server race suites rerun with opt-in fixtures; no focus activation, duplicated warmup requests or sandbox bypass in the fix."
+    },
+    {
+      "name": "web-aged-background-capture-deployed",
+      "result": "pass",
+      "productionGateway": true,
+      "realChromium": true,
+      "feature": "CDPScreenshotNewSurface",
+      "firstCaptureAfterIdleSeconds": 6.5,
+      "consecutivePasses": 3,
+      "maximumLatencyMs": 14,
+      "correctTabImageVerified": true,
+      "controlAndLogicalTabPreserved": true,
+      "evidence": [
+        "browser-aged-runtime-final.json",
+        "browser-aged-runtime-final.log",
+        "browser-aged-runtime-B.png"
+      ],
+      "scope": "After deployment, three background B captures after 6.5 seconds idle each returned through the actual gateway in 13\u201314 ms. Control owner/epoch and selected A preserved. Image visually checked as B. Separate from the live model/frontend run."
+    },
+    {
+      "name": "web-final-viewer-after-background-fix",
+      "result": "pass",
+      "realGatewayCoreBrowser": true,
+      "viewFrames": 19,
+      "minimumViewMs": 13,
+      "maximumViewMs": 26,
+      "firstHiddenViewAfterIdleSeconds": 7,
+      "firstHiddenViewMs": 15,
+      "targetControlEpochPreserved": true,
+      "mutatingAPICalls": 0,
+      "javascriptErrors": 0,
+      "horizontalOverflow": false,
+      "evidence": [
+        "frontend-viewer-after-capture-fix.json"
+      ],
+      "scope": "Actual frontend/core/gateway after final capture fix. Follow A, pin B after seven seconds unobserved, return to A; desktop and mobile views. All 19 captures complete without timeouts or recorded network failure. No model called for this final observer retest."
+    },
+    {
+      "name": "web-dark-tabs-final-delivery",
+      "result": "pass",
+      "publicHTTPSStatus": 200,
+      "servicesActiveAndEnabled": true,
+      "linger": true,
+      "preservedUserSessions": 2,
+      "preservedOriginalRuns": 8,
+      "temporarySessionsRemoved": 2,
+      "temporaryRunsRemoved": 2,
+      "testCookieRevokedStatus": 401,
+      "privateFixtureRemoved": true,
+      "assetVersion": "20261006-4",
+      "publicJavaScriptMatchesCurrentSourceSHA256": true,
+      "originAssetCache": "no-cache",
+      "cloudflareAssetCache": "max-age=14400",
+      "evidence": [
+        "dark-final-delivery-check.json",
+        "dark-fixture-cleanup.json",
+        "dark-test-auth-cleanup.json"
+      ],
+      "scope": "Actual public HTTPS routes and updated versioned JS matching current source. Final restart after fixture cleanup; existing two chats/eight historical runs and configured Gemrouter/Codex preserved. Only temporary harness sessions/profiles/runs/auth fixture removed; final transient authentication existed only in memory and was revoked. Cloudflare overrides public JS cache TTL, so HTML points to versioned complete module graph."
+    },
+    {
+      "name": "web-markdown-full-tests",
+      "result": "pass",
+      "passedTests": 63,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "unitAndMockTests": 54,
+      "nativeBrowserTestsIncludingSubtests": 9,
+      "evidence": [
+        "web-markdown-all-tests.log",
+        "markdown-native-security-tests.log",
+        "markdown-security-review.json"
+      ],
+      "scope": "Full Node web suite on final version20261006-6. Includes actual sandboxed Electron/Chromium renderer in a local HTML fixture without CSP, 8 security/semantic/streaming subtests plus its container. Tests reject dangerous HTML/link schemes and automatic image loads, preserve URI entities, and verify semantic GFM and code. Separate from deployed user-history and native core viewport checks."
+    },
+    {
+      "name": "web-markdown-integrated-ui",
+      "result": "pass",
+      "realBrowser": true,
+      "simulatedHTTPAPI": true,
+      "assetVersion": "20261006-6",
+      "maliciousPayloads": 13,
+      "layouts": 4,
+      "viewportSelections": 6,
+      "paidModelCalls": 0,
+      "javascriptErrors": 0,
+      "externalRequests": 0,
+      "evidence": [
+        "frontend-markdown-smoke.json"
+      ],
+      "scope": "Historical and streaming Markdown with incomplete delimiters, reload, literal user prompts, table/code overflow contained at1440/390px in both themes. All six UI preset payloads include exact dimensions/flags, explicit tab and CSRF; dropdown syncs from PNG dimensions. HTTP fixture values are simulated, not a real provider turn."
+    },
+    {
+      "name": "web-markdown-existing-user-history",
+      "result": "pass",
+      "realGateway": true,
+      "realBrowser": true,
+      "tableRows": 7,
+      "headings": 3,
+      "boldElements": 15,
+      "reloadPreservesFormatting": true,
+      "desktopAndMobile": true,
+      "javascriptErrors": 0,
+      "mutatingAPICalls": 0,
+      "paidModelCalls": 0,
+      "evidence": [
+        "markdown-real-history.json",
+        "markdown-real-history-desktop.png",
+        "markdown-real-history-mobile.png"
+      ],
+      "scope": "Actual existing saved AIRTrack response rendered in the real web client before the final URI-entity edge-case correction; table/headings/bold were confirmed on desktop/mobile/reload with no model turn or mutation. Final full suite and integrated UI verify the final renderer after that correction."
+    },
+    {
+      "name": "six-browser-viewport-native",
+      "result": "pass",
+      "realChromium": true,
+      "standardSandbox": true,
+      "presets": 6,
+      "dpr": 1,
+      "correctPNGSizesAndCSSViewport": true,
+      "cornerAndSemanticClicksVerified": true,
+      "largestViewport": [
+        1536,
+        2048
+      ],
+      "highEntropyResponseBytes": 12624720,
+      "paidModelCalls": 0,
+      "evidence": [
+        "nativeviewportpreset-check.json"
+      ],
+      "scope": "Current built core with isolated native Chromium/local fixture and meta viewport. All six payloads match viewports.js, screenshot dimensions/pixels and corner/semantic coordinates correct, control preserved. Largest high-entropy screenshot12624720byte JSON is below32MiB CDP message limit. No production-core changes."
+    },
+    {
+      "name": "web-markdown-final-deployment",
+      "result": "pass",
+      "assetVersion": "20261006-6",
+      "publicRoutes": 4,
+      "publicAssetsMatchingCurrentSource": 10,
+      "publicHTTPSHealth": 200,
+      "temporaryCookieRevokedStatus": 401,
+      "privateFixtureRemoved": true,
+      "preservedUserSessions": 3,
+      "preservedUserRuns": 9,
+      "evidence": [
+        "markdown-public-deployment.json",
+        "markdown-auth-cleanup.json"
+      ],
+      "scope": "Public routes/assets checked after final source freeze. Exact bytes of eight first-party assets and two pinned vendor ESM modules match source; correct JavaScript MIME. Login fixture revoked/removed; only GET user-history observations, no new model runs or chat sessions. No service restart required for static client update."
+    },
+    {
+      "name": "web-markdown-frozen-dependencies",
+      "result": "pass",
+      "marked": "18.1.0",
+      "dompurify": "3.4.16",
+      "command": "corepack pnpm install --frozen-lockfile --ignore-scripts",
+      "evidence": [
+        "web-markdown-lock-install.log"
+      ],
+      "scope": "Pinned package lock verified, local vendor ESM/maps/licenses retained; no runtime CDN."
+    }
+  ],
+  "priorDeliveryEvidence": {
+    "recordedAt": "2026-10-05T12:40:53.261077+00:00",
+    "preservedFile": "/home/your-user/svolo-installation/verification-delivery.json",
+    "freshlyExecutedHere": false,
+    "scope": "Retained delivery evidence, not re-executed in the current environment. Superseded delivery desktop-install failures do not describe the installed state.",
+    "checks": [
+      {
+        "name": "native-linux",
+        "result": "pass",
+        "checks": 8,
+        "scope": "Real GTK fixture in isolated Xvfb; input, capture, authentication and Esc. No AT-SPI or Wayland qualification.",
+        "freshlyExecutedInThisInstallation": false
+      },
+      {
+        "name": "core-builds",
+        "result": "pass",
+        "executed": [
+          "linux/amd64"
+        ],
+        "compileOnly": [
+          "linux/arm64",
+          "windows/amd64",
+          "windows/arm64",
+          "darwin/amd64",
+          "darwin/arm64"
+        ],
+        "freshlyExecutedInThisInstallation": false
+      },
+      {
+        "name": "retired-identity-scan",
+        "result": "pass",
+        "matches": 0,
+        "scope": "Filenames and UTF-8 files in the delivered source tree. Required notices for incorporated material are retained.",
+        "freshlyExecutedInThisInstallation": false
+      },
+      {
+        "name": "all-visual-assets",
+        "result": "pass",
+        "files": 98,
+        "formats": {
+          "png": 44,
+          "webp": 33,
+          "svg": 13,
+          "ico": 6,
+          "icns": 2
+        },
+        "scope": "Raster decode and XML parsing for all committed visuals. Brand geometry and icon rendering inspected separately.",
+        "freshlyExecutedInThisInstallation": false
+      }
+    ]
+  },
+  "license": {
+    "path": "LICENSE.md",
+    "sha256": "ab5670a28b88c4a1020d4fb2a9a2b6d0121193fc957f0a0128eb0d14ba06fb0d",
+    "suppliedFileCopiedUnchanged": true
+  },
+  "unqualified": [
+    "CEF implementation",
+    "Windows/macOS native runtime and current interactive desktop session",
+    "AT-SPI semantic operations and Wayland",
+    "Live multi-host SSH",
+    "External MCP servers exercised with real authorized accounts",
+    "New interactive OAuth login flows exercised with real accounts",
+    "Antigravity OAuth account connection: no importable authenticated credentials or complete supported per-user DB adapter/export",
+    "Gemrouter remaining quota: upstream endpoint/observed headers do not provide it",
+    "Every catalog model and complete live streaming/tool/image/error coverage beyond the two limited provider/browser smoke runs",
+    "Complete desktop viewer integration",
+    "Aggregate quotas across all writers and per-user resource quotas",
+    "Kernel network isolation: per-user cores share the host network; browser egress is enforced by proxy",
+    "Full at-rest encryption of core history and Chromium profiles: these remain private filesystem data",
+    "Signed production installers, notarization where required, update channel and release rollback qualification",
+    "Complete host reboot and boot recovery test",
+    "Long-duration reliability and independent security review"
+  ],
+  "updatedAtLocal": "2026-10-06T10:21:55.528217+02:00",
+  "updateTimezone": "Europe/Rome",
+  "preUpdateEvidence": {
+    "preservedFile": "/home/your-user/svolo-installation/verification-pre-dark.json",
+    "recordedAt": "2026-10-05T14:51:47.222091+00:00",
+    "scope": "Initial completed web-deployment verification before the 6 October 2026 Europe/Rome dark theme, tab observation and form-assistance update."
+  },
+  "latestUpdate": {
+    "name": "github-publication-language-toggle-collapsible-columns",
+    "recordedAt": "2026-10-06T08:21:55.528217+00:00",
+    "assetVersion": "20261006-10",
+    "webTests": {
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0,
+      "unitAndMock": 56,
+      "nativeBrowser": 10
+    },
+    "core": "Previous verification: Go race tests with native Chromium, go vet and Linux build passed; core unchanged in this frontend/publication update",
+    "desktop": "Previous verification: 15 targeted GitHub environment-isolation fixture tests passed; desktop runtime unchanged",
+    "documentation": {
+      "englishDocumentsTranslated": 22,
+      "italianSection": "docs/it/index.md",
+      "protectedCodeAndLinkLiteralsPreserved": true,
+      "headingCountsPreserved": true
+    },
+    "gatewayRuntime": {
+      "readOnlyHealthAndSessionChecks": true,
+      "applicationRestartRequired": false,
+      "userConversationsModified": false
+    },
+    "publicFrontend": {
+      "routesPassed": 4,
+      "assetsExactlyMatchSource": 10
+    },
+    "publicGit": "Public GitHub source repository; runtime credentials and user data excluded",
+    "privateState": "Real private credential-value comparison and redacted source secret scan; GitHub history checked separately after first push",
+    "services": "Application gateway and Cloudflare application tunnel active/enabled; user Linger=yes",
+    "qualification": "Development status retained; no new desktop/platform or whole-host reboot qualification",
+    "frontend": "Direct language toggle; chat-header collapse and floating reopen; persistent compact sidebar; native browser fixture checks"
+  }
+}

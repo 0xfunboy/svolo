@@ -1,0 +1,69 @@
+appId: io.svolo.agentbrowser
+productName: Svolo
+copyright: Copyright © 2026 0xfunboy
+artifactName: ${name}-${version}-${os}-${arch}.${ext}
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**
+  - resources/**
+  - src/shared/browser.ts
+  - src/shared/board.ts
+  - src/shared/laments.ts
+  - src/shared/viewport.ts
+  - "!resources/svolo-flag.ts"
+  - "!resources/icon.svg"
+asarUnpack:
+  - resources/**
+  - src/shared/browser.ts
+  - src/shared/board.ts
+  - src/shared/laments.ts
+  - src/shared/viewport.ts
+extraResources:
+  - from: build/core
+    to: core
+  - from: ../LICENSE.md
+    to: LICENSE.md
+  - from: ../legal
+    to: legal
+  - from: ../product.json
+    to: product.json
+  - from: ../docs
+    to: docs
+publish: null
+electronLanguages: [en]
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  loadBrowserProcessSpecificV8Snapshot: false
+  grantFileProtocolExtraPrivileges: false
+mac:
+  icon: build/icon.icns
+  category: public.app-category.developer-tools
+  darkModeSupport: true
+  target: [dmg]
+  extraResources:
+    - from: build/computer-use/Svolo Computer Use.app
+      to: computer-use/Svolo Computer Use.app
+  identity: "-"
+  hardenedRuntime: false
+  signIgnore:
+    - /Contents/Resources/computer-use/
+dmg:
+  format: ULFO
+  writeUpdateInfo: false
+linux:
+  icon: build/icon.png
+  target: [AppImage, deb]
+  category: Development
+win:
+  icon: build/icon.ico
+  target: [nsis, zip]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true

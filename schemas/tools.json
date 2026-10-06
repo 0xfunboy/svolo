@@ -1,0 +1,1486 @@
+{
+  "product": "Svolo",
+  "schemaVersion": 1,
+  "tools": [
+    {
+      "name": "project-board",
+      "description": "Project-scoped Kanban, implemented in Go. action=get or apply with a validated board operation. No access to another project.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "project-laments",
+      "description": "Project-scoped lament reports, fixes and resolution, implemented in Go. action=get or apply; bounded report retention and explicit reopening.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "computer-use",
+      "description": "Native application control, off by default. Requires a separate per-app human approval. Select list_apps/get_app_state/screenshot/click/drag/scroll/type_text/press_key/set_value/select_text/perform_secondary_action/paste/end. Foreground actions need an explicit setting and an already focused app.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "app": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "pi-kanban",
+      "description": "Kanban operations for a connected desktop runtime session. Requires an existing pi session in Electron; native domain policy remains enforced.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "arguments"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "pi-atp",
+      "description": "Pause or resume the workflow associated with a connected desktop runtime session.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "arguments"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "pi-lament",
+      "description": "Issue-report operations for a connected desktop runtime session. Requires an existing pi session in Electron.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "arguments"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "pi-computer",
+      "description": "Desktop runtime Computer Use adapter. Preserves pi approvals; macOS uses Swift, Windows/Linux use the Go-supervised native provider. Native capabilities and limitations are reported at runtime.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "arguments"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "state",
+      "description": "Read active tab URL, title and loading state.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "navigate",
+      "description": "Navigate the owned tab to http(s). Verify page state afterwards.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "open-browser",
+      "description": "Open a managed browser tab in this session.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "close-browser",
+      "description": "Close only this session's managed browser.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "open-tab",
+      "description": "Create another tab in the same browser session.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "tabs",
+      "description": "List only the browser targets owned by this session.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "switch-tab",
+      "description": "Activate a tab by exact id, title or URL; ambiguous matches fail.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "close-tab",
+      "description": "Close the current owned tab.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "tab-history",
+      "description": "Go back or forward in tab history.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "direction"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "open-in-new-tab",
+      "description": "Open an element's link or image URL in another tab.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "click",
+      "description": "Dispatch a click on a visible, unambiguous target. This is not a task-success assertion.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "type-text",
+      "description": "Type text into the current focus or an explicit target.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "fill",
+      "description": "Replace the text of a visible editable target.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "text"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "press-key",
+      "description": "Send a key, optionally Ctrl/Alt/Shift/Meta modifiers joined with +.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "select",
+      "description": "Choose a native select option by exact value or label.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "value"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "check",
+      "description": "Check a checkbox and verify its state.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "dialog",
+      "description": "Accept or dismiss a JavaScript dialog.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "drag",
+      "description": "Drag between two explicit page element targets.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "destination": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "wait",
+      "description": "Bounded wait for text, css, visible, url, title, hidden or image-ready.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "condition": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "condition",
+          "value"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "wait-for",
+      "description": "Wait for an explicit condition for at most 60 seconds.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "condition": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "condition",
+          "value"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "assert-url",
+      "description": "Verify the current URL; exact match by default.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expected": {
+            "type": "string"
+          },
+          "match": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "expected"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "assert-title",
+      "description": "Verify the document title.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expected": {
+            "type": "string"
+          },
+          "match": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "expected"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "assert-visible",
+      "description": "Verify element visibility and return geometry.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "assert-text",
+      "description": "Verify a target's text, exact or contains.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "match": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "text"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "assert-image-ready",
+      "description": "Verify visible image completion and nonzero natural dimensions.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "snapshot-interactive",
+      "description": "Read semantic interactive elements with snapshot-scoped refs. Refresh refs after takeover or page changes.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "find-interactive",
+      "description": "Search interactive elements by semantic label.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "number"
+          },
+          "query": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "read-page",
+      "description": "Read title, URL, headings and bounded main text.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "inspect-inputs",
+      "description": "Inspect visible form controls. Password values are redacted.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "inspect-elements",
+      "description": "Inspect visible CSS matches, bounded to 500.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "css": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "element-info",
+      "description": "Inspect state, attributes, HTML, text and geometry of one target.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "scroll",
+      "description": "Scroll up/down/top/bottom or to a target.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "destination": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "query-selector",
+      "description": "Inspect CSS matching elements.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "css": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "css"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "get-element",
+      "description": "Read one target's current DOM data.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "accessibility-tree",
+      "description": "Read non-ignored accessibility nodes with a hard output bound.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "max": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "inspect-links",
+      "description": "Read visible links and resolved URLs.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "inspect-images",
+      "description": "Read image sources and load state.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "upload",
+      "description": "Set a file input. File must belong to the session's registered workspace on the browser host.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "file"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "highlight",
+      "description": "Draw a non-interactive box highlight over a target.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "clear-highlight",
+      "description": "Remove the current owned highlight.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "evaluate-js",
+      "description": "Evaluate JavaScript in the owned page. Requires explicit approval; never runs in application UI.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expression": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "expression"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "inject-js",
+      "description": "Run script now; optionally install it for future documents of this tab.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "persistent": {
+            "type": "boolean"
+          },
+          "script": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "script"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "screenshot",
+      "description": "Capture page pixels, optionally save an immutable hashed artifact.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "fullPage": {
+            "type": "boolean"
+          },
+          "save": {
+            "type": "boolean"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "target": {
+            "description": "Snapshot ref @document:index, css:selector, text:exact text or role:role|name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "viewport",
+      "description": "Set viewport dimensions, device scale, mobile/touch and optional user agent.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "dpr": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "mobile": {
+            "type": "boolean"
+          },
+          "reset": {
+            "type": "boolean"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "touch": {
+            "type": "boolean"
+          },
+          "userAgent": {
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "inspect-network",
+      "description": "Start/stop/show bounded redacted network metadata capture. Does not capture request bodies or secrets.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "console",
+      "description": "Show the console events collected after network/console capture was started.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "downloads",
+      "description": "Enable managed downloads for this session and list completed files.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "wait-download",
+      "description": "Wait for a non-temporary stable download newer than a timestamp, then register a copy as an artifact.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "afterMs": {
+            "type": "number"
+          },
+          "nameContains": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "afterMs"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "verify-artifact",
+      "description": "Verify the immutable artifact bytes, size and SHA-256. Does not invent semantic proof.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "record-browser",
+      "description": "Start or stop bounded page recordings (sampled continuous or action steps); ffmpeg is required for MP4 encoding.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "intervalMs": {
+            "type": "number"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "profile-import",
+      "description": "Copy a CLOSED Chromium profile into a CLOSED managed session. Credentials may not be portable between OS users.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "force": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "browser-task",
+      "description": "Run one browser operation in an isolated owned task session and close it unless persist is set.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "persist": {
+            "type": "boolean"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "tool"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "call-routine",
+      "description": "Run or resume a bounded persisted JSON graph. Human suspension returns a resume id; uncertain actions never replay automatically.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "resume": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          },
+          "variables": {
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "hitl",
+      "description": "Request human intervention in the integrated approval UI.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "workspace-list",
+      "description": "List files in the explicitly selected workspace.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "workspace-read",
+      "description": "Read a regular file confined to the workspace; symlinks are refused.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "workspace-write",
+      "description": "Atomically write a workspace file after approval.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "workspace-exec",
+      "description": "Run an explicit program and argument vector inside a trusted workspace. Requires allowExec and approval; not an OS sandbox.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "args": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "program": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "program"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    },
+    {
+      "name": "browser-schema",
+      "description": "Discover the argument schema of a named browser operation.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "readOnly": true
+    },
+    {
+      "name": "browser-operation",
+      "description": "Execute a discovered browser primitive through the same control/policy path.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "tab": {
+            "description": "Optional owned target id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation",
+          "arguments"
+        ],
+        "type": "object"
+      },
+      "readOnly": false
+    }
+  ],
+  "version": "0.3.1-dev"
+}

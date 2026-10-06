@@ -1,0 +1,12 @@
+{
+  "name": "Svolo",
+  "slug": "svolo",
+  "version": "0.3.1-dev",
+  "description": "A shared browser and workspace for human-directed agents.",
+  "tagline": "You set the direction. Svolo gets the work done.",
+  "appId": "io.svolo.agentbrowser",
+  "owner": "0xfunboy",
+  "license": "LICENSE.md",
+  "releaseChannel": "development",
+  "productionQualified": false
+}
