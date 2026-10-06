@@ -849,90 +849,85 @@
     "Complete host reboot and boot recovery test",
     "Long-duration reliability and independent security review"
   ],
-  "updatedAtLocal": "2026-10-06T11:28:48.754600+02:00",
-  "updateTimezone": "Europe/Rome",
+  "updatedAtLocal": "2026-10-06T11:13:56.967716+00:00",
+  "updateTimezone": "Etc/UTC",
   "preUpdateEvidence": {
     "preservedFile": "/home/your-user/svolo-installation/verification-pre-dark.json",
     "recordedAt": "2026-10-05T14:51:47.222091+00:00",
     "scope": "Initial completed web-deployment verification before the 6 October 2026 Europe/Rome dark theme, tab observation and form-assistance update."
   },
   "latestUpdate": {
-    "name": "user-defined-task-profile-infrastructure",
-    "recordedAt": "2026-10-06T10:25:07.287798+00:00",
-    "assetVersion": "20261006-13",
-    "profiles": {
-      "fields": [
-        "name",
-        "goal",
-        "instructions",
-        "knowledge",
-        "uploadOrigins"
-      ],
-      "maxPerUser": 1000,
-      "noBuiltInBusinessTasks": true,
-      "noAutomaticSelection": true,
-      "searchAndReviewedDuplication": true,
-      "learningChangesOnlyBoundProfileKnowledge": true,
-      "ownerBoundEncryptedStorage": true
-    },
+    "name": "browser-rendering-live-viewport-and-continuation-fixes",
+    "recordedAt": "2026-10-06T11:13:56.967703+00:00",
+    "assetVersion": "20261006-14",
+    "confirmedCauses": [
+      "renderTabs callback shadowed the translation function, throwing TypeError for the active/viewed tab and surfacing a misleading browser-unavailable message",
+      "The old viewport handler took human control and cancelled in-flight model requests before attempting resize",
+      "Recorded follow-up failures were context cancellations on human takeover, not observed password validation failures"
+    ],
+    "changes": [
+      "Active/viewed tab labels and URLs render correctly in both languages",
+      "Typed, CSRF-protected, tenant-bound viewport configuration preserves agent owner, epoch and selected target; queues with a cancellable deadline and invalidates old page references",
+      "Repeated tab markup, unchanged image data and unchanged Markdown reuse prior rendering",
+      "Transient capture failures retain the last valid image, distinguish reconnection from errors, and recover automatically",
+      "Waiting for model is explicit while inference is pending; the only owned unselected page remains observable"
+    ],
     "webTests": {
-      "passed": 75,
+      "passed": 77,
       "failed": 0,
       "skipped": 0,
-      "unitAndMock": 64,
-      "nativeBrowserAndOCR": 11,
-      "evidence": "generic-profiles-web.log"
+      "unitAndMock": 65,
+      "nativeBrowserAndOCR": 12,
+      "evidence": "browser-fix-web-tests.log"
     },
     "core": {
-      "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled native Chromium checks. Unmodified package results may be cached. Evidence: generic-profiles-core.log",
+      "race": "All 20 tested Go packages passed; SVOLO_E2E=1 enabled actual Chromium checks. Unchanged package results may be cached.",
+      "targeted": "New browser queue/ownership/reference tests and credential-continuation server test passed with -race -count=1; real Chromium viewport/form test passed with SVOLO_E2E=1 -race -count=1",
       "vet": "pass",
-      "build": "Native Linux/amd64 core: generic-profiles-core"
+      "build": "Native Linux/amd64 executable deployed; no new cross-platform release qualification",
+      "evidence": [
+        "browser-fix-core-tests.log",
+        "browser-fix-core-vet.log"
+      ]
     },
-    "nativeMCP": {
-      "core": "Actual sandboxed Go executable, automatically discovered internal MCP",
-      "provider": "Simulated completion provider; no external inference",
-      "selectedDocumentRead": true,
-      "proposalRequiresReview": true,
-      "reviewCreatesRevision": 2,
-      "evidence": "generic-profiles-native-mcp.log"
+    "nativeAcceptance": {
+      "provider": "Simulated provider with a pending credential follow-up; resize does not cancel it",
+      "browser": "Real Chromium form, preserved values, new geometry, stale-reference recovery, password fixture entry and unchanged tab focus",
+      "frontend": "Native Electron browser against HTTP fixtures with active and background tabs, both languages, resize without control changes, stable rendering and transient recovery",
+      "realExternalRegistrations": 0
+    },
+    "latency": {
+      "observedCompletedFormSeconds": 88,
+      "modelResponseSecondsRange": [
+        5,
+        21
+      ],
+      "browserTools": "Recorded navigation took 197ms; most form reads/writes took 3–70ms",
+      "interpretation": "The provider dominated this recorded run. UI rendering work was reduced; no claim that upstream inference latency has been eliminated.",
+      "evidence": "runtime-diagnostics.json"
     },
     "deployment": {
-      "realSystemdGateway": true,
-      "multipleCustomProfiles": true,
-      "fieldsRoundTrip": true,
-      "profileSelectionSwitches": true,
-      "temporaryFixturesRemoved": true,
-      "unsolicitedUnmodifiedExampleRemoved": true,
-      "existingChatsPreserved": 1,
-      "existingRunsPreserved": 3,
+      "gatewayActive": true,
+      "tunnelActive": true,
+      "enabled": true,
+      "lingering": true,
+      "chatsPreserved": 1,
+      "runsPreserved": 6,
+      "attachmentsPreserved": 1,
       "providerCredentialsUnchanged": true,
-      "externalModelCalls": 0,
+      "dataIntegrity": "Attachments, task profiles/versions and MCP configuration unchanged versus consistent private SQLite backup",
+      "sourceAssetsExactlyMatched": 11,
+      "publicRoutesPassed": 4,
+      "actualPublicFrontend": "FullHD resize and original viewport restoration, both languages, screenshot visibility and unchanged control epoch verified through the actual public HTTPS gateway; no model calls or registrations",
       "evidence": [
-        "generic-profile-cleanup.json",
-        "generic-profiles-deployed-check.json"
+        "browser-fix-deployed-check.json",
+        "browser-fix-data-integrity.json",
+        "browser-fix-real-ui.json",
+        "public-browser-fix-deploy.json"
       ]
     },
-    "publicFrontend": {
-      "actualPublicHTTPSFrontend": true,
-      "noAutomaticallySelectedProfile": true,
-      "customProfileFields": true,
-      "searchAvailable": true,
-      "mobileNoHorizontalOverflow": true,
-      "routesPassed": 4,
-      "assetsExactlyMatchSource": 11,
-      "evidence": [
-        "generic-profiles-real-ui.json",
-        "public-generic-profiles-deploy.json"
-      ]
-    },
-    "documentation": {
-      "englishGuide": "TASK_PROFILES.md",
-      "italianGuide": "it/docs/TASK_PROFILES.md"
-    },
-    "publicationChecks": "Tracked source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest. Hosted checks are available in GitHub Actions for the published commit; local/native evidence remains separate.",
-    "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification.",
-    "testBrowser": "Actual sandboxed Chromium in the project-pinned Electron browser, with Xvfb. Hosted web checks explicitly install this native browser and retain the standard sandbox; no test skips or sandbox bypass flags.",
-    "additionalProbe": "Local Chrome 154 standalone fixture navigation timed out; not counted as a passed check. Production Go browser checks use their separate native transport."
+    "publicationChecks": "Source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest; hosted CI is reported separately for the published commit.",
+    "qualification": "Development release status and license retained. Credential follow-up tests use disposable data; external site registration flows and paid-model latency are not qualified by fixtures."
   },
   "previousUpdates": [
     {
@@ -1001,6 +996,84 @@
         "modelRunsStarted": 0,
         "evidence": "tasks-real-ui.json"
       }
+    },
+    {
+      "name": "user-defined-task-profile-infrastructure",
+      "recordedAt": "2026-10-06T10:25:07.287798+00:00",
+      "assetVersion": "20261006-13",
+      "profiles": {
+        "fields": [
+          "name",
+          "goal",
+          "instructions",
+          "knowledge",
+          "uploadOrigins"
+        ],
+        "maxPerUser": 1000,
+        "noBuiltInBusinessTasks": true,
+        "noAutomaticSelection": true,
+        "searchAndReviewedDuplication": true,
+        "learningChangesOnlyBoundProfileKnowledge": true,
+        "ownerBoundEncryptedStorage": true
+      },
+      "webTests": {
+        "passed": 75,
+        "failed": 0,
+        "skipped": 0,
+        "unitAndMock": 64,
+        "nativeBrowserAndOCR": 11,
+        "evidence": "generic-profiles-web.log"
+      },
+      "core": {
+        "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled native Chromium checks. Unmodified package results may be cached. Evidence: generic-profiles-core.log",
+        "vet": "pass",
+        "build": "Native Linux/amd64 core: generic-profiles-core"
+      },
+      "nativeMCP": {
+        "core": "Actual sandboxed Go executable, automatically discovered internal MCP",
+        "provider": "Simulated completion provider; no external inference",
+        "selectedDocumentRead": true,
+        "proposalRequiresReview": true,
+        "reviewCreatesRevision": 2,
+        "evidence": "generic-profiles-native-mcp.log"
+      },
+      "deployment": {
+        "realSystemdGateway": true,
+        "multipleCustomProfiles": true,
+        "fieldsRoundTrip": true,
+        "profileSelectionSwitches": true,
+        "temporaryFixturesRemoved": true,
+        "unsolicitedUnmodifiedExampleRemoved": true,
+        "existingChatsPreserved": 1,
+        "existingRunsPreserved": 3,
+        "providerCredentialsUnchanged": true,
+        "externalModelCalls": 0,
+        "evidence": [
+          "generic-profile-cleanup.json",
+          "generic-profiles-deployed-check.json"
+        ]
+      },
+      "publicFrontend": {
+        "actualPublicHTTPSFrontend": true,
+        "noAutomaticallySelectedProfile": true,
+        "customProfileFields": true,
+        "searchAvailable": true,
+        "mobileNoHorizontalOverflow": true,
+        "routesPassed": 4,
+        "assetsExactlyMatchSource": 11,
+        "evidence": [
+          "generic-profiles-real-ui.json",
+          "public-generic-profiles-deploy.json"
+        ]
+      },
+      "documentation": {
+        "englishGuide": "TASK_PROFILES.md",
+        "italianGuide": "it/docs/TASK_PROFILES.md"
+      },
+      "publicationChecks": "Tracked source privacy comparison, redacted secret scans, product checks and regenerated SHA-256 manifest. Hosted checks are available in GitHub Actions for the published commit; local/native evidence remains separate.",
+      "qualification": "Development status retained. Profiles support arbitrary user-defined browser/document tasks; individual external workflows require supervised verification. No new general production qualification.",
+      "testBrowser": "Actual sandboxed Chromium in the project-pinned Electron browser, with Xvfb. Hosted web checks explicitly install this native browser and retain the standard sandbox; no test skips or sandbox bypass flags.",
+      "additionalProbe": "Local Chrome 154 standalone fixture navigation timed out; not counted as a passed check. Production Go browser checks use their separate native transport."
     }
   ]
 }

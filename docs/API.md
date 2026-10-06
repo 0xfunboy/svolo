@@ -17,6 +17,7 @@ Input and output are JSON except for streams, transfers, and artifacts. Modifica
 | `/v1/approvals`, `/v1/tokens` | Human decisions and limited MCP credentials. |
 | `/v1/events`, `/v1/events/stream`, `/v1/events/cursor` | Events and cursor recovery. |
 | `/v1/view`, `/v1/input`, `/v1/browser/tabs` | Page view, input, and session tabs. |
+| `POST /v1/browser/viewport` | Resize an owned tab without taking control or cancelling its agent run. |
 | `/v1/artifacts`, `/v1/artifact` | List and content of artifacts. |
 | `/v1/hosts/*`, `/v1/remote` | SSH management and requests to the selected daemon. |
 | `/v1/transfers/*` | Staging, chunks, commits, and verified downloads. |
@@ -34,6 +35,18 @@ For request shapes, consult the handlers in `core/internal/server`. The patterns
 The managed browser enables `CDPScreenshotNewSurface` and captures screenshots with `fromSurface:true`. This [Chromium](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/content/common/features.cc) feature requires a new compositor surface without waiting for `ForceRedraw`, which can hang when a static background tab does not present new frames. Capture keeps the tab hidden, without activating it. The native test [`TestChromiumAgedBackgroundObservation`](../core/internal/browser/screenshot_chromium_test.go) leaves B hidden for six seconds, then verifies six consecutive captures with B's pixels, focus on A, and control unchanged, using headless Chromium with the standard sandbox.
 
 The `@documento:elemento` references are bound both to the control epoch and the snapshot tab. An incompatible `tab` ID produces `target_tab_mismatch`; a takeover or replaced document makes references obsolete. Without a valid selection, a session with multiple tabs produces `tab_ambiguous` instead of choosing the first. The model harness requires an explicit `tab` for tools operating on a page.
+
+`POST /v1/browser/viewport` accepts only `{session,tab,width,height,dpr,mobile,touch}`.
+The session must be configured and `tab` must be an explicit owned page ID.
+Width and height are integer CSS pixels from 100 to 8192; DPR is from 0.1 to 5.
+Unknown fields, foreign tabs and missing dimensions are rejected. The operation
+queues behind an in-flight page action with a cancellable 20-second deadline. It
+does not stop the agent, change its control epoch or switch its selected tab.
+Snapshots for the resized page are invalidated so the next action must use fresh
+references. A timeout is not proof that no display change occurred: capture the
+page again. Input, navigation and other manual tools still require human control.
+The authenticated web gateway exposes this route with its usual CSRF and tenant
+checks. It is a display configuration route, not a model tool or control shortcut.
 
 ## Manual Call
 

@@ -12,6 +12,14 @@ controllo umano; **Return to agent** permette una nuova osservazione e la ripres
 Il controllo automatico di tutti gli input nella finestra browser nativa richiede ancora
 qualifica completa. Fermare l'agente non annulla un invio già eseguito su un sito.
 
+Nel workspace web, selezionare un'altra scheda cambia solo la vista. Anche il
+cambio di risoluzione mantiene l'agente in esecuzione e la sua scheda operativa.
+Il selettore si disabilita durante il ridimensionamento: attendere la nuova immagine
+prima di cliccare sulla pagina. **In attesa del modello** indica che il browser
+attende la risposta del provider AI selezionato. Una cattura in ritardo mantiene
+l'ultima immagine valida e riprova automaticamente; non significa che il browser
+sia stato chiuso.
+
 ## Attività dell'agente
 
 Selezionare host, sessione e provider, scrivere un risultato desiderato e mantenere

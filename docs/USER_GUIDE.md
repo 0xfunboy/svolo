@@ -12,6 +12,13 @@ control; **Return to agent** allows a new observation and resumption.
 Automatic control of all inputs in the native browser window still requires full
 qualification. Stopping the agent does not cancel a submission already executed on a site.
 
+In the web workspace, selecting another tab only changes your view. Resolution
+changes also leave the agent running and keep its operative tab selected. The
+selector briefly disables while the page is resized; wait for the new frame before
+clicking on the page. **Waiting for model** means the browser is waiting for the
+selected AI provider's next response. A delayed capture retains the last valid
+image and retries automatically; it does not imply that the browser has closed.
+
 ## Agent Activity
 
 Select host, session, and provider, write a desired outcome, and initially keep

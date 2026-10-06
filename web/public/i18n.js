@@ -1,5 +1,7 @@
 // UI-only translations. User messages, names, provider output and page content are never translated here.
 const messages = {
+  "Waiting for model": { "en": "Waiting for model", "it": "In attesa del modello" },
+  "Browser view delayed. Retrying automatically…": { "en": "Browser view delayed. Retrying automatically…", "it": "Vista del browser in ritardo. Riprovo automaticamente…" },
   "Al lavoro": {
     "en": "Working",
     "it": "Al lavoro"

@@ -22,6 +22,7 @@ considerare un timeout una prova che un'azione esterna non sia avvenuta.
 | `/v1/approvals`, `/v1/tokens` | Decisioni umane e credenziali MCP limitate. |
 | `/v1/events`, `/v1/events/stream`, `/v1/events/cursor` | Eventi e recupero del cursore. |
 | `/v1/view`, `/v1/input`, `/v1/browser/tabs` | Vista della pagina, input e tab della sessione. |
+| `POST /v1/browser/viewport` | Ridimensiona una scheda propria senza prendere il controllo o cancellare l'agente. |
 | `/v1/artifacts`, `/v1/artifact` | Elenco e contenuto degli artefatti. |
 | `/v1/hosts/*`, `/v1/remote` | Gestione SSH e richieste al daemon selezionato. |
 | `/v1/transfers/*` | Staging, chunk, commit e download verificati. |
@@ -61,6 +62,19 @@ alla scheda dello snapshot. Un ID `tab` incompatibile produce
 obsoleti. Senza selezione valida, una sessione con più schede produce
 `tab_ambiguous` invece di scegliere la prima. Lo harness del modello richiede
 un `tab` esplicito per gli strumenti che operano su una pagina.
+
+`POST /v1/browser/viewport` accetta solo `{session,tab,width,height,dpr,mobile,touch}`.
+La sessione deve essere configurata e `tab` deve indicare esplicitamente una sua
+scheda. Larghezza e altezza sono interi da 100 a 8192 pixel CSS; DPR va da 0.1 a 5.
+Campi sconosciuti, schede estranee e dimensioni mancanti sono rifiutati. La modifica
+si accoda all'azione in corso, con attesa cancellabile e limite di 20 secondi.
+Non ferma l'agente, non cambia l'epoch del controllo e non seleziona un'altra scheda.
+Gli snapshot della pagina ridimensionata vengono invalidati: servono riferimenti
+aggiornati per l'azione successiva. Dopo un timeout, acquisire nuovamente la vista;
+non è prova che la modifica non sia avvenuta. Input, navigazione e altri strumenti
+manuali richiedono ancora il controllo umano. Il gateway web applica autenticazione,
+CSRF e isolamento per utente. Questo endpoint configura la vista e non è uno
+strumento del modello o una scorciatoia per acquisire il controllo.
 
 ## Chiamata manuale
 

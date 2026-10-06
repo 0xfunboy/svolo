@@ -552,6 +552,21 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			value, err = s.Engine.Observe(r.Context(), sid, "tabs", nil)
 		}
+	case "/v1/browser/viewport":
+		var p struct {
+			Session string `json:"session"`
+			browser.ViewportSettings
+		}
+		if err = method(r, "POST"); err == nil {
+			err = decode(r, &p)
+		}
+		if err == nil {
+			if _, ok := s.Config.Session(p.Session); !ok {
+				err = errors.New("unknown session")
+			} else {
+				value, err = s.Engine.ConfigureViewport(r.Context(), p.Session, p.ViewportSettings)
+			}
+		}
 	case "/v1/view":
 		err = method(r, "GET")
 		sid := r.URL.Query().Get("session")

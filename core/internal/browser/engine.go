@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -178,6 +179,66 @@ func (e *Engine) Run(ctx context.Context, sid, actor, name string, args map[stri
 type observationContextKey struct{}
 type observationTarget struct {
 	Tab string
+}
+
+// ViewportSettings deliberately exposes only display configuration, never page
+// input, navigation or arbitrary CDP parameters.
+type ViewportSettings struct {
+	Tab    string  `json:"tab"`
+	Width  int     `json:"width"`
+	Height int     `json:"height"`
+	DPR    float64 `json:"dpr"`
+	Mobile bool    `json:"mobile"`
+	Touch  bool    `json:"touch"`
+}
+
+// ConfigureViewport serializes geometry changes with page actions but does not
+// acquire/release control, cancel a run, activate a tab or select an agent target.
+func (e *Engine) ConfigureViewport(ctx context.Context, sid string, v ViewportSettings) (any, error) {
+	if v.Tab == "" || v.Width < 100 || v.Width > 8192 || v.Height < 100 || v.Height > 8192 || math.IsNaN(v.DPR) || math.IsInf(v.DPR, 0) || v.DPR < .1 || v.DPR > 5 {
+		return nil, errors.New("invalid viewport: owned tab, dimensions and device scale are required")
+	}
+	s, err := e.get(sid)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+	for {
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
+		if s.op.TryLock() {
+			break
+		}
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-time.After(25 * time.Millisecond):
+		}
+	}
+	defer s.op.Unlock()
+	ctx = context.WithValue(ctx, observationContextKey{}, observationTarget{Tab: v.Tab})
+	args := map[string]any{"tab": v.Tab, "width": v.Width, "height": v.Height, "dpr": v.DPR, "mobile": v.Mobile, "touch": v.Touch}
+	if _, err := e.target(ctx, sid, s, args); err != nil {
+		return nil, err
+	}
+	// Even a partially applied resize invalidates geometry from old snapshots.
+	s.mu.Lock()
+	for id, ref := range s.refs {
+		if ref.Tab == v.Tab {
+			delete(s.refs, id)
+		}
+	}
+	if s.target == v.Tab {
+		s.extensionEpoch = 0
+	}
+	s.mu.Unlock()
+	result, err := e.dispatch(ctx, sid, s, "viewport", args)
+	if err == nil && e.Events != nil {
+		e.Events(sid, "browser.viewport", v)
+	}
+	return result, err
 }
 
 // Observe reads an owned page without joining the action queue, changing the

@@ -14,7 +14,7 @@ import { createProviderService } from './providers.mjs';
 const projectRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const cookieName='__Host-svolo';
 const readRoutes=new Set(['/v1/health','/v1/config','/v1/control','/v1/tools','/v1/browser/tabs','/v1/view','/v1/runs','/v1/approvals','/v1/events','/v1/events/cursor','/v1/artifacts','/v1/artifact','/v1/projects/board','/v1/projects/laments','/v1/transfers/status','/v1/transfers/chunk']);
-const writeRoutes=new Set(['/v1/control','/v1/tools/call','/v1/input','/v1/runs','/v1/runs/stop','/v1/approvals','/v1/projects/board','/v1/projects/laments','/v1/mcp/refresh','/v1/transfers','/v1/transfers/chunk','/v1/transfers/commit','/v1/transfers/abort','/v1/transfers/download']);
+const writeRoutes=new Set(['/v1/control','/v1/tools/call','/v1/input','/v1/browser/viewport','/v1/runs','/v1/runs/stop','/v1/approvals','/v1/projects/board','/v1/projects/laments','/v1/mcp/refresh','/v1/transfers','/v1/transfers/chunk','/v1/transfers/commit','/v1/transfers/abort','/v1/transfers/download']);
 const deniedTools=new Set(['workspace-exec','computer-use','profile-import','call-routine','pi-computer','pi-kanban','pi-atp','pi-lament']);
 const uuid=()=>randomBytes(16).toString('hex');
 function error(message,status=400){return Object.assign(new Error(message),{status});}
@@ -296,6 +296,7 @@ export async function createApp(options={}) {
           const corePath=path.slice('/api/core'.length),reading=req.method==='GET';
           if(!(reading?readRoutes:writeRoutes).has(corePath)||(!reading&&req.method!=='POST'))throw error('Operazione non disponibile nel servizio web.',403);
           const core=await cores.get(user);let payload=reading?undefined:await body(req);
+          if(corePath==='/v1/browser/viewport')await ownedChat(payload.session);
           if(corePath==='/v1/tools/call'&&deniedTools.has(payload.name))throw error('Operazione non disponibile nel servizio web.',403);
           if(corePath==='/v1/runs'&&!reading){
             if((await cores.request(core,'/v1/runs')).filter(run=>run.status==='running').length>=3)throw error('Sono già attive tre operazioni.',429);

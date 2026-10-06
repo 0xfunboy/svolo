@@ -96,6 +96,15 @@ subsequent verification, continuity after interruption, and concurrency in contr
 These tests do not register real accounts and do not qualify the terms, forms, or
 OAuth flows of external services.
 
+`server/viewport_test.go` uses a simulated provider to verify a missing-credential
+question followed by a user answer, with viewport resizing during inference and
+no cancellation. `browser/viewport_chromium_test.go` separately verifies resizing,
+preserved form values, stale-reference recovery, fixture password entry and tab
+focus in real Chromium (`SVOLO_E2E=1`). The native web test in
+`web/browser-state.test.mjs` exercises active-tab translation, both languages,
+resizing without takeover, stable tab/image updates and transient capture recovery
+against simulated HTTP endpoints. These checks never submit a real registration.
+
 ## Selected documents and reusable task knowledge
 
 The web gateway adds a reviewed profile snapshot and bounded selected-document

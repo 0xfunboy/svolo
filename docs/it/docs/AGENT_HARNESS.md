@@ -95,3 +95,13 @@ valori forniti dall'utente, domanda dell'email mancante, intervento manuale e
 verifica successiva, continuità dopo interruzione e concorrenza nel controllo.
 Questi test non registrano account reali e non qualificano i termini, i moduli o
 i flussi OAuth dei servizi esterni.
+
+`server/viewport_test.go` verifica con un provider simulato la richiesta di una
+credenziale mancante e la risposta dell'utente, ridimensionando la pagina durante
+l'inferenza senza cancellare il lavoro. `browser/viewport_chromium_test.go` verifica
+separatamente geometria, valori del modulo conservati, recupero dai riferimenti
+obsoleti, inserimento di una password fittizia e focus con Chromium reale
+(`SVOLO_E2E=1`). `web/browser-state.test.mjs` usa un browser nativo e API HTTP
+simulate per schede attive in entrambe le lingue, ridimensionamento senza takeover,
+aggiornamenti stabili e recupero delle catture temporaneamente fallite. Nessuna
+prova invia una registrazione reale.

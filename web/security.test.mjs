@@ -570,6 +570,18 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
     try{assert.equal(reopened.decrypt(reopened.db.prepare('SELECT prompt_enc FROM user_run_prompts WHERE user_id=?').get(alice.user.id).prompt_enc,alice.user.id),alicePrompt);}finally{reopened.db.close();}
   });
 
+  await t.test('viewport configuration remains authenticated, CSRF protected and tenant scoped',async()=>{
+    const input={session:aliceSession,tab:'fixture-tab',width:1920,height:1080,dpr:1,mobile:false,touch:false};
+    assert.equal((await api('/api/core/v1/browser/viewport',{method:'POST',input})).status,401);
+    assert.equal((await api('/api/core/v1/browser/viewport',{auth:alice,method:'POST',input,headers:{'X-CSRF-Token':'wrong-fixture'}})).status,403);
+    assert.equal((await api('/api/core/v1/browser/viewport',{auth:bob,method:'POST',input})).status,404);
+    const result=await api('/api/core/v1/browser/viewport',{auth:alice,method:'POST',input});
+    assert.equal(result.status,200);
+    assert.equal(calls.at(-1).userId,alice.user.id);
+    assert.equal(calls.at(-1).path,'/v1/browser/viewport');
+    assert.deepEqual(calls.at(-1).payload,input);
+  });
+
   await t.test('attachments and reviewed task learning are tenant-bound across HTTP and internal MCP',async()=>{
     const chat=(await api('/api/sessions',{auth:alice,method:'POST',input:{name:'Document fixture'}})).data.id;
     const created=await api('/api/task-profiles',{auth:alice,method:'POST',input:{name:'Fixture workflow',goal:'Complete the requested workflow',instructions:'Use only supplied values.',knowledge:'Verify the current form.',reviewed:true,uploadOrigins:['https://portal.example']}});assert.equal(created.status,201);const profile=created.data;
