@@ -849,7 +849,7 @@
     "Complete host reboot and boot recovery test",
     "Long-duration reliability and independent security review"
   ],
-  "updatedAtLocal": "2026-10-06T10:21:55.528217+02:00",
+  "updatedAtLocal": "2026-10-06T11:28:48.754600+02:00",
   "updateTimezone": "Europe/Rome",
   "preUpdateEvidence": {
     "preservedFile": "/home/your-user/svolo-installation/verification-pre-dark.json",
@@ -857,37 +857,60 @@
     "scope": "Initial completed web-deployment verification before the 6 October 2026 Europe/Rome dark theme, tab observation and form-assistance update."
   },
   "latestUpdate": {
-    "name": "github-publication-language-toggle-collapsible-columns",
-    "recordedAt": "2026-10-06T08:21:55.528217+00:00",
-    "assetVersion": "20261006-10",
+    "name": "document-attachments-and-reviewed-task-profiles",
+    "recordedAt": "2026-10-06T09:34:57.592917+00:00",
+    "assetVersion": "20261006-11",
     "webTests": {
-      "passed": 66,
+      "passed": 73,
       "failed": 0,
       "skipped": 0,
-      "unitAndMock": 56,
-      "nativeBrowser": 10
+      "unitAndMock": 62,
+      "nativeBrowserAndOCR": 11,
+      "evidence": "tasks-web-final.log"
     },
-    "core": "Previous verification: Go race tests with native Chromium, go vet and Linux build passed; core unchanged in this frontend/publication update",
-    "desktop": "Previous verification: 15 targeted GitHub environment-isolation fixture tests passed; desktop runtime unchanged",
+    "core": {
+      "race": "All 20 tested Go packages passed, six packages have no tests; SVOLO_E2E=1 enabled actual Chromium browser/server tests. Cached unit-package results identified in tasks-core-final.log",
+      "vet": "pass: tasks-core-vet.log",
+      "build": "Native Linux/amd64 core, tasks-svolo-core; no new cross-platform qualification",
+      "guardTests": "Mandatory upload approval, selected-file and destination guards, changed destination after approval"
+    },
+    "nativeMCP": {
+      "core": "Actual sandboxed Go executable with automatically discovered internal MCP",
+      "provider": "Simulated completion provider; no external inference",
+      "selectedDocumentRead": true,
+      "proposalRequiresReview": true,
+      "reviewCreatesRevision": 2,
+      "evidence": "tasks-native-smoke.log"
+    },
+    "nativeDocumentReading": {
+      "fixtures": "Generated JPG, PNG, text PDF, scanned PDF and mixed text/raster PDF; no customer records",
+      "decoders": "Actual isolated Tesseract eng/ita and Poppler",
+      "evidence": "tasks-final-targeted.log"
+    },
+    "frontend": "Real browser against simulated HTTP API: attachments, safe extracted-text preview, task selection/edit, reviewed learning, version history, languages, drafts and responsive layouts",
     "documentation": {
-      "englishDocumentsTranslated": 22,
-      "italianSection": "docs/it/index.md",
-      "protectedCodeAndLinkLiteralsPreserved": true,
-      "headingCountsPreserved": true
+      "englishGuide": "TASK_PROFILES.md",
+      "italianGuide": "it/docs/TASK_PROFILES.md"
     },
-    "gatewayRuntime": {
-      "readOnlyHealthAndSessionChecks": true,
-      "applicationRestartRequired": false,
-      "userConversationsModified": false
+    "qualification": "Development status retained; real TIM portal flow and customer contracts not provided/tested",
+    "publicationChecks": "Prior GitHub CI failures addressed: ripgrep installed for desktop ATP tests, macOS temp fixture paths resolved, private-state path guard canonicalizes aliases. Local ATP seven tests and Go/native race suite passed; hosted CI results remain separate.",
+    "deployment": {
+      "realSystemdGateway": true,
+      "actualInternalMCPDiscovered": true,
+      "actualOCRInsideService": true,
+      "TIMStarterInstalledForAdmin": true,
+      "authorizedPortalOriginPendingUserConfiguration": true,
+      "existingChatsPreserved": 1,
+      "existingRunsPreserved": 3,
+      "providerCredentialsUnchanged": true,
+      "temporaryChatAndDocumentRemoved": true,
+      "externalModelCalls": 0,
+      "evidence": "tasks-deployed-check.json"
     },
     "publicFrontend": {
       "routesPassed": 4,
-      "assetsExactlyMatchSource": 10
-    },
-    "publicGit": "Public GitHub source repository; runtime credentials and user data excluded",
-    "privateState": "Real private credential-value comparison and redacted source secret scan; GitHub history checked separately after first push",
-    "services": "Application gateway and Cloudflare application tunnel active/enabled; user Linger=yes",
-    "qualification": "Development status retained; no new desktop/platform or whole-host reboot qualification",
-    "frontend": "Direct language toggle; chat-header collapse and floating reopen; persistent compact sidebar; native browser fixture checks"
+      "assetsExactlyMatchSource": 11,
+      "evidence": "public-tasks-deploy.json"
+    }
   }
 }

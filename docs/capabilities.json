@@ -107,7 +107,8 @@
       "Resource ceilings are aggregate, not per-user cost or CPU quotas",
       "MCP accepts public HTTPS endpoints only; local commands and host execution tools are denied",
       "Gemrouter quota remains unavailable without real quota data; Antigravity requires a supported credential",
-      "External models and MCP services require separate live qualification"
+      "External models and MCP services require separate live qualification",
+      "OCR and reusable-knowledge pattern checks are fallible; human verification/review remains necessary"
     ],
     "documentation": [
       "WEB_DEPLOYMENT.md",
@@ -115,7 +116,8 @@
       "WEB_SECURITY.md",
       "frontend-web.md",
       "web-providers.md",
-      "AGENT_HARNESS.md"
+      "AGENT_HARNESS.md",
+      "TASK_PROFILES.md"
     ],
     "appearance": "Dark default on public and authenticated screens; persistent light/dark choice",
     "browserObservation": "Independent watched tab and operative target; follow agent or inspect another owned tab without taking control; idle hidden-tab screenshots use CDPScreenshotNewSurface and fromSurface:true without physical activation",
@@ -163,6 +165,32 @@
       "clone": "https://github.com/0xfunboy/svolo.git",
       "hosting": "Public GitHub repository; authenticated maintainer push"
     },
-    "sidebar": "Persistent compact desktop rail retaining logo, new chat, settings and profile; full mobile navigation retained"
+    "sidebar": "Persistent compact desktop rail retaining logo, new chat, settings and profile; full mobile navigation retained",
+    "documentAttachments": {
+      "formats": [
+        "jpg",
+        "jpeg",
+        "png",
+        "pdf",
+        "txt",
+        "csv"
+      ],
+      "reading": "Local UTF-8, Poppler PDF text and sandboxed Tesseract eng/ita OCR, including mixed PDFs; bounded vision images for supported providers",
+      "maxFileMiB": 20,
+      "maxSelectedFiles": 8,
+      "maxPdfPages": 20,
+      "retentionDays": 7,
+      "storage": "Owner-bound encrypted original bytes and extracted text; selected-file private upload copies",
+      "providerDisclosure": "Only checked files enter the selected provider context; existing chat/provider retention is separate"
+    },
+    "taskProfiles": {
+      "ownership": "Per-user encrypted database procedures, versions and pending proposals; selected per chat",
+      "learning": "Agent proposes verified general steps/mappings; explicit human review creates a new revision",
+      "versionsRetained": 20,
+      "starter": "TIM contract-entry first-case guide; actual portal workflow requires supervised verification",
+      "toolScope": "Browser plus trusted internal document/memory MCP, excluding scripts, workspace and external MCP tools",
+      "destinationPolicy": "Configured exact HTTPS portal origins; selected-file uploads always require human approval and destination recheck",
+      "caseSeparation": "New profile revision or changed nonempty document selection starts fresh model context"
+    }
   }
 }

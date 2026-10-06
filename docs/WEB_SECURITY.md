@@ -139,7 +139,7 @@ to an external site may have taken effect before the interruption: verify
 the outcome before resuming work.
 
 The pool allows eight cores and can stop a core unused for 15 minutes
-when it finds no runs with state `running`. Endpoints enforce limits
+when it finds no runs with state `running` or `waiting_approval`. Endpoints enforce limits
 for users, sessions, providers, MCP, and requests; these are not complete
 CPU, memory, or provider cost consumption quotas per user. The systemd deployment
 adds aggregate limits for the entire application group, described in
@@ -217,3 +217,27 @@ certify a complete cycle of tool calls and approvals; these must be
 verified separately for each adapter/model. The publication
 of this service and the described tests do not automatically
 promote the product to a production-qualified release.
+
+## Attachments and task memory
+
+The gateway encrypts original document bytes, OCR/text, task procedures, versions,
+proposals and run-context bindings with owner/resource-bound AES-256-GCM fields.
+Selected-file and same-chat authorization applies to both HTTP and internal MCP.
+CSRF protects edits; optimistic revisions and mandatory user review prevent silent
+learning updates. Pattern checks reject common personal identifiers and credential
+URLs; they do not detect every name/address and do not replace human review.
+
+Decoding uses a separate, network-isolated Bubblewrap process without user home or
+credentials, capped at two concurrent readers, one upload per user, 1 GiB address
+space, 25 CPU seconds per command, bounded output and a 120-second file budget.
+Originals are capped at 20 MiB each, 100 files/200 MiB per user and seven-day retention.
+Uploads materialize only selected files in a private workspace directory, reject
+symlinks/hardlinks and verify existing file hashes. Core guards require selected
+paths, authorized HTTPS origins and fresh human approval; the origin is checked
+again after approval. Active/waiting tasks retain needed copies; polling or a
+periodic sweep removes inactive copies.
+
+These encrypted fields do not encrypt the entire SQLite file, core history or
+Chromium data. Attachment expiry does not erase prior conversation/provider text.
+Only checked files are available to the selected provider, subject to its retention
+policy. [Task profiles](TASK_PROFILES.md) describe the user workflow and boundaries.

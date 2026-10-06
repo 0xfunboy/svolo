@@ -8,6 +8,7 @@ permissions:
 jobs:
   core:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
@@ -27,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y ripgrep
       - uses: actions/setup-go@v5
         with:
           go-version-file: core/go.mod
@@ -47,3 +49,15 @@ jobs:
       - run: python3 -B scripts/test-product-check.py
       - run: python3 -B scripts/test-task-plans.py
       - run: node --test scripts/test-source-contracts.cjs
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: web
+      - run: pnpm test
+        working-directory: web

@@ -1,6 +1,6 @@
-import { t, locale } from './i18n.js?v=20261006-10';
-import { Marked, Renderer } from './vendor/marked-18.1.0/marked.esm.js?v=20261006-10';
-import createDOMPurify from './vendor/dompurify-3.4.16/purify.es.mjs?v=20261006-10';
+import { t, locale } from './i18n.js?v=20261006-11';
+import { Marked, Renderer } from './vendor/marked-18.1.0/marked.esm.js?v=20261006-11';
+import createDOMPurify from './vendor/dompurify-3.4.16/purify.es.mjs?v=20261006-11';
 
 const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;',

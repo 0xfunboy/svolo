@@ -8,9 +8,17 @@ import (
 	"testing"
 )
 
+func realTempDir(t *testing.T) string {
+	t.Helper()
+	p, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return p
+}
 func repo(t *testing.T) string {
 	t.Helper()
-	p := t.TempDir()
+	p := realTempDir(t)
 	ctx := context.Background()
 	for _, a := range [][]string{{"init", "-q"}, {"config", "user.email", "test@example.invalid"}, {"config", "user.name", "Svolo Test"}} {
 		if _, e := Run(ctx, p, a...); e != nil {
@@ -31,7 +39,7 @@ func TestWorktreeRealGit(t *testing.T) {
 	os.WriteFile(filepath.Join(p, "sub", "nested"), []byte("nested"), 0600)
 	Run(ctx, p, "add", ".")
 	Run(ctx, p, "commit", "-qm", "sub")
-	m := &Manager{Home: t.TempDir()}
+	m := &Manager{Home: realTempDir(t)}
 	var wg sync.WaitGroup
 	results := make(chan *Worktree, 8)
 	for i := 0; i < 8; i++ {
@@ -86,9 +94,9 @@ func TestCommitGuards(t *testing.T) {
 	}
 }
 func TestInvalidWorktree(t *testing.T) {
-	m := Manager{Home: t.TempDir()}
+	m := Manager{Home: realTempDir(t)}
 	for _, id := range []string{"../escape", "-option", "", "a/b"} {
-		if _, e := m.Prepare(context.Background(), t.TempDir(), id, "title"); e == nil {
+		if _, e := m.Prepare(context.Background(), realTempDir(t), id, "title"); e == nil {
 			t.Fatal(id)
 		}
 	}
@@ -97,8 +105,8 @@ func TestInvalidWorktree(t *testing.T) {
 	}
 }
 func TestNonRepo(t *testing.T) {
-	m := Manager{Home: t.TempDir()}
-	w, e := m.Prepare(context.Background(), t.TempDir(), "abc123", "title")
+	m := Manager{Home: realTempDir(t)}
+	w, e := m.Prepare(context.Background(), realTempDir(t), "abc123", "title")
 	if e != nil || w != nil {
 		t.Fatal(w, e)
 	}

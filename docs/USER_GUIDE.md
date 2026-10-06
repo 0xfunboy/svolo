@@ -55,3 +55,13 @@ capabilities returned by the backend before committing a task to this feature.
 
 Light/dark/system themes and background rotation remain selectable. All
 distributed backgrounds are variations of the approved Svolo landscape, without gesture images or mascots. The **None** option disables the backdrop.
+
+## Documents and repeated tasks in the web client
+
+Attach JPG, PNG, PDF, UTF-8 TXT or CSV above the chat composer. Check only the
+current case's files; preview extracted text and verify important OCR values.
+In **Settings → Task profiles**, create a task or the TIM contract starter, configure
+authorized portal origins and review its reusable procedure. Select it in chat.
+The agent proposes learning for review; saving creates a version recalled in future
+chats. See [documents and task profiles](TASK_PROFILES.md) for the supervised first
+case, retention and privacy boundaries.

@@ -95,3 +95,23 @@ user-provided values, missing email query, manual intervention and
 subsequent verification, continuity after interruption, and concurrency in control.
 These tests do not register real accounts and do not qualify the terms, forms, or
 OAuth flows of external services.
+
+## Selected documents and reusable task knowledge
+
+The web gateway adds a reviewed profile snapshot and bounded selected-document
+excerpts as untrusted data. The internal MCP offers `read_document` in bounded
+chunks and `propose_knowledge`; these require the current user's active run and
+its persisted binding. The latter creates a pending proposal, not trusted memory.
+Only user review creates a new profile revision. Customer values and credentials
+must remain outside reusable procedures. New document selections/profile revisions
+start fresh model context; procedure history remains persistent in the gateway DB.
+
+For these runs, the gateway excludes arbitrary JavaScript, workspace operations,
+browser wrappers and external MCP tools. Server-produced `uploadFiles`,
+`uploadOrigins` and `taskOrigins` constrain the core. An explicit empty portal-origin
+list denies task browser actions; configured origins are exact HTTPS destinations.
+Uploads are always approved individually, with the destination exposed and checked
+again after approval. These guards constrain the agent; an authenticated user's
+manual browser controls remain available. General final-submission consent is a
+harness instruction, not a universal semantic detector of every site's submit button.
+See [task profiles](TASK_PROFILES.md).

@@ -71,9 +71,11 @@ export class CorePool {
     for(const provider of providers){provider.apiKeyRef='web-broker';delete provider.apiKeyEnv;}
     await this.request(core,'/v1/credentials','PUT',{name:'web-broker',value:core.brokerToken});
     const mcp=this.db.prepare('SELECT config_json,credential_enc FROM mcp_servers WHERE user_id=?').all(core.user.id);
-    const servers=[];
+    const servers=[{id:'svolo-task-memory',url:`${this.gatewayURL}/internal/tasks/${core.user.id}`,tokenRef:'web-broker',allowInsecureHTTP:true,enabled:true}];
     for(const row of mcp){const config=JSON.parse(row.config_json);if(row.credential_enc){config.tokenRef='mcp-'+config.id;await this.request(core,'/v1/credentials','PUT',{name:config.tokenRef,value:this.decrypt(row.credential_enc,core.user.id)});}servers.push(config);}
     await this.request(core,'/v1/config','PUT',{version:1,providers,mcpServers:servers,hosts:[],sessions:config.sessions??[]});
+    const fingerprint=JSON.stringify([servers,mcp.map(row=>row.credential_enc)]);
+    if(core.mcpFingerprint!==fingerprint){await this.request(core,'/v1/mcp/refresh','POST',{});core.mcpFingerprint=fingerprint;}
     core.lastSync=Date.now();
   }
   broker(userId,token){const core=this.cores.get(userId);return core&&token?.length===64&&core.brokerToken===token?core:null;}
@@ -94,6 +96,6 @@ export class CorePool {
     })();
     return core.stopping;
   }
-  async sweep(){for(const core of this.cores.values())if(Date.now()-core.used>15*60*1000){try{const runs=await this.request(core,'/v1/runs');if(!runs.some(run=>run.status==='running'))await this.stop(core);}catch{await this.stop(core);}}}
+  async sweep(){for(const core of this.cores.values())if(Date.now()-core.used>15*60*1000){try{const runs=await this.request(core,'/v1/runs');if(!runs.some(run=>['running','waiting_approval'].includes(run.status)))await this.stop(core);}catch{await this.stop(core);}}}
   async close(){this.closed=true;clearInterval(this.timer);await Promise.allSettled([...this.starting.values()]);await Promise.all([...this.cores.values()].map(core=>this.stop(core)));}
 }

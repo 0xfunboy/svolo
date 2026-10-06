@@ -5,6 +5,7 @@ La documentazione principale e il README sono in inglese. Le versioni italiane s
 - [Presentazione e README](README.md)
 - [Guida iniziale](docs/GETTING_STARTED.md)
 - [Guida utente](docs/USER_GUIDE.md)
+- [Documenti e profili di compito](docs/TASK_PROFILES.md)
 - [API core](docs/API.md)
 - [API web](docs/WEB_API.md)
 - [Configurazione](docs/CONFIGURATION.md)

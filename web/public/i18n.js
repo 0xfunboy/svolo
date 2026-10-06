@@ -1908,6 +1908,392 @@ Object.assign(messages, {
   'Collapse sidebar': {en:'Collapse sidebar',it:'Comprimi barra laterale'},
   'Expand sidebar': {en:'Expand sidebar',it:'Espandi barra laterale'}
 });
+Object.assign(messages, {
+  "Attach documents": {
+    "en": "Attach documents",
+    "it": "Allega documenti"
+  },
+  "Task profile": {
+    "en": "Task profile",
+    "it": "Profilo attività"
+  },
+  "No task profile": {
+    "en": "No task profile",
+    "it": "Nessun profilo attività"
+  },
+  "Manage task profiles": {
+    "en": "Manage task profiles",
+    "it": "Gestisci profili attività"
+  },
+  "Partial reading": {
+    "en": "Partial reading",
+    "it": "Lettura parziale"
+  },
+  "Read extracted text": {
+    "en": "Read extracted text",
+    "it": "Leggi testo estratto"
+  },
+  "Delete document": {
+    "en": "Delete document",
+    "it": "Elimina documento"
+  },
+  "Only checked files are sent to the selected AI provider. Files expire after 7 days; chat history is kept until you delete the chat.": {
+    "en": "Only checked files are sent to the selected AI provider. Files expire after 7 days; chat history is kept until you delete the chat.",
+    "it": "Solo i file selezionati vengono inviati al provider AI scelto. I file scadono dopo 7 giorni; la cronologia resta finché non elimini la chat."
+  },
+  "Reusable task profiles": {
+    "en": "Reusable task profiles",
+    "it": "Profili attività riutilizzabili"
+  },
+  "Save procedures, field mappings and verified exceptions. Review learning before it becomes reusable.": {
+    "en": "Save procedures, field mappings and verified exceptions. Review learning before it becomes reusable.",
+    "it": "Salva procedure, mappature dei campi ed eccezioni verificate. Rivedi le conoscenze prima di renderle riutilizzabili."
+  },
+  "Start with TIM contracts": {
+    "en": "Start with TIM contracts",
+    "it": "Inizia con i contratti TIM"
+  },
+  "New task profile": {
+    "en": "New task profile",
+    "it": "Nuovo profilo attività"
+  },
+  "Configure authorized portal origins before running this task.": {
+    "en": "Configure authorized portal origins before running this task.",
+    "it": "Configura i siti autorizzati prima di eseguire questo compito."
+  },
+  "Private to your account": {
+    "en": "Private to your account",
+    "it": "Privato del tuo account"
+  },
+  "Edit procedure": {
+    "en": "Edit procedure",
+    "it": "Modifica procedura"
+  },
+  "Versions": {
+    "en": "Versions",
+    "it": "Versioni"
+  },
+  "Delete task profile": {
+    "en": "Delete task profile",
+    "it": "Elimina profilo attività"
+  },
+  "Create a profile for a task you repeat, such as entering TIM contracts.": {
+    "en": "Create a profile for a task you repeat, such as entering TIM contracts.",
+    "it": "Crea un profilo per un’attività ricorrente, come l’inserimento di contratti TIM."
+  },
+  "Store reusable instructions, not customer records or login credentials. Documents and knowledge are encrypted and isolated by user. Task profiles use browser tools and private document/memory tools.": {
+    "en": "Store reusable instructions, not customer records or login credentials. Documents and knowledge are encrypted and isolated by user. Task profiles use browser tools and private document/memory tools.",
+    "it": "Salva istruzioni riutilizzabili, non dati dei clienti o credenziali. Documenti e conoscenze sono cifrati e separati per utente. I profili usano gli strumenti del browser e quelli privati per documenti e memoria."
+  },
+  "Learning ready for review": {
+    "en": "Learning ready for review",
+    "it": "Conoscenze da rivedere"
+  },
+  "Review procedure": {
+    "en": "Review procedure",
+    "it": "Rivedi procedura"
+  },
+  "Task name": {
+    "en": "Task name",
+    "it": "Nome attività"
+  },
+  "Procedure and field mappings": {
+    "en": "Procedure and field mappings",
+    "it": "Procedura e mappature dei campi"
+  },
+  "Authorized portal origins": {
+    "en": "Authorized portal origins",
+    "it": "Siti autorizzati"
+  },
+  "One exact HTTPS origin per line. Task actions stay on these sites; uploads always ask for approval.": {
+    "en": "One exact HTTPS origin per line. Task actions stay on these sites; uploads always ask for approval.",
+    "it": "Un sito HTTPS esatto per riga, senza percorsi. Le azioni del compito restano su questi siti; gli upload richiedono sempre approvazione."
+  },
+  "I reviewed this procedure: it contains no customer personal data or credentials.": {
+    "en": "I reviewed this procedure: it contains no customer personal data or credentials.",
+    "it": "Ho rivisto la procedura: non contiene dati personali dei clienti o credenziali."
+  },
+  "Keep general steps and field names. Customer values belong in the current documents.": {
+    "en": "Keep general steps and field names. Customer values belong in the current documents.",
+    "it": "Conserva passaggi generali e nomi dei campi. I valori dei clienti appartengono ai documenti della pratica corrente."
+  },
+  "Task profile saved.": {
+    "en": "Task profile saved.",
+    "it": "Profilo attività salvato."
+  },
+  "Select at most eight documents at a time.": {
+    "en": "Select at most eight documents at a time.",
+    "it": "Seleziona al massimo otto documenti alla volta."
+  },
+  "Reading document…": {
+    "en": "Reading document…",
+    "it": "Lettura del documento…"
+  },
+  "This is a partial reading. Verify missing pages and uncertain fields.": {
+    "en": "This is a partial reading. Verify missing pages and uncertain fields.",
+    "it": "La lettura è parziale. Verifica le pagine mancanti e i campi incerti."
+  },
+  "Extracted text can contain OCR errors. Verify important fields against the original.": {
+    "en": "Extracted text can contain OCR errors. Verify important fields against the original.",
+    "it": "Il testo estratto può contenere errori OCR. Verifica i campi importanti sul documento originale."
+  },
+  "Extracted text": {
+    "en": "Extracted text",
+    "it": "Testo estratto"
+  },
+  "No text recognized. Use a vision-capable model.": {
+    "en": "No text recognized. Use a vision-capable model.",
+    "it": "Nessun testo riconosciuto. Usa un modello che legge le immagini."
+  },
+  "Download original": {
+    "en": "Download original",
+    "it": "Scarica originale"
+  },
+  "TIM contract entry": {
+    "en": "TIM contract entry",
+    "it": "Inserimento contratti TIM"
+  },
+  "TIM starter created. Teach the portal procedure during the first supervised case.": {
+    "en": "TIM starter created. Teach the portal procedure during the first supervised case.",
+    "it": "Procedura iniziale TIM creata. Insegna i passaggi del portale durante la prima pratica assistita."
+  },
+  "Delete task profile?": {
+    "en": "Delete task profile?",
+    "it": "Eliminare il profilo attività?"
+  },
+  "This deletes its procedure, versions and pending learning. Chat history and documents are kept.": {
+    "en": "This deletes its procedure, versions and pending learning. Chat history and documents are kept.",
+    "it": "Elimina procedura, versioni e proposte di apprendimento. Conserva cronologia e documenti delle chat."
+  },
+  "Procedure versions": {
+    "en": "Procedure versions",
+    "it": "Versioni della procedura"
+  },
+  "Restoring a version creates a new reviewed revision.": {
+    "en": "Restoring a version creates a new reviewed revision.",
+    "it": "Il ripristino di una versione crea una nuova revisione da confermare."
+  },
+  "Version": {
+    "en": "Version",
+    "it": "Versione"
+  },
+  "Restore this version": {
+    "en": "Restore this version",
+    "it": "Ripristina questa versione"
+  },
+  "Learning proposal is no longer available.": {
+    "en": "Learning proposal is no longer available.",
+    "it": "La proposta di apprendimento non è più disponibile."
+  },
+  "Review learned procedure": {
+    "en": "Review learned procedure",
+    "it": "Rivedi la procedura appresa"
+  },
+  "Reject proposal": {
+    "en": "Reject proposal",
+    "it": "Rifiuta proposta"
+  },
+  "Learning saved to the task profile.": {
+    "en": "Learning saved to the task profile.",
+    "it": "Conoscenze salvate nel profilo attività."
+  },
+  "Learn from this chat": {
+    "en": "Learn from this chat",
+    "it": "Impara da questa chat"
+  },
+  "Task profiles": {
+    "en": "Task profiles",
+    "it": "Profili attività"
+  },
+  "Extract only reusable procedures and field mappings confirmed by tool results in this chat. Do not include customer data or credentials. Propose the complete updated knowledge with the task-memory tool; do not claim it is saved until I approve.": {
+    "en": "Extract only reusable procedures and field mappings confirmed by tool results in this chat. Do not include customer data or credentials. Propose the complete updated knowledge with the task-memory tool; do not claim it is saved until I approve.",
+    "it": "Estrai solo procedure riutilizzabili e mappature confermate dai risultati degli strumenti in questa chat. Non includere dati dei clienti o credenziali. Proponi le conoscenze complete aggiornate con lo strumento di memoria attività; non dichiararle salvate finché non le approvo."
+  },
+  "Invalid document filename.": {
+    "en": "Invalid document filename.",
+    "it": "Nome documento non valido."
+  },
+  "Supported files: JPG, PNG, PDF, TXT and CSV.": {
+    "en": "Supported files: JPG, PNG, PDF, TXT and CSV.",
+    "it": "File supportati: JPG, PNG, PDF, TXT e CSV."
+  },
+  "Files must contain 1 byte to 20 MiB.": {
+    "en": "Files must contain 1 byte to 20 MiB.",
+    "it": "I file devono avere dimensioni da 1 byte a 20 MiB."
+  },
+  "The file is not a valid PNG.": {
+    "en": "The file is not a valid PNG.",
+    "it": "Il file non è un PNG valido."
+  },
+  "The file is not a valid JPEG.": {
+    "en": "The file is not a valid JPEG.",
+    "it": "Il file non è un JPEG valido."
+  },
+  "The file is not a valid PDF.": {
+    "en": "The file is not a valid PDF.",
+    "it": "Il file non è un PDF valido."
+  },
+  "TXT and CSV documents must use UTF-8.": {
+    "en": "TXT and CSV documents must use UTF-8.",
+    "it": "I documenti TXT e CSV devono usare UTF-8."
+  },
+  "Binary data is not a text document.": {
+    "en": "Binary data is not a text document.",
+    "it": "I dati binari non sono un documento di testo."
+  },
+  "Document readers are busy. Try again shortly.": {
+    "en": "Document readers are busy. Try again shortly.",
+    "it": "I lettori di documenti sono occupati. Riprova tra poco."
+  },
+  "Document decoding failed or exceeded its resource limit. Check that the file is readable and unencrypted.": {
+    "en": "Document decoding failed or exceeded its resource limit. Check that the file is readable and unencrypted.",
+    "it": "La lettura è fallita o ha superato i limiti. Verifica che il file sia leggibile e senza password."
+  },
+  "Document reading exceeded its time limit.": {
+    "en": "Document reading exceeded its time limit.",
+    "it": "La lettura del documento ha superato il limite di tempo."
+  },
+  "OCR is unavailable on this server.": {
+    "en": "OCR is unavailable on this server.",
+    "it": "OCR non disponibile su questo server."
+  },
+  "PDF reading is unavailable on this server.": {
+    "en": "PDF reading is unavailable on this server.",
+    "it": "Lettura PDF non disponibile su questo server."
+  },
+  "PDF page count is unavailable.": {
+    "en": "PDF page count is unavailable.",
+    "it": "Numero di pagine PDF non disponibile."
+  },
+  "Knowledge must contain at most 40,000 characters.": {
+    "en": "Knowledge must contain at most 40,000 characters.",
+    "it": "Le conoscenze possono contenere al massimo 40.000 caratteri."
+  },
+  "Remove personal data or credentials before saving reusable knowledge.": {
+    "en": "Remove personal data or credentials before saving reusable knowledge.",
+    "it": "Rimuovi dati personali e credenziali prima di salvare conoscenze riutilizzabili."
+  },
+  "Specify up to ten HTTPS upload origins.": {
+    "en": "Specify up to ten HTTPS upload origins.",
+    "it": "Specifica al massimo dieci siti HTTPS autorizzati."
+  },
+  "Upload origins must be HTTPS origins without paths or credentials.": {
+    "en": "Upload origins must be HTTPS origins without paths or credentials.",
+    "it": "I siti autorizzati devono essere indirizzi HTTPS senza percorsi o credenziali."
+  },
+  "Task profile not found.": {
+    "en": "Task profile not found.",
+    "it": "Profilo attività non trovato."
+  },
+  "This profile changed. Reload it before saving.": {
+    "en": "This profile changed. Reload it before saving.",
+    "it": "Il profilo è cambiato. Ricaricalo prima di salvare."
+  },
+  "Maximum 32 task profiles per user.": {
+    "en": "Maximum 32 task profiles per user.",
+    "it": "Massimo 32 profili attività per utente."
+  },
+  "Task names must contain 1 to 100 characters.": {
+    "en": "Task names must contain 1 to 100 characters.",
+    "it": "Il nome dell’attività deve contenere da 1 a 100 caratteri."
+  },
+  "Review reusable knowledge before saving.": {
+    "en": "Review reusable knowledge before saving.",
+    "it": "Rivedi le conoscenze riutilizzabili prima di salvare."
+  },
+  "Attachment not found.": {
+    "en": "Attachment not found.",
+    "it": "Allegato non trovato."
+  },
+  "An upload is already being read for this user.": {
+    "en": "An upload is already being read for this user.",
+    "it": "È già in corso la lettura di un upload per questo utente."
+  },
+  "Document storage limit reached. Delete unused files.": {
+    "en": "Document storage limit reached. Delete unused files.",
+    "it": "Limite dei documenti raggiunto. Elimina i file inutilizzati."
+  },
+  "Invalid document scope.": {
+    "en": "Invalid document scope.",
+    "it": "Ambito del documento non valido."
+  },
+  "Unsafe attachment directory.": {
+    "en": "Unsafe attachment directory.",
+    "it": "Cartella allegati non sicura."
+  },
+  "Select at most eight distinct attachments.": {
+    "en": "Select at most eight distinct attachments.",
+    "it": "Seleziona al massimo otto allegati distinti."
+  },
+  "Unsafe attachment file.": {
+    "en": "Unsafe attachment file.",
+    "it": "File allegato non sicuro."
+  },
+  "Attachment integrity check failed.": {
+    "en": "Attachment integrity check failed.",
+    "it": "Verifica d’integrità dell’allegato fallita."
+  },
+  "A document needs a vision-capable model or readable OCR text.": {
+    "en": "A document needs a vision-capable model or readable OCR text.",
+    "it": "Un documento richiede un modello che legge le immagini o testo OCR leggibile."
+  },
+  "Select a task profile before proposing learning.": {
+    "en": "Select a task profile before proposing learning.",
+    "it": "Seleziona un profilo attività prima di proporre conoscenze."
+  },
+  "Review pending learning proposals first.": {
+    "en": "Review pending learning proposals first.",
+    "it": "Rivedi prima le proposte di apprendimento in attesa."
+  },
+  "Learning proposal not found.": {
+    "en": "Learning proposal not found.",
+    "it": "Proposta di apprendimento non trovata."
+  },
+  "This profile changed. Review a new proposal against its current revision.": {
+    "en": "This profile changed. Review a new proposal against its current revision.",
+    "it": "Il profilo è cambiato. Rivedi una nuova proposta basata sulla revisione corrente."
+  },
+  "Approve or reject the proposal explicitly.": {
+    "en": "Approve or reject the proposal explicitly.",
+    "it": "Approva o rifiuta esplicitamente la proposta."
+  },
+  "Stop active tasks before editing their profile.": {
+    "en": "Stop active tasks before editing their profile.",
+    "it": "Interrompi le attività in corso prima di modificare il profilo."
+  },
+  "Stop active tasks before deleting their profile.": {
+    "en": "Stop active tasks before deleting their profile.",
+    "it": "Interrompi le attività in corso prima di eliminare il profilo."
+  },
+  "Stop the agent before switching task profiles.": {
+    "en": "Stop the agent before switching task profiles.",
+    "it": "Interrompi l’agente prima di cambiare profilo attività."
+  },
+  "Wait for the agent before adding documents.": {
+    "en": "Wait for the agent before adding documents.",
+    "it": "Attendi l’agente prima di aggiungere documenti."
+  },
+  "Maximum file size is 20 MiB.": {
+    "en": "Maximum file size is 20 MiB.",
+    "it": "La dimensione massima dei file è 20 MiB."
+  },
+  "Wait for the agent before deleting documents.": {
+    "en": "Wait for the agent before deleting documents.",
+    "it": "Attendi l’agente prima di eliminare documenti."
+  },
+  "This chat already has an active task.": {
+    "en": "This chat already has an active task.",
+    "it": "Questa chat ha già un’attività in corso."
+  },
+  "A message is required.": {
+    "en": "A message is required.",
+    "it": "È richiesto un messaggio."
+  },
+  "Message and document context exceed the model budget.": {
+    "en": "Message and document context exceed the model budget.",
+    "it": "Messaggio e contesto dei documenti superano il limite del modello."
+  }
+});
 const aliases = new Map(Object.entries(messages).flatMap(([source,value])=>[[source,value],[value.en,value]]));
 export const language = () => globalThis.document?.documentElement?.lang === 'it' ? 'it' : 'en';
 export const locale = () => language() === 'it' ? 'it-IT' : 'en-GB';

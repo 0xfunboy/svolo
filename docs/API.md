@@ -120,3 +120,20 @@ The following table is derived from [tools.json](../schemas/tools.json). `readOn
 ## Delete a session
 
 `DELETE /v1/sessions?session=ID` requires the administrative core credential and a registered, idle session. It removes persisted runs and retained journal entries for that session, closes its browser, removes its browser profile and artifacts, revokes scoped credentials, and removes its configuration entry. Shared workspace files are preserved. Other sessions and event sequence cursors remain intact. Running agents must finish cancellation cleanup before deletion.
+
+## Restricted document/task runs
+
+`POST /v1/runs` accepts optional `uploadFiles:string[]`, `uploadOrigins:string[]`
+and `taskOrigins:string[]` in addition to the agent's existing fields. These are
+policy inputs produced by a trusted caller, not model arguments. The web gateway
+derives them from authenticated document selection and task configuration and
+overrides client values. Standalone callers omitting them retain their existing
+behavior. An explicit empty array denies the corresponding operation.
+
+`uploadFiles` allows at most eight workspace-relative file paths. `uploadOrigins`
+and `taskOrigins` allow at most ten exact HTTPS origins. An upload must match a
+selected file and a verified origin; it requires human approval regardless of
+`allowedTools` or browser autonomy, then rechecks the destination. Task destination
+guards apply to navigation and form actions. Web task runs additionally restrict
+tool scope to prevent wrappers/scripts from bypassing those guards. See the
+[web API](WEB_API.md) for authenticated attachment and profile endpoints.

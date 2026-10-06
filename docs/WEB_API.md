@@ -21,7 +21,7 @@ mutations require `X-CSRF-Token` matching the session value.
 Login precedes the authenticated session and does not require this header.
 Public user registration is not available.
 
-Request bodies are JSON objects with `Content-Type: application/json`.
+Request bodies are JSON objects with `Content-Type: application/json`, except raw attachment uploads documented below.
 Normal responses are JSON, except for artifact downloads. Gateway
 errors have `{error,requestId}` and `X-Request-ID`; 500 internal
 errors do not expose stacks or credentials. Codes used: 400 for invalid
@@ -236,3 +236,49 @@ All chat operations require an authenticated session. Mutations also require the
 | DELETE | `/api/sessions?id=CHAT_ID` | Removes its core history, browser profile, artifacts and gateway prompt/pin rows; workspace files are retained. |
 
 Deletion returns 409 while an agent is running or waiting for approval. Stop it and retry once cleanup completes. The core also checks the busy state under the deletion lock. Core `DELETE /v1/sessions?session=ID` provides the corresponding authenticated local operation. Configuration synchronization and chat edits are serialized per user to prevent a concurrent provider update from resurrecting a deleted chat.
+
+## Documents and reusable task profiles
+
+All endpoints below require the current user's cookie; mutations also require CSRF.
+Ownership is checked even for administrator accounts. Profiles are distinct from
+Chromium profiles. Request fields and knowledge are bounded; see
+[task profiles](TASK_PROFILES.md) for retention, OCR and privacy details.
+
+| Method and path | Request | Response / behavior |
+| --- | --- | --- |
+| `GET /api/documents/capabilities` | — | Supported types, OCR/PDF availability, file/page limits |
+| `GET /api/task-profiles` | — | `{profiles}` owned by this account |
+| `POST /api/task-profiles` | `{name,knowledge,uploadOrigins,reviewed:true}` or `{name,template:'tim'}` | Profile with revision 1 |
+| `PATCH /api/task-profiles?id=…` | `{name,knowledge,uploadOrigins,revision,reviewed:true}` | New revision; stale revision returns 409 |
+| `DELETE /api/task-profiles?id=…` | — | Deletes procedure, versions and proposals; active bindings return 409 |
+| `GET /api/task-profiles/versions?id=…` | — | `{versions}`, latest 20 |
+| `GET /api/task-selection?session=…` | — | `{profileId}` for an owned chat |
+| `POST /api/task-selection?session=…` | `{profileId}`; empty string clears | Persists selection; active chat returns 409 |
+| `GET /api/task-profiles/proposals?session=…` | Optional chat filter | `{proposals}` pending user review |
+| `POST /api/task-profiles/proposals?id=…` | `{approve:false}` or `{approve:true,reviewed:true,knowledge?}` | Rejects or saves a reviewed revision; stale proposal returns 409 |
+| `POST /api/attachments?session=…&name=…` | Raw `application/octet-stream`, max 20 MiB | Decoded document summary; active chat returns 409 |
+| `GET /api/attachments?session=…` | — | `{attachments}` metadata; no raw bytes or text |
+| `GET /api/attachments/text?id=…` | — | Owned extracted text and reading metadata |
+| `GET /api/attachments/download?id=…` | — | Original, forced octet-stream download |
+| `DELETE /api/attachments?session=…&id=…` | — | Removes owned attachment and upload copy; active chat returns 409 |
+
+`uploadOrigins` contains exact authorized HTTPS portal origins, without credentials,
+paths, query or fragment. It constrains task browser actions as well as file uploads.
+Changing profile knowledge/origins while it is actively bound also returns 409.
+
+`POST /api/core/v1/runs` additionally accepts `attachments:string[]`, at most eight
+IDs belonging to the same account and chat. The gateway loads the selected profile,
+constructs text/image context, narrows tool scope and supplies the core policy fields.
+Provider vision capability determines image inclusion; unreadable files that fit
+neither text nor vision are rejected. Client-supplied `images`, `uploadFiles`,
+`uploadOrigins` and `taskOrigins` cannot override this context. The stored/returned
+`prompt` is the user's original message, separate from the generated file/profile
+context; run metadata includes attachment summaries and task revision.
+
+The gateway reserves MCP ID prefix `svolo-task-memory`. Its internal JSON-RPC endpoint
+`POST /internal/tasks/<user-id>` accepts only gateway-loopback Host and the owning
+core's broker bearer credential. It is unavailable to public-host requests or
+ordinary web cookies. Tools are `read_document(session,id,offset?)` and
+`propose_knowledge(session,knowledge,reason)`, authorized against an active run's
+profile/selected files. General user-configured MCP servers remain external HTTPS
+services and are excluded from document/profile runs.

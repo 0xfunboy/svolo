@@ -1,9 +1,10 @@
-import { t, language, setLanguage, locale } from './i18n.js?v=20261006-10';
-import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-10';
-import { icon } from './icons.js?v=20261006-10';
-import * as view from './views.js?v=20261006-10';
-import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-10';
-import { renderMarkdown } from './markdown.js?v=20261006-10';
+import {loadTasks,loadTaskChat,bindTaskUI,learningCards} from './tasks-ui.js?v=20261006-11';
+import { t, language, setLanguage, locale } from './i18n.js?v=20261006-11';
+import { api, core, post, setCsrf, ApiError, escapeHtml as e, array } from './api.js?v=20261006-11';
+import { icon } from './icons.js?v=20261006-11';
+import * as view from './views.js?v=20261006-11';
+import { VIEWPORT_PRESETS, viewportArguments } from './viewports.js?v=20261006-11';
+import { renderMarkdown } from './markdown.js?v=20261006-11';
 
 const app = document.getElementById('app');
 const modal = document.getElementById('modal');
@@ -11,7 +12,7 @@ const $ = selector => document.querySelector(selector);
 let savedCollapsed=false, savedSidebarCollapsed=false;
 try{savedCollapsed=localStorage.getItem('svolo:chat-collapsed')==='true';savedSidebarCollapsed=localStorage.getItem('svolo:sidebar-collapsed')==='true';}catch{}
 const drafts=new Map();
-const state = { chatCollapsed:savedCollapsed, sidebarCollapsed:savedSidebarCollapsed, user:null, providers:[], sessions:[], mcp:[], users:[], provider:'', model:'', session:'', tab:'', agentTab:'', tabs:[], followAgent:true, activity:null, runs:[], approvals:[], after:0, owner:'human', controlEpoch:0, controlBusy:false, browserView:null, browserVisible:false, liveText:new Map(), submitted:new Map(), busy:false, page:'', health:false };
+const state = { taskProfiles:[],taskProfile:'',attachments:[],selectedDocuments:new Map(),uploading:false,chatCollapsed:savedCollapsed, sidebarCollapsed:savedSidebarCollapsed, user:null, providers:[], sessions:[], mcp:[], users:[], provider:'', model:'', session:'', tab:'', agentTab:'', tabs:[], followAgent:true, activity:null, runs:[], approvals:[], after:0, owner:'human', controlEpoch:0, controlBusy:false, browserView:null, browserVisible:false, liveText:new Map(), submitted:new Map(), busy:false, page:'', health:false };
 let generation = 0, timer, frameTimer, abort, toastTimer, polling = false, framing = false, viewPending = false, viewAbort, takeover;
 const statusLabels = { running:t("Al lavoro"), waiting_approval:t("In attesa del tuo consenso"), completed:'Completato', finished:'Completato', failed:t("Attività non riuscita"), stopped:'Interrotto', interrupted:'Interrotto', cancelled:'Interrotto' };
 const activityLabels = {
@@ -82,7 +83,7 @@ document.addEventListener('click',async ev=>{
   languageSwitching=true;button.disabled=true;
   const inputs=[...document.querySelectorAll('input,textarea,select')].map(input=>({id:input.id,name:input.name,value:input.value,type:input.type}));
   setLanguage(language()==='en'?'it':'en');
-  try{await route();for(const item of inputs){const input=item.id?document.getElementById(item.id):document.querySelector(`[name="${CSS.escape(item.name)}"]`);if(input&&input.type===item.type&&!['hidden','submit','button'].includes(item.type))input.value=item.value;}}catch(failure){error(failure);}finally{languageSwitching=false;button.disabled=false;}
+  try{await route();for(const item of inputs){if(item.id==='prompt')continue;const input=item.id?document.getElementById(item.id):document.querySelector(`[name="${CSS.escape(item.name)}"]`);if(input&&input.type===item.type&&!['hidden','submit','button'].includes(item.type))input.value=item.value;}}catch(failure){error(failure);}finally{languageSwitching=false;const current=document.querySelector('[data-action=toggle-language]');if(current)current.disabled=false;}
 });
 document.addEventListener('click', ev => { if (ev.target.closest('[data-action="toggle-theme"]')) toggleTheme(); });
 
@@ -115,6 +116,7 @@ async function takeHumanControl() {
 }
 
 async function loadWorkspaceData() {
+  await loadTasks(state,signal());
   const [providers, sessions] = await Promise.all([api('/api/providers', signal()), api('/api/sessions', signal())]);
   state.providers = array(providers?.providers).map(p=>({...p,models:array(p.models).map(m=>typeof m==='string'?{id:m,name:m}:m)}));
   state.sessions = array(sessions?.sessions || sessions);
@@ -144,6 +146,7 @@ async function route() {
       if(stamp!==generation)return;
       state.sessions=[created];if($('#prompt'))drafts.set(state.session,$('#prompt').value);state.session=created.id;if($('#prompt'))$('#prompt').value='';state.after=0;resetBrowser();
     }
+    if(!settings)await loadTaskChat(state,signal());if(stamp!==generation)return;
     document.title=settings?t("Impostazioni — Svolo"):t("Workspace — Svolo"); app.innerHTML=view.shell(state,settings);
     bindShell(); void health();
     if(settings)await renderSettings(hash.split('/')[1]||'providers',stamp);
@@ -160,6 +163,7 @@ function renderLogin() {
   });
 }
 function bindShell() {
+  const languageButton=document.querySelector('[data-action=toggle-language]');if(languageButton)languageButton.disabled=languageSwitching;
   bind('#toggle-sidebar','click',toggleSidebar);
   bind('#mobile-menu','click',()=>$('.workspace').classList.toggle('sidebar-open'));
   bind('#new-session','click',newSession);
@@ -234,6 +238,7 @@ function toggleChat() {
   try{localStorage.setItem('svolo:chat-collapsed',String(state.chatCollapsed));}catch{}
 }
 function bindChat() {
+  bindTasks();
   bind('#toggle-chat','click',toggleChat);
   bind('#expand-chat','click',toggleChat);
   bind('#prompt-form','submit',sendPrompt);
@@ -289,11 +294,11 @@ async function chooseModel([provider,model]) {
   tell(`${p.name||p.id} · ${model} ${e(t("selezionato."))}`);
 }
 async function sendPrompt(ev) {
-  ev.preventDefault();if(state.busy)return;
+  ev.preventDefault();if(state.busy||state.uploading)return;
   const prompt=$('#prompt').value.trim();if(!prompt)return;
   const provider=state.providers.find(p=>p.id===state.provider&&p.configured);if(!provider)throw new Error(t("Collega un provider nelle impostazioni per avviare l’agente."));
   requireSession();state.busy=true;$('#send-button').disabled=true;
-  try {const run=await mutations('/v1/runs',{session:state.session,provider:state.provider,prompt,autonomy:'ask',maxSteps:20,continue:true});state.submitted.set(run.id,prompt);state.liveText.set(run.id,'');$('#prompt').value='';drafts.delete(state.session);await poll();}
+  try {const run=await mutations('/v1/runs',{session:state.session,provider:state.provider,prompt,attachments:[...(state.selectedDocuments.get(state.session)||[])],autonomy:'ask',maxSteps:20,continue:true});state.submitted.set(run.id,prompt);state.liveText.set(run.id,'');$('#prompt').value='';drafts.delete(state.session);await poll();}
   finally{state.busy=false;if($('#send-button'))$('#send-button').disabled=false;}
 }
 async function poll() {
@@ -315,6 +320,8 @@ async function poll() {
     const activityRun=state.activity&&state.runs.find(run=>run.id===state.activity.runId);
     if(state.activity?.status==='running'&&activityRun&&!['running','waiting_approval'].includes(activityRun.status))state.activity={...state.activity,status:['stopped','interrupted','cancelled'].includes(activityRun.status)?'interrupted':activityRun.status==='failed'?'failed':'completed'};
     renderConversation();renderApprovals();renderControl();renderActivity();
+    const learning=await api('/api/task-profiles/proposals?session='+encodeURIComponent(sid),signal());if(stamp===generation&&$('#learning-proposals'))$('#learning-proposals').innerHTML=learningCards(array(learning.proposals));
+    const activeTask=state.runs.some(r=>['running','waiting_approval'].includes(r.status));if($('#learn-task'))$('#learn-task').disabled=!state.taskProfile||state.busy||activeTask||state.uploading;if($('#attach-file'))$('#attach-file').disabled=state.busy||activeTask||state.uploading;if($('#task-select'))$('#task-select').disabled=state.busy||activeTask;
     try{await refreshTabs();}catch(failure){if(failure.name==='AbortError')return;const note=$('#browser-error');if(note){note.textContent=t("Il browser non è disponibile. Riprova ad aprire la pagina tra un momento.");note.title=failure.message;note.hidden=false;}}
     state.health=true;const health=$('#service-health');if(health){health.classList.add('ready');health.innerHTML=`<span class="dot"></span>${e(t("Core connesso"))}`;}
   }catch(failure){if(failure.name==='AbortError')return;const label=$('#agent-status');if(label)label.textContent=t("Connessione interrotta");if(state.health){state.health=false;error(failure);}}
@@ -411,12 +418,13 @@ async function navigateBrowser(newTab) {
 
 async function renderSettings(page,stamp) {
   const area=$('#settings-content');if(!area)return;
-  if(!['providers','mcp','users','account'].includes(page))page='providers';if(page==='users'&&state.user.role!=='admin')page='account';
+  if(!['providers','mcp','tasks','users','account'].includes(page))page='providers';if(page==='users'&&state.user.role!=='admin')page='account';
   if(page==='mcp'){const result=await api('/api/mcp',signal());state.mcp=array(result?.servers||result);}
   if(page==='users'){const result=await api('/api/users',signal());state.users=array(result?.users||result);}
   if(stamp!==generation)return;area.innerHTML=view.settingsHeader(state,page)+view[page](state);
+  bindTasks();
   bind('#add-provider','click',()=>providerForm());bind('#connect-codex','click',()=>codexLogin(state.providers.find(p=>p.kind==='codex-oauth')?.id||'codex'));bind('#add-mcp','click',()=>mcpForm());bind('#add-user','click',userForm);
-  bind('#logout','click',async()=>{await post('/api/logout',{},signal());stopScreen();state.user=null;state.sessions=[];state.provider='';state.model='';state.liveText.clear();state.submitted.clear();drafts.clear();state.session='';resetBrowser();setCsrf('');location.hash='#login';});
+  bind('#logout','click',async()=>{await post('/api/logout',{},signal());stopScreen();state.user=null;state.sessions=[];state.provider='';state.model='';state.liveText.clear();state.submitted.clear();drafts.clear();state.taskProfiles=[];state.attachments=[];state.selectedDocuments.clear();state.taskProfile='';state.session='';resetBrowser();setCsrf('');location.hash='#login';});
   bind('.provider-list','click',ev=>{const edit=ev.target.closest('[data-edit-provider]'),model=ev.target.closest('[data-model]');if(edit)providerForm(state.providers.find(p=>p.id===edit.dataset.editProvider));if(model)return chooseModel(JSON.parse(model.dataset.model));});
   bind('.mcp-list','click',ev=>{const edit=ev.target.closest('[data-edit-mcp]');if(edit)mcpForm(state.mcp.find(s=>s.id===edit.dataset.editMcp));});
 }
@@ -483,3 +491,5 @@ window.addEventListener('resize',()=>{if($('#chat-panel'))$('#chat-panel').inert
 if(!location.hash && ['/app','/login','/settings'].includes(location.pathname))history.replaceState(null,'',location.pathname+({ '/app':'#workspace','/login':'#login','/settings':'#settings/providers' }[location.pathname]));
 try { me(await api('/api/me')); } catch(failure) { if(failure.status!==401 && failure.status!==403)tell(failure.message,true); }
 await route();
+
+function bindTasks(){bindTaskUI({state,bind,showModal,signal,tell,error,refresh:async()=>{if(state.page.startsWith('settings'))await renderSettings('tasks',generation);else await route();},learn:async()=>{if(state.busy||state.uploading||!state.taskProfile||state.runs.some(r=>['running','waiting_approval'].includes(r.status)))return;const draft=$('#prompt').value;$('#prompt').value=t('Extract only reusable procedures and field mappings confirmed by tool results in this chat. Do not include customer data or credentials. Propose the complete updated knowledge with the task-memory tool; do not claim it is saved until I approve.');await sendPrompt({preventDefault(){}});if($('#prompt'))$('#prompt').value=draft;drafts.set(state.session,draft);}});}

@@ -412,6 +412,10 @@ func (s *Server) waitDownload(ctx context.Context, sid string, a map[string]any)
 }
 
 func (s *Server) privatePath(path string) bool {
-	rel, err := filepath.Rel(s.Store.Root, path)
+	root, err := filepath.EvalSymlinks(s.Store.Root)
+	if err != nil {
+		return true // An unresolved private-state boundary must fail closed.
+	}
+	rel, err := filepath.Rel(root, path)
 	return err == nil && (rel == "." || (!strings.HasPrefix(rel, ".."+string(os.PathSeparator)) && rel != ".."))
 }

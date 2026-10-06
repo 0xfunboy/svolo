@@ -6,7 +6,7 @@ import https from 'node:https';
 import net from 'node:net';
 import { syncBuiltinESMExports } from 'node:module';
 import { randomBytes } from 'node:crypto';
-import { mkdtempSync, writeFileSync, chmodSync, statSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, chmodSync, statSync, rmSync, mkdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PassThrough } from 'node:stream';
@@ -355,6 +355,7 @@ async function gatewayFixture(t) {
   writeFileSync(keyFile, randomBytes(32).toString('hex'), { mode: 0o600 });
   writeFileSync(bootstrapFile, JSON.stringify({ username: 'FixtureAdmin', passwordHash: await hashPassword(password) }), { mode: 0o600 });
   const store = openDatabase(dataDir, keyFile);
+  const decoderRemnant=join(dataDir,'document-tmp','document-fixture');mkdirSync(decoderRemnant,{recursive:true,mode:0o700});writeFileSync(join(decoderRemnant,'input.txt'),'Disposable decoder crash remnant',{mode:0o600});
   let externalCalls = 0;
   const providers = createProviderService({ ...store, userStateDir: id => join(dataDir, 'users', id), fetchImpl: async () => { externalCalls++; throw new Error('External calls are forbidden in this fixture'); } });
   const calls = [];
@@ -378,7 +379,7 @@ async function gatewayFixture(t) {
         return { userId: core.user.id, session: payload?.session };
       }
       if (pathname === '/v1/runs') {
-        if (method === 'POST') { const run = { id: 'same-fixture-run-id', session: payload.session, status: 'completed', text: 'Fixture response' }; core.runs.push(run); return run; }
+        if (method === 'POST') { const run = { id: core.runs.length?'fixture-run-'+core.runs.length:'same-fixture-run-id', session: payload.session, status: 'completed', text: 'Fixture response' }; core.runs.push(run); return run; }
         return core.runs;
       }
       return { ok: true };
@@ -393,13 +394,14 @@ async function gatewayFixture(t) {
   let app;
   try { app = await createApp({ host: '127.0.0.1', port: 0, dataDir, keyFile, bootstrapFile, publicOrigin, providers, cores }); }
   finally { if (importFile !== undefined) process.env.SVOLO_INITIAL_IMPORT_FILE = importFile; }
+  assert.equal(existsSync(decoderRemnant),false,'Startup clears private decoder remnants from an interrupted read');
   t.after(async () => { await app.close(); store.db.close(); rmSync(root, { recursive: true, force: true }); });
   const url = `http://127.0.0.1:${app.server.address().port}`;
-  async function api(path, { auth, method = 'GET', input, headers = {} } = {}) {
+  async function api(path, { auth, method = 'GET', input, raw, headers = {} } = {}) {
     return new Promise((resolve, reject) => {
       const req = requestHTTP(url + path, {
         method,
-        headers: { Host: new URL(publicOrigin).host, ...(input === undefined ? {} : { 'Content-Type': 'application/json' }), ...(auth ? { Cookie: auth.cookie, 'X-CSRF-Token': auth.csrf } : {}), ...headers },
+        headers: { Host: new URL(publicOrigin).host, ...(raw!==undefined?{'Content-Type':'application/octet-stream'}:input === undefined ? {} : { 'Content-Type': 'application/json' }), ...(auth ? { Cookie: auth.cookie, 'X-CSRF-Token': auth.csrf } : {}), ...headers },
         timeout: 5000,
       }, response => {
         let text = '';
@@ -415,7 +417,7 @@ async function gatewayFixture(t) {
       });
       req.on('timeout', () => req.destroy(new Error('Fixture gateway timeout')));
       req.on('error', reject);
-      req.end(input === undefined ? undefined : JSON.stringify(input));
+      req.end(raw??(input === undefined ? undefined : JSON.stringify(input)));
     });
   }
   async function login(username) {
@@ -568,6 +570,40 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
     try{assert.equal(reopened.decrypt(reopened.db.prepare('SELECT prompt_enc FROM user_run_prompts WHERE user_id=?').get(alice.user.id).prompt_enc,alice.user.id),alicePrompt);}finally{reopened.db.close();}
   });
 
+  await t.test('attachments and reviewed task learning are tenant-bound across HTTP and internal MCP',async()=>{
+    const chat=(await api('/api/sessions',{auth:alice,method:'POST',input:{name:'Document fixture'}})).data.id;
+    const created=await api('/api/task-profiles',{auth:alice,method:'POST',input:{name:'Fixture workflow',template:'tim',uploadOrigins:['https://portal.example']}});assert.equal(created.status,201);const profile=created.data;
+    assert.equal((await api('/api/task-profiles?id='+profile.id,{auth:bob,method:'PATCH',input:{...profile,reviewed:true}})).status,404);
+    assert.equal((await api('/api/task-selection?session='+chat,{auth:alice,method:'POST',input:{profileId:profile.id}})).status,200);
+    assert.equal((await api('/api/attachments?session='+chat+'&name=fixture.txt',{auth:alice,method:'POST',raw:Buffer.from('PRIVATE_DOCUMENT_FIXTURE')})).status,201);
+    const files=(await api('/api/attachments?session='+chat,{auth:alice})).data.attachments;assert.equal(files.length,1);const doc=files[0];
+    assert.equal((await api('/api/attachments/text?id='+doc.id,{auth:bob})).status,404);
+    assert.equal((await api('/api/attachments?session='+chat+'&name=bad.txt',{auth:alice,method:'POST',raw:Buffer.from('fixture'),headers:{'X-CSRF-Token':'wrong'}})).status,403);
+    assert.equal((await api('/api/attachments?session='+chat+'&name=bad.html',{auth:alice,method:'POST',raw:Buffer.from('fixture')})).status,415);
+    assert.equal((await api('/api/core/v1/runs',{auth:bob,method:'POST',input:{session:chat,prompt:'Cross-user',provider:'fixture',attachments:[doc.id]}})).status,404);
+    const started=await api('/api/core/v1/runs',{auth:alice,method:'POST',input:{session:chat,prompt:'Read this selected document',provider:'fixture',attachments:[doc.id]}});assert.equal(started.status,200);assert.equal(started.data.attachments[0].id,doc.id);
+    const forwarded=calls.findLast(c=>c.userId===alice.user.id&&c.path==='/v1/runs'&&c.method==='POST').payload;assert.match(forwarded.prompt,/PRIVATE_DOCUMENT_FIXTURE/);assert.deepEqual(forwarded.taskOrigins,['https://portal.example']);assert.equal(forwarded.uploadFiles.length,1);assert.ok(!forwarded.allowedTools.includes('upload'));assert.equal(forwarded.continue,false);
+    const fetched=(await api('/api/core/v1/runs',{auth:alice})).data.find(r=>r.id===started.data.id);assert.equal(fetched.prompt,'Read this selected document');
+    const core=fixture.cores.cores.get(alice.user.id),run=core.runs.find(r=>r.id===started.data.id);run.status='running';
+    assert.equal((await api('/api/task-profiles?id='+profile.id,{auth:alice,method:'PATCH',input:{...profile,reviewed:true}})).status,409);
+    assert.equal((await api('/api/task-profiles?id='+profile.id,{auth:alice,method:'DELETE'})).status,409);
+    const internal=async(authToken,params,trusted=false)=>{return new Promise((resolve,reject)=>{const req=requestHTTP(`http://127.0.0.1:${app.server.address().port}`+'/internal/tasks/'+alice.user.id,{method:'POST',headers:{Host:trusted?`127.0.0.1:${app.server.address().port}`:new URL(fixture.publicOrigin??'https://svolo.fixture.example').host,Authorization:'Bearer '+authToken,'Content-Type':'application/json'}},res=>{let text='';res.on('data',b=>text+=b);res.on('end',()=>resolve({status:res.statusCode,data:JSON.parse(text)}));});req.on('error',reject);req.end(JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params}));});};
+    // Public Host cannot turn the internal broker into an authenticated browser API.
+    assert.equal((await internal(core.brokerToken,{name:'propose_knowledge',arguments:{session:chat,knowledge:'General procedure',reason:'Fixture'}})).status,403);
+    const proposed=await internal(core.brokerToken,{name:'propose_knowledge',arguments:{session:chat,knowledge:'Read the offer label, enter supplied values and verify the receipt.',reason:'Fixture verified steps'}},true);assert.equal(proposed.status,200);assert.equal(proposed.data.result.isError,undefined);const proposalId=JSON.parse(proposed.data.result.content[0].text).id;
+    assert.equal((await api('/api/task-profiles',{auth:alice})).data.profiles.find(p=>p.id===profile.id).revision,1);
+    assert.equal((await api('/api/task-profiles/proposals?id='+proposalId,{auth:bob,method:'POST',input:{approve:true,reviewed:true}})).status,404);
+    assert.equal((await api('/api/task-profiles/proposals?id='+proposalId,{auth:alice,method:'POST',input:{approve:true}})).status,400);
+    assert.equal((await api('/api/task-profiles/proposals?id='+proposalId,{auth:alice,method:'POST',input:{approve:true,reviewed:true}})).status,200);
+    const selectedRead=await internal(core.brokerToken,{name:'read_document',arguments:{session:chat,id:doc.id}},true);assert.match(selectedRead.data.result.content[0].text,/PRIVATE_DOCUMENT_FIXTURE/);
+    const wrongRead=await internal(core.brokerToken,{name:'read_document',arguments:{session:chat,id:'not-selected'}},true);assert.equal(wrongRead.data.result.isError,true);
+
+    assert.equal((await api('/api/task-selection?session='+chat,{auth:alice,method:'POST',input:{profileId:''}})).status,409);
+    assert.equal((await api('/api/attachments?session='+chat+'&id='+doc.id,{auth:alice,method:'DELETE'})).status,409);run.status='completed';
+    assert.equal((await api('/api/task-profiles/proposals',{auth:alice})).data.proposals.length,0);
+    assert.ok(app.db.prepare('SELECT data_enc FROM chat_attachments').all().every(r=>!r.data_enc.includes('PRIVATE_DOCUMENT_FIXTURE')));
+    assert.equal((await api('/api/sessions?id='+chat,{auth:alice,method:'DELETE'})).status,200);assert.equal((await api('/api/attachments/text?id='+doc.id,{auth:alice})).status,404);
+  });
   await t.test('privileged core routes and restricted tools are denied for every account role', async () => {
     for (const auth of [admin, alice, bob]) {
       for (const [method, path] of [['GET', '/v1/tokens'], ['GET', '/v1/credentials'], ['GET', '/v1/hosts'], ['POST', '/v1/config'], ['POST', '/v1/credentials'], ['POST', '/v1/runtime/start'], ['PUT', '/v1/config']]) {
@@ -606,7 +642,7 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
     };
     let req;
     try{
-      req=requestHTTP(`http://127.0.0.1:${app.server.address().port}/api/core/v1/view?session=${aliceSession}`,{headers:{Host:'127.0.0.1:0',Cookie:alice.cookie}},response=>response.resume());
+      req=requestHTTP(`http://127.0.0.1:${app.server.address().port}/api/core/v1/view?session=${aliceSession}`,{headers:{Host:`127.0.0.1:${app.server.address().port}`,Cookie:alice.cookie}},response=>response.resume());
       req.on('error',()=>{});req.end();
       await Promise.race([entered,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Viewer did not enter core')),2000))]);
       req.destroy();
@@ -618,7 +654,7 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
   await t.test('internal provider broker refuses public-host access and ordinary session tokens', async () => {
     const path = `/internal/provider/${alice.user.id}/fixture-provider/v1/chat/completions`;
     assert.equal((await api(path, { auth: alice, method: 'POST', input: { model: 'fixture-alice-model', messages: [] } })).status, 403);
-    assert.equal((await api(path, { method: 'POST', input: { model: 'fixture-alice-model', messages: [] }, headers: { Host: '127.0.0.1:0', Authorization: 'Bearer ' + alice.cookie.split('=')[1] } })).status, 401);
+    assert.equal((await api(path, { method: 'POST', input: { model: 'fixture-alice-model', messages: [] }, headers: { Host: `127.0.0.1:${app.server.address().port}`, Authorization: 'Bearer ' + alice.cookie.split('=')[1] } })).status, 401);
   });
 
   await t.test('a disconnected provider stream closes only its request and keeps the gateway alive', async () => {
@@ -627,7 +663,7 @@ test('gateway enforces login, CSRF, per-user state and forbidden operations over
     try{
       const outcome=await new Promise((resolve,reject)=>{
         const path=`http://127.0.0.1:${app.server.address().port}/internal/provider/${alice.user.id}/fixture-provider/v1/chat/completions`;
-        const req=requestHTTP(path,{method:'POST',headers:{Host:'127.0.0.1:0','Content-Type':'application/json',Authorization:'Bearer '+fixture.cores.cores.get(alice.user.id).brokerToken}},response=>{
+        const req=requestHTTP(path,{method:'POST',headers:{Host:`127.0.0.1:${app.server.address().port}`,'Content-Type':'application/json',Authorization:'Bearer '+fixture.cores.cores.get(alice.user.id).brokerToken}},response=>{
           response.resume();response.once('aborted',()=>resolve('aborted'));response.once('error',()=>resolve('aborted'));response.once('end',()=>resolve('ended'));
         });
         req.setTimeout(2000,()=>{req.destroy();reject(new Error('Stream fixture timeout'));});req.once('error',()=>resolve('aborted'));req.end(JSON.stringify({model:'fixture-alice-model',messages:[{role:'user',content:'Disposable request'}]}));

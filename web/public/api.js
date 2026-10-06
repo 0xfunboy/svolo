@@ -1,4 +1,4 @@
-import { t, locale } from './i18n.js?v=20261006-10';
+import { t, locale } from './i18n.js?v=20261006-11';
 // Same-origin, cookie-based access. The core credential never reaches this client.
 let csrf = '';
 export const setCsrf = value => { csrf = typeof value === 'string' ? value : ''; };
@@ -8,11 +8,12 @@ export class ApiError extends Error {
 export async function api(path, { method = 'GET', body, timeout = 20000, signal } = {}) {
   if (typeof path !== 'string' || !path.startsWith('/api/') || path.startsWith('//')) throw new Error(t("Percorso API non valido."));
   const headers = { Accept: 'application/json' };
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const binary=body instanceof Blob;
+  if (body !== undefined) headers['Content-Type'] = binary?'application/octet-stream':'application/json';
   if (!['GET', 'HEAD'].includes(method)) headers['X-CSRF-Token'] = csrf;
   let response;
   try {
-    response = await fetch(path, { method, headers, credentials: 'same-origin', redirect: 'error', cache: 'no-store', body: body === undefined ? undefined : JSON.stringify(body), signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeout)]) : AbortSignal.timeout(timeout) });
+    response = await fetch(path, { method, headers, credentials: 'same-origin', redirect: 'error', cache: 'no-store', body: body === undefined ? undefined : binary?body:JSON.stringify(body), signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeout)]) : AbortSignal.timeout(timeout) });
   } catch (error) {
     if (error.name === 'TimeoutError') throw new ApiError(t("Il servizio non ha risposto in tempo. Riprova."), 0);
     if (error.name === 'AbortError') throw error;
@@ -46,3 +47,5 @@ export function quotaText(quota) {
   if(quota?.status==='unavailable')return quota?.reason===t("Provider non collegato")?t("Provider non collegato"):t("Quota non disponibile dal provider");
   return t(quota?.message) || (quota?.status==='available'?t("Dettagli quota disponibili"):t("Quota non disponibile dal provider"));
 }
+
+export const uploadAttachment=(session,file,options={})=>api("/api/attachments?session="+encodeURIComponent(session)+"&name="+encodeURIComponent(file.name),{method:"POST",body:file,...options});

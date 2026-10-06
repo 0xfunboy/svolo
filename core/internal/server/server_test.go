@@ -199,6 +199,13 @@ func TestWorkspaceAndWrapperBoundaries(t *testing.T) {
 		t.Fatal(e)
 	}
 	call("workspace-read", map[string]any{"path": "private/auth.token"}, 400)
+	alias := filepath.Join(t.TempDir(), "private-alias")
+	if err := os.Symlink(s.Store.Root, alias); err == nil {
+		original := s.Store.Root
+		s.Store.Root = alias
+		call("workspace-read", map[string]any{"path": "private/auth.token"}, 400)
+		s.Store.Root = original
+	}
 }
 func TestObservationDoesNotStealControl(t *testing.T) {
 	s, h, _ := setup(t)

@@ -268,3 +268,12 @@ The desktop chat header includes a collapse button with `aria-expanded`. The hid
 The left sidebar has its own collapse button. The compact rail retains the logo, new-chat button, settings icon and user avatar, with accessible labels and tooltips. The session list returns when the sidebar expands. `localStorage['svolo:sidebar-collapsed']` stores this preference. On mobile the full navigation remains available in the menu. Both columns can be collapsed independently. These layout changes and the language toggle do not mutate browser control or agent state. Unsent drafts survive collapsing either column and switching chats or languages within the current page.
 
 `web/frontend.test.mjs` exercises the actual client in sandboxed Electron/Chromium against fixture APIs, covering both languages, visible chat menus, pin/rename/delete requests with CSRF, retained model/user text, draft continuity, independent desktop column collapse, floating-button visibility, compact sidebar icons, mobile navigation and saved language/layout after reload. These UI tests are separate from the gateway/core deletion tests and do not invoke real model providers.
+
+## Documents and task memory
+
+The composer exposes file attachment, explicit document selection, extracted-text
+preview and per-chat task selection. Settings include private task CRUD, reviewed
+procedure edits and revision history. The chat header can request learning; pending
+proposals are editable and require explicit review before saving. Upload/learning
+controls follow active-run state. Labels use the existing EN/IT dictionary and
+dark/light styles. See [task profiles](TASK_PROFILES.md) and [web API](WEB_API.md).

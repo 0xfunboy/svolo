@@ -93,7 +93,7 @@ locally. Enable and start the services only after this verification:
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable --now svolo-web.service
-# Verificare il gateway locale prima di avviare il tunnel.
+# Verify the local gateway before starting the tunnel.
 systemctl --user enable --now svolo-cloudflared.service
 ```
 
@@ -171,3 +171,22 @@ This deployment uses user systemd units, with credentials outside the repository
 Keep the gateway key, tunnel credentials, and Cloudflare certificate in
 their respective private paths; their contents do not belong in the source
 distribution or verification logs.
+
+## Document-reading dependencies
+
+The web attachment reader requires `poppler-utils` (`pdfinfo`, `pdftotext`,
+`pdftoppm`, `pdfimages`), Tesseract with English and Italian language data,
+Bubblewrap and `prlimit`. System packages are preferred. For a private unpacked
+Tesseract installation, set `SVOLO_OCR_PREFIX` to a directory containing
+`usr/bin/tesseract`, `usr/lib/x86_64-linux-gnu` and
+`usr/share/tesseract-ocr/5/tessdata`. The reader mounts that directory read-only
+inside its isolated decoder. This deployment uses such a private prefix, outside
+the repository, set in the user service unit. `GET /api/documents/capabilities`
+reports decoder availability. Restart the gateway after changing this environment.
+
+Run `node --test web/*.test.mjs` on Node.js 24 with native browser/OCR dependencies
+present. Native OCR and renderer checks are distinct from mock gateway tests;
+skipped dependencies do not count as native passes. The current task-profile
+checks also exercise a real sandboxed Go core and its internal MCP with a fixture
+provider, without paid inference or real customer documents. See
+[current verification](verification.json) and [task profiles](TASK_PROFILES.md).
